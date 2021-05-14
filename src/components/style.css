@@ -1,0 +1,31 @@
+.group{
+    padding: 8px 40px;
+    margin: 8px;
+}
+
+input[type='checkbox']{
+    display: none;
+}
+
+label {
+    position: relative
+}
+
+.group label::before {
+    content: "";
+    background: url("./../Image/checkCircle.svg");
+    background-position: center;
+    background-size: contain;
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    left: -20px;
+    top: 5px;
+
+    transform: scale(0) rotateZ(180deg);
+    transition: all 0.4s cubic-bezier(0.54, 0.01, 0, 1.49)
+}
+
+.group input[type="checkbox"]:checked + label::before{
+    transform: scale(1) rotateZ(0deg)
+}

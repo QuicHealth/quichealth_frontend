@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  /*font-family: 'Lexend Exa', sans-serif; */
+  font-family: 'Poppins', sans-serif;
+  /*letter-spacing: -1.9px; */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #070647;
+
+}
+
+*{
+  margin: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+ body{
+    font-size: 13px;
+ }
+}
+

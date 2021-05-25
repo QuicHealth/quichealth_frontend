@@ -1,19 +1,17 @@
-import React from 'react'
-import styled from 'styled-components';
-import NavBar from '../components/NavBar';
-import Help from '../components/Help';
+import React from "react";
+import styled from "styled-components";
+import DashboardNav from "../components/DashboardNav";
+import Help from "../components/Help";
 
 function DashboardHelp() {
-    return (
-        <Container>
-            <NavBar />
-            <Help/>
-        </Container>
-    )
+  return (
+    <Container>
+      <DashboardNav />
+      <Help />
+    </Container>
+  );
 }
 
-export default DashboardHelp
+export default DashboardHelp;
 
-const Container = styled.div`
-  
-`;
+const Container = styled.div``;

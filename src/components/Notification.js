@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from 'styled-components';
+import { connect } from "react-redux";
 import SideBar from './SideBar';
 import {Container, MainBody,CheckBox,Image, AppointmentContainer } from './Appointments';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import SearchIcon from '@material-ui/icons/Search';
 
-function Notification() {
+function Notification({ openSidebar}) {
     return (
-        <Container>
+        <Container sidebar={openSidebar}>
             <SideBar />
             <MainBody>
                 <NotificationSearch>
@@ -70,7 +71,11 @@ function Notification() {
     )
 }
 
-export default Notification;
+const mapStateProps = (state) => ({
+    openSidebar: state.utils.openSidebar,
+  });
+  
+export default Notification = connect(mapStateProps)(Notification);
 
 export const AppointmentContainers = styled(AppointmentContainer)`
     display: grid;
@@ -134,4 +139,8 @@ export const SearchInput = styled.input `
     padding: 10px;
     padding-left: 40px;
     width: 25em;
+
+    @media (max-width: ${500}px) {
+        width:100%;
+    }
 `;

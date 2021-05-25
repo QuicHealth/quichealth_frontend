@@ -1,14 +1,13 @@
 import React from 'react'
 import styled from 'styled-components';
 import MenuIcon from '@material-ui/icons/Menu';
-import {Container, IconBox} from "./SelectAppointment";
+import {Containa, IconBox} from "./SelectAppointment";
 import { ViewProfile, Name, Details, MainBody,Image } from './Appointments';
 import { AppointmentContainer} from './History'
 
 function Meetings() {
     return (
-        <Container>
-              <IconBox><MenuIcon /></IconBox>
+        <Containa>
                 <MainBodyBox>
                     <HistoryContainer>
                         <Image>
@@ -31,7 +30,7 @@ function Meetings() {
                         </HistoryType>
                     </HistoryTypeContainer>
                 </MainBodyBox>
-        </Container>
+        </Containa>
     )
 }
 

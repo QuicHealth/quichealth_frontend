@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components';
 import {TermsParagraph, AlreadyHaveAccount, InputLabel, RegisterMinContainer,FormContainer, InputContainer} from "./RegisterBody";
+import {Slidein} from './RegisterBody'
 
 function SigninBody() {
     return (
@@ -46,10 +47,14 @@ export default SigninBody
 
 const Container = styled.div`
     background-color: #fafafb;
-    margin: 0 .8em;
+    margin: 0em .8em;
     border-radius: 15px;
     height: 100vh;
     width: 98%;
+    padding-top:3em;
+    font-size: 1em;
+    transform-origin: right;
+    animation: ${Slidein} 500ms 0s ease-in-out;
 `;
 
 const Input = styled.input`

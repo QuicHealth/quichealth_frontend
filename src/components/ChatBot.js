@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { AppointmentContainer} from './History'
 import {Button, ViewMore} from './SelectAppointment'   
 
-const Bot = ({message}) => {
+export const Bot = ({message}) => {
     return(
         <div>
             <BotChat>{message}</BotChat>
@@ -11,7 +11,7 @@ const Bot = ({message}) => {
     )
 }
 
-const Patient = ({message}) => {
+export const Patient = ({message}) => {
     return(
         <PatientBox>
             <div></div>
@@ -23,7 +23,7 @@ const Patient = ({message}) => {
 function ChatBot() {
     return (
         <Container>
-            <ChatImg></ChatImg>
+            <ChatImg><img src="./images/chatbot.png" alt="" /></ChatImg>
             <ChatBox>
                 <Bot message={"Hi! I am Beatrice, QuicHealth assistant chatbot"}/>
                 <Bot message={"Kinndlt state what bring you to QuicHealth today?"}/>
@@ -47,7 +47,7 @@ export default ChatBot
 
 const Container = styled.div`
     display: grid;
-    grid-template-columns: 5% 93%;
+    grid-template-columns: 10% auto;
     column-gap: 1em;
     padding: 2em;
     background-color: #f5f5f8;
@@ -56,11 +56,27 @@ const Container = styled.div`
     margin-left:.5em;
     //color:#070647;
     border-radius: 15px; 
+    @media (max-width: ${500}px) {
+        padding: 2em 1em;
+  }
+    
 `;
 
-const ChatImg = styled.div``;
+const ChatImg = styled.div`
+    > img {
+        width:5em;
+        @media (max-width: ${500}px) {
+            width:3em;
+        }
+    }
+`;
 const ChatBox = styled.div`
-
+    >div>button{
+        padding: .6em 2.5em;
+        @media (max-width: ${500}px) {
+        padding: .5em 1.3em;
+  }
+    }
 `;
 const BotChat= styled(AppointmentContainer)`
     display: grid;
@@ -73,7 +89,7 @@ const BotChat= styled(AppointmentContainer)`
 
 `;
 
-const PatientBox = styled.div`
+const PatientBox = styled.span`
     display: grid;
     grid-template-columns: 10% 90%;
     justify-items: flex-end;

@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components';
-import NavBar from '../components/NavBar';
+import DashboardNav from '../components/DashboardNav'
 import Overview from '../components/Overview';
 
 function DasboardOverview() {
     return (
         <Container>
-            <NavBar />
+            <DashboardNav />
             <Overview/>
         </Container>
     )

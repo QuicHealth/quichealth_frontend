@@ -1,0 +1,2 @@
+export const SHOW_SIDEBAR = "SHOW_SIDEBAR"
+export const NOT_SHOW_SIDEBAR = "NOT_SHOW_SIDEBAR"

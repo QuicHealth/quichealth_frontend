@@ -1,12 +1,13 @@
 import React from 'react'
 import styled from 'styled-components';
 import SideBar from './SideBar';
+import { connect } from "react-redux";
 import {Container, ViewProfile, Name, Details, MainBody,Image } from './Appointments';
 import { AppointmentContainers} from './Notification'
 
-function History() {
+function History({ openSidebar}) {
     return (
-        <Container>
+        <Container sidebar={openSidebar}>
             <SideBar />
             <MainBody>
                 <AppointmentContainer>
@@ -51,7 +52,11 @@ function History() {
     )
 }
 
-export default History;
+const mapStateProps = (state) => ({
+    openSidebar: state.utils.openSidebar,
+  });
+
+export default History = connect(mapStateProps)(History);
 
 export const AppointmentContainer = styled(AppointmentContainers)`
     display: grid;

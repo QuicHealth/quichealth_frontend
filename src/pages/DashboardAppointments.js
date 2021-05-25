@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components';
-import NavBar from '../components/NavBar';
+import DashboardNav from '../components/DashboardNav';
 import Appointments from '../components/Appointments';
 
 function DashboardAppointments() {
     return (
         <Container>
-            <NavBar />
+             <DashboardNav />
             <Appointments/>
         </Container>
     )

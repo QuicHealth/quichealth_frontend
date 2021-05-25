@@ -2,11 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { Subsection,SectionChild } from './OurServices'
 
-function WhyQuicHealth({sectionRef}) {
+function WhyQuicHealth() {
    const alignLeft = {margin: "1em auto 2em auto"};
     return (
-        <Container   className="fadeIn" >
-            <div>
+        <Container className="fadeIn">
                 <div> <Subsection Title={"Why use Quichealth?"} Body={""}/></div>
                
                 <Waves>
@@ -41,7 +40,6 @@ function WhyQuicHealth({sectionRef}) {
                         />
                     </Segment>
                 </SubsectionContainer>
-            </div>
 
         </Container>
     )
@@ -49,17 +47,30 @@ function WhyQuicHealth({sectionRef}) {
 
 export default WhyQuicHealth;
 
-export const Container = styled.div`
-    margin-top:10em;
+export const Container = styled.section`
+    //adding-top:10em;
+    position: relative;
+    padding: 10em 0;
+    height: 100vh;
+    margin-bottom: 10em;
+    @media (max-width: ${500}px) {
+        padding: 25em 0;
+      
+    }
 `;
 
 const SubsectionContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 3em;
-    width: 80%;
+    //width: 80%;
     margin: 0 auto;
     position: relative;
+    padding: 0 6em;
+    @media (max-width: ${500}px) {
+       grid-template-columns:100%
+      
+    }
 `;
 const Segment = styled.div`
     width: 90%;
@@ -68,10 +79,10 @@ const Segment = styled.div`
 
     >div{
         justify-content: center;
-
+        height: 10em;
         >img{
-            width: 9em;
-            height: 8em;
+            width: fit-content;
+            //height: 8em;
         }
     }
 

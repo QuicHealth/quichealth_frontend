@@ -1,19 +1,17 @@
-import React from 'react'
-import styled from 'styled-components';
-import NavBar from '../components/NavBar';
-import HealthProfile from '../components/HealthProfile';
+import React from "react";
+import styled from "styled-components";
+import DashboardNav from "../components/DashboardNav";
+import HealthProfile from "../components/HealthProfile";
 
 function DashboardHealthProfile() {
-    return (
-        <Container>
-            <NavBar />
-            <HealthProfile/>
-        </Container>
-    )
+  return (
+    <Container>
+      <DashboardNav />
+      <HealthProfile />
+    </Container>
+  );
 }
 
-export default DashboardHealthProfile
+export default DashboardHealthProfile;
 
-const Container = styled.div`
-  
-`;
+const Container = styled.div``;

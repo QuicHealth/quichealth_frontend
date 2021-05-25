@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Container, Subsection,SectionChild } from './OurServices'
+import { Subsection,SectionChild } from './OurServices'
 import { GetStarted} from './LandingSection';
 
 const Dots = () =>{
@@ -16,9 +16,9 @@ const Dots = () =>{
 
 function HowItWork() {
 
-    const detail= <>Get started and consult with an ID specialist for as low as <br /> <span style={{fontSize:"2em"}}>N1000</span></>
+    const detail= <>Get started and book a consulation with a medical specialist for as low as <br /> <span style={{fontSize:"2em"}}>N1000</span></>
     return (
-        <Container>
+        <Container className="fadeIn">
              <Subsection Title={"How it Works"} Body={""}/>
              <SectionContainer>
                 <Section>
@@ -66,28 +66,42 @@ function HowItWork() {
 
 export default HowItWork;
 
+const Container = styled.section`
+  height: 100%;
+  margin-bottom: 10em;
+
+  @media (max-width: ${500}px) {
+       padding-top: 45em;
+      
+    }
+`;
+
 const SectionContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     column-gap: 1em;
-    width: 80%;
+    width: 100%;
+    padding: 0 5em;
     margin: 0 auto;
     position: relative;
+    @media (max-width: ${500}px) {
+       grid-template-columns: 100%;
+    }
 `;
 
 const WaveImg = styled.img`
     position: absolute;
     left: -8em;
-    top: -4em;
-    width: 60% !important;
-    height: 30em !important;
+    top: -5em;
+    width: 50% !important;
+    height: 40em !important;
 `;
-const StartImg = styled.div`
+const StartImg = styled.span`
     display: flex;
     align-items: flex-end;
 
     >img{
-        width: 80%;
+        width: 70%;
         height: fit-content;
     }
 `;
@@ -118,10 +132,13 @@ const Section = styled.div`
 
 const GetStartedBox = styled(SectionContainer)`
     grid-template-columns: 1fr 1fr;
-    padding-bottom: 16em;
+    //padding-bottom: 22em;
     position: relative;
-    >div >h1{
-        font-size: 1.5em;
+        >div{
+            padding: 10em 0em 0em 0em;
+            h1{
+            font-size: 2em;
+        }
     }
 
     >div>div>div{

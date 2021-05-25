@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from 'styled-components';
+import { connect } from "react-redux";
 import SideBar from './SideBar';
 
-function Appointments() {
+
+function Appointments({openSidebar}) {
     return (
-        <Container>
+        <Container sidebar={openSidebar}>
             <SideBar />
             <MainBody>
                 <AppointmentContainer>
@@ -55,26 +57,31 @@ function Appointments() {
     )
 }
 
-export default Appointments;
+const mapStateProps = (state) => ({
+    openSidebar: state.utils.openSidebar
+})
+
+export default Appointments = connect(mapStateProps)(Appointments);
 
 export const Container = styled.div`
     display: grid;
-    grid-template-columns: 20% 80%;
-    height: 80vh;
+    grid-template-columns: ${({sidebar}) => (sidebar? "20% 80%": "10% auto")};
+    height: 100vh;
 
     @media (max-width: ${1080}px) {
-        grid-template-columns: 25% 75%;
+        grid-template-columns: ${({sidebar}) => (sidebar? "25% auto": "10% auto")};
     }
 
     @media (max-width: ${700}px) {
-            grid-template-columns: 12% 88%;
+            grid-template-columns: ${({sidebar}) => (sidebar? "12% 88%": "10% auto")};
         }
 `;
 export const MainBody = styled.div`
-    background-color: #fafafb;
+    background: linear-gradient(180deg, #e7e7ed, #ffffff);
     border-top-right-radius: 15px;
     padding: 3em 2em;
     margin-right:.7em;
+    font-size: 1em;
 
     @media (max-width: ${800}px) {
     font-size: 17px;
@@ -86,7 +93,7 @@ export const MainBody = styled.div`
     }
     @media (max-width: ${500}px) {
     font-size: 9px;
-    padding: 2em .5em;
+    padding: 3em 1em;
     }
 `;
 export const AppointmentContainer = styled.div`
@@ -107,9 +114,9 @@ export const AppointmentContainer = styled.div`
 
     @media (max-width: ${750}px) {
         font-size: 15px;
-        padding: 2em;
+        padding: .5em;
     }
-    @media (max-width: ${400}px) {
+    @media (max-width: ${500}px) {
         font-size: 7px;
         padding: 2em;
         width: 100%;
@@ -135,24 +142,26 @@ export const CheckBox = styled.div`
 `;
 export const Image = styled.div`
     >img{
-        width: 3em;
+        width: 5em;
+        height: 5em;
         border-radius: 100%;
-        object-fit: contain;
+        ///object-fit: contain;
 
         @media (max-width: ${750}px) {
-            width: 2em;
+            width: 4em;
         }
         @media (max-width: ${500}px) {
-            width: 1.5em;
+            width: 3em;
         }
     }
 `;
 export const Details = styled.div``;
 export const Name = styled.h4`
+    font-size:1.3em;
     @media (max-width: ${750}px) {
         font-size: 10px;
     }
-    @media (max-width: ${400}px) {
+    @media (max-width: ${500}px) {
         font-size: 7px
     }
 `;
@@ -164,7 +173,7 @@ export const ViewProfile = styled.span`
     @media (max-width: ${750}px) {
         font-size: 10px;
     }
-    @media (max-width: ${400}px) {
+    @media (max-width: ${500}px) {
         font-size: 7px
     }
     &:hover{
@@ -176,7 +185,7 @@ const Date = styled.div`
     @media (max-width: ${750}px) {
     font-size: 10px;
     }
-    @media (max-width: ${400}px) {
+    @media (max-width: ${500}px) {
         font-size: 7px
     }
 `;
@@ -184,15 +193,16 @@ const Time = styled.div`
     @media (max-width: ${750}px) {
     font-size: 10px;
     }
-    @media (max-width: ${400}px) {
-        font-size: 7px
+    @media (max-width: ${500}px) {
+        font-size: 7px;
+        text-align: center;
     }
 `;
 const Minutes =  styled.div`
      @media (max-width: ${750}px) {
     font-size: 10px;
     }
-@media (max-width: ${400}px) {
+@media (max-width: ${500}px) {
     font-size: 7px;
     }
 `;
@@ -204,7 +214,7 @@ export const Meeting  = styled.div`
     @media (max-width: ${750}px) {
        font-size  : 10px;
     }
-    @media (max-width: ${400}px) {
+    @media (max-width: ${500}px) {
         font-size: 7px;
     }
     &.active{

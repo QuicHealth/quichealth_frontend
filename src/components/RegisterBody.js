@@ -1,40 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { dates, months, years } from "./../utils";
+import { dates, months, years } from "../utils/utils";
+import { userSchema, userAuth } from "./../Validations/UserValidation";
+import useForm from "./../utils/useForm";
 
 function RegisterBody() {
-  const genders = ["Male", "Female"];
-  const INITIAL_STATE = {
-    firstname: "",
-    lastname: "",
-    email: "",
-    mobileNo: "",
-    password: "",
-    confirmPassword: "",
-    gender: "",
-  };
+    const {values, errors, setErrors, setDisabledSubmit, handleChange, handleBlur, setValues, genders, disabledSubmit, setIsSubmit} = useForm();
 
-  const [values, setValues] = useState(INITIAL_STATE);
-  const [day, setDay] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
-
-  const [errors, setErrors] = useState({});
+    const [day, setDay] = useState("");
+    const [month, setMonth] = useState("");
+    const [year, setYear] = useState("");
 
   const register = (e) => {
     e.preventDefault();
-    const date = `${day}-${month}-${year}`;
-    values.date = date;
-    console.log(values);
+    const date = `${day}${month}${year}`;
+    values.dob = date;
+    const formError = userAuth(values);
+    setErrors(formError);
+    setDisabledSubmit(true);
+    setIsSubmit(true);
+    if (Object.keys(formError).length === 0) {
+      console.log("submit");
+    }
   };
 
-  const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value,
-    });
-  };
   return (
     <Container>
       <RegisterMinContainer>
@@ -43,29 +33,53 @@ function RegisterBody() {
           <InputContainer>
             <InputLabel htmlFor="Name"> Name </InputLabel>
             <InputNameContainer>
-              <Input
-                type="text"
-                name="firstname"
-                value={values.firstname}
-                onChange={handleChange}
-                placeholder="First Name"
-              />
-              <Input
-                type="text"
-                name="lastname"
-                value={values.lastname}
-                onChange={handleChange}
-                placeholder="Last Name"
-              />
+              <div>
+                <Input
+                  width
+                  border={errors.firstname && "1px solid red"}
+                  type="text"
+                  name="firstname"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.firstname}
+                  placeholder="First Name"
+                />
+                {errors.firstname && (
+                  <Text color="red">{errors.firstname}</Text>
+                )}
+              </div>
+
+              <div>
+                <Input
+                  width
+                  border={errors.lastname && "1px solid red"}
+                  type="text"
+                  name="lastname"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.lastname}
+                  //onChange={handleChange}
+                  placeholder="Last Name"
+                />
+                {errors.lastname && <Text color="red">{errors.lastname}</Text>}
+              </div>
             </InputNameContainer>
             <br />
 
             <InputLabel htmlFor="Dob"> Date of Birth </InputLabel>
+            <div></div>
             <InputTypeBox>
               <Select
+                border={errors.day && "1px solid red"}
+                name="day"
                 onChange={(e) => {
                   const selectedDay = e.target.value;
                   setDay(selectedDay);
+                  setValues({
+                    ...values,
+                    [e.target.name]: e.target.value,
+                  });
+                  setDisabledSubmit(false);
                 }}
               >
                 <option value="" hidden>
@@ -73,16 +87,23 @@ function RegisterBody() {
                 </option>
                 {dates("days").map((date, key) => {
                   return (
-                    <option key={key} value={date}>
+                    <option key={key} value={`${date}-`}>
                       {date}
                     </option>
                   );
                 })}
               </Select>
               <Select
+                border={errors.month && "1px solid red"}
+                name="month"
                 onChange={(e) => {
                   const selectedMonth = e.target.value;
                   setMonth(selectedMonth);
+                  setDisabledSubmit(false);
+                  setValues({
+                    ...values,
+                    [e.target.name]: e.target.value,
+                  });
                 }}
               >
                 <option value="" hidden>
@@ -90,16 +111,23 @@ function RegisterBody() {
                 </option>
                 {Object.entries(months).map(([key, value], id) => {
                   return (
-                    <option key={id} value={value}>
+                    <option key={id} value={`${value}-`}>
                       {value}
                     </option>
                   );
                 })}
               </Select>
               <Select
+                border={errors.year && "1px solid red"}
+                name="year"
                 onChange={(e) => {
                   const selectedYear = e.target.value;
                   setYear(selectedYear);
+                  setDisabledSubmit(false);
+                  setValues({
+                    ...values,
+                    [e.target.name]: e.target.value,
+                  });
                 }}
               >
                 <option value="" hidden>
@@ -110,6 +138,11 @@ function RegisterBody() {
                 })}
               </Select>
             </InputTypeBox>
+            {errors.dob && (
+              <Text color="red" style={{ textAlign: "center" }}>
+                {errors.dob}
+              </Text>
+            )}
             <br />
 
             <InputLabel htmlFor="gender"> Gender </InputLabel>
@@ -128,7 +161,7 @@ function RegisterBody() {
                     &nbsp;
                     <label
                       htmlFor={gend}
-                      style={{ position: "relative", bottom: ".1em" }}
+                      style={{ position: "relative", bottom: ".6em" }}
                     >
                       {" "}
                       {gend}
@@ -137,6 +170,11 @@ function RegisterBody() {
                   </>
                 );
               })}
+              {errors.gender && (
+                <Text color="red" style={{ top: "-1em" }}>
+                  {errors.gender}
+                </Text>
+              )}
             </div>
             <br />
 
@@ -144,17 +182,20 @@ function RegisterBody() {
             <div style={{ display: "grid" }}>
               <Input
                 type="text"
+                border={errors.mobileNo && "1px solid red"}
                 name="mobileNo"
                 value={values.mobileNo}
                 onChange={handleChange}
                 placeholder="+234-3xxx-xxx-xxxx"
               />
             </div>
+            {errors.mobileNo && <Text color="red">{errors.mobileNo}</Text>}
             <br />
 
             <InputLabel htmlFor="email"> Email</InputLabel>
             <div style={{ display: "grid" }}>
               <Input
+                border={errors.email && "1px solid red"}
                 type="email"
                 name="email"
                 value={values.email}
@@ -162,11 +203,13 @@ function RegisterBody() {
                 placeholder="example@xxx.com"
               />
             </div>
+            {errors.email && <Text color="red">{errors.email}</Text>}
             <br />
 
             <InputLabel htmlFor="password"> Password</InputLabel>
             <div style={{ display: "grid" }}>
               <Input
+                border={errors.password && "1px solid red"}
                 type="password"
                 name="password"
                 value={values.password}
@@ -174,11 +217,13 @@ function RegisterBody() {
                 placeholder="password"
               />
             </div>
+            {errors.password && <Text color="red">{errors.password}</Text>}
             <br />
 
             <InputLabel htmlFor="password"> Confirm Password</InputLabel>
             <div style={{ display: "grid" }}>
               <Input
+                border={errors.confirmPassword && "1px solid red"}
                 type="password"
                 name="confirmPassword"
                 value={values.confirmPassword}
@@ -186,12 +231,15 @@ function RegisterBody() {
                 placeholder="password"
               />
             </div>
+            {errors.confirmPassword && (
+              <Text color="red">{errors.confirmPassword}</Text>
+            )}
             <br />
             <br />
 
-            <submit type="submit" onClick={register}>
+            <button disabled={disabledSubmit} onClick={register} type="submit">
               Continue
-            </submit>
+            </button>
             <br />
             <AlreadyHaveAccount>
               Already have an account?{" "}
@@ -289,12 +337,14 @@ export const FormContainer = styled.div`
   }
 `;
 export const InputContainer = styled.form`
-  > submit {
+  > button {
     padding: 0.5em 2.5em;
     border-radius: 20px;
     background-color: #2fa5a9;
     color: white;
     text-align: center;
+    outline: none;
+    border: 0;
 
     &:hover {
       cursor: pointer;
@@ -313,14 +363,28 @@ export const InputLabel = styled.label`
 export const Input = styled.input`
   padding: 0.6em 2em 0.6em 1em;
   border-radius: 14px;
-  border: 1px solid #2fa5a9;
+  border: ${(props) => props.border || "1px solid #2fa5a9"};
   outline: none;
   @media (max-width: ${500}px) {
     padding: 0.5em;
     font-size: 10px;
+    height: 2.5em;
+    //width: 100%;
+    width: ${(props) => (props.width ? "100%" : " inherit")};
   }
   ::placeholder {
     color: #bdbdbe;
+  }
+`;
+
+export const Text = styled.p`
+  color: ${(props) => props.color || "#4d4d4d"};
+  text-align: left;
+  position: relative;
+  left: 1em;
+  top: 0.5em;
+  @media (max-width: ${500}px) {
+    font-size: 9px;
   }
 `;
 
@@ -355,7 +419,7 @@ export const TermsParagraph = styled.p`
 const Select = styled.select`
   padding: 0.6em 2em 0.6em 1em;
   border-radius: 14px;
-  border: 1px solid #2fa5a9;
+  border: ${(props) => props.border || "1px solid #2fa5a9"};
   outline: none;
   color: #bdbdbe;
   @media (max-width: ${500}px) {

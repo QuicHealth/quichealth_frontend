@@ -35,10 +35,16 @@ export const PaySys = ({ name, amount, total }) => {
     <Pay>
       <DocAppointment name={name} NoIcon={true} />
       <br />
-      <Margin />
-      <PaymentDetail left={"Service fee"} right={amount} />
-      <Margin />
-      <PaymentDetail bold="bold" left="Total" right={total} />
+      {amount && total? 
+        <> 
+          <Margin />
+          <PaymentDetail left={"Service fee"} right={amount} />
+          <Margin />
+          <PaymentDetail bold="bold" left="Total" right={total} />
+        </> 
+        :
+        ""
+      }
     </Pay>
   );
 };
@@ -142,6 +148,12 @@ const Pay = styled(Plan)`
   @media (max-width: ${500}px) {
     //padding: 0em;
     width: 100%;
+    height : unset;
+    padding: 2em;
+    height: unset;
+    box-shadow: none;
+    background-color:#e9e9ef;
+    margin-top: 8em;
   }
   &:hover {
     width: 30em;

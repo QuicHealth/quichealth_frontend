@@ -65,7 +65,7 @@ function LandingSection() {
       </Waves>
       <SectionOne>
         <GetStarted
-          firsth1={"Welcome to QuicHealth,"}
+          firsth1={"Welcome to QuicHealth, "}
           secondh1={'"your pocket doctor"'}
           body={
             "See a doctor without leaving your home. We provide easy and fast access to the best medical experts in NIGERIA."
@@ -195,7 +195,7 @@ export let LeftSection = styled.div`
   > h1 {
     animation: ${MoveRight} 2s ease-in;
     font-size: 3.1em;
-    width: 25em;
+    width: 14em;
     @media (max-width: ${500}px) {
       font-size: 2em;
       width: 10em;
@@ -292,6 +292,10 @@ const SubmitSection = styled.div`
   @media (max-width: ${500}px) {
       font-size: 1em;
       width:11em;
+    }
+    @media (max-width: ${500}px) {
+      font-size: 1em;
+      width:100%;
     }
   > div {
     width: 43px;

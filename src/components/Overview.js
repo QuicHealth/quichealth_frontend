@@ -8,9 +8,15 @@ function Overview({ openSidebar }) {
     <Container sidebar={openSidebar}>
       <SideBar />
       <MainBody>
-        <BodyHeading>Welcome, Tobi</BodyHeading>
+      <ProfileImage>
+          <img
+            src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+            alt=""
+          />
+        </ProfileImage>
+        <BodyHeading>Welcome, <span className="bold">Tobi!,</span></BodyHeading>
         <BodySection>
-          <BodyHeading>What do you want to do today?</BodyHeading>
+          <BodyHeading className="bold">What do you want to do today?</BodyHeading>
           <BodyOption>
             <Option className="left-option">Book a physical appointment</Option>
             <Option>Consult an expert online</Option>
@@ -65,8 +71,21 @@ const BodyHeading = styled.h2`
   }
 
   @media (max-width: ${700}px) {
-    font-size: 15px;
-    padding: 2em;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 2em 0;
+    padding-bottom: 0;
+  }
+  &.bold, span {
+    font-weight: 700;
+  }
+  &.bold{
+    @media (max-width: ${700}px) {
+      font-size: 24px;
+      width: 80%;
+      margin: 0 auto;
+      line-height: 36px;
+    }
   }
 `;
 
@@ -104,24 +123,25 @@ const Option = styled.div`
   padding: 1em 0.2em 1em 0.2em;
   border: 3px solid #070647;
   margin: 2em 0.5em;
-  border-radius: 20px;
+  border-radius: 40px;
   font-size: 1.3em;
   width: 17em;
   box-shadow: 2px 3px #2e302f4a;
 
   @media (max-width: ${900}px) {
     width: 80%;
-    font-size: 12px;
+    //font-size: 12px;
   }
   @media (max-width: ${700}px) {
     width: 18em;
     margin: 2em auto;
-    font-size: 10px;
+    //font-size: 10px;
   }
   @media (max-width: ${400}px) {
     width: 100%;
     margin: 2em auto;
-    font-size: 10px;
+    font-size: 14px;
+    line-height: 21px;
   }
 
   &:hover {
@@ -134,5 +154,21 @@ const Option = styled.div`
     color: white;
     border: 0px solid #070647;
     //padding: 1em 0.2em 0.7em 0.2em;
+  }
+`;
+
+
+export const ProfileImage = styled.div`
+  padding-right: 1em;
+  display: none;
+  > img {
+    width: 2.5em;
+    border-radius: 100%;
+    object-fit: contain;
+  }
+  @media (max-width: ${500}px) {
+    display: flex;
+    padding: 1em 2em;
+    justify-content: flex-end;
   }
 `;

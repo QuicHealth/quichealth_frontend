@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components";
+import  { toast } from "react-toastify";
+
 import { dates, months, years } from "../utils/utils";
-import { userSchema, userAuth } from "./../Validations/UserValidation";
+import { userAuth } from "./../Validations/UserValidation";
 import useForm from "./../utils/useForm";
+import { registerUser } from "./../redux/actions"
+import { Spin } from "../pages/Register";
 
-function RegisterBody() {
+function RegisterBody(props) {
     const {values, errors, setErrors, setDisabledSubmit, handleChange, handleBlur, setValues, genders, disabledSubmit, setIsSubmit} = useForm();
-
+    const { registerUser, errorMessage, successMessage, isLoading } = props
     const [day, setDay] = useState("");
     const [month, setMonth] = useState("");
     const [year, setYear] = useState("");
@@ -20,13 +25,19 @@ function RegisterBody() {
     setErrors(formError);
     setDisabledSubmit(true);
     setIsSubmit(true);
-    if (Object.keys(formError).length === 0) {
-      console.log("submit");
+    const noErrors = Object.keys(formError).length === 0;
+    if (noErrors) {
+      registerUser(values)
     }
   };
 
+  /* 
+  {errorMessage && toast.error(errorMessage)}
+      {successMessage && toast.success(successMessage)}
+  */
   return (
     <Container>
+      {isLoading ? <Spin /> : ""}
       <RegisterMinContainer>
         <h1>Create Profile</h1>
         <FormContainer>
@@ -182,14 +193,14 @@ function RegisterBody() {
             <div style={{ display: "grid" }}>
               <Input
                 type="text"
-                border={errors.mobileNo && "1px solid red"}
-                name="mobileNo"
-                value={values.mobileNo}
+                border={errors.phone && "1px solid red"}
+                name="phone"
+                value={values.phone}
                 onChange={handleChange}
                 placeholder="+234-3xxx-xxx-xxxx"
               />
             </div>
-            {errors.mobileNo && <Text color="red">{errors.mobileNo}</Text>}
+            {errors.phone && <Text color="red">{errors.phone}</Text>}
             <br />
 
             <InputLabel htmlFor="email"> Email</InputLabel>
@@ -223,16 +234,16 @@ function RegisterBody() {
             <InputLabel htmlFor="password"> Confirm Password</InputLabel>
             <div style={{ display: "grid" }}>
               <Input
-                border={errors.confirmPassword && "1px solid red"}
+                border={errors.password_confirmation && "1px solid red"}
                 type="password"
-                name="confirmPassword"
-                value={values.confirmPassword}
+                name="password_confirmation"
+                value={values.password_confirmation}
                 onChange={handleChange}
                 placeholder="password"
               />
             </div>
-            {errors.confirmPassword && (
-              <Text color="red">{errors.confirmPassword}</Text>
+            {errors.password_confirmation && (
+              <Text color="red">{errors.password_confirmation}</Text>
             )}
             <br />
             <br />
@@ -262,7 +273,20 @@ function RegisterBody() {
   );
 }
 
-export default RegisterBody;
+const mapStateToProps = state => ({
+      isLoading: state.signup.isLoading,
+      errorMessage: state.signup.errorMessage,
+      successMessage: state.signup.successMessage,
+
+
+})
+const mapDispatchToProps = dispatch => {
+  return {
+    registerUser: (value) => dispatch(registerUser(value)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterBody);
 
 //slidein
 export const Slidein = keyframes`

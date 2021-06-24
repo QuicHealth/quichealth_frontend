@@ -150,7 +150,7 @@ const IconBox = styled.div`
     font-size: 2em;
     color: #070647;
     @media (max-width: ${700}px) {
-      font-size: 1em;
+      //font-size: 1em;
     }
   }
   &:hover {

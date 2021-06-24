@@ -1,3 +1,8 @@
 const initialState = {
-    openSidebar : true
+    openSidebar : true,
+    token: localStorage.getItem('token'),
+    isRegistered : false,
+    isLoading: false,
+    successMessage: "",
+    errorMessage: ""
 }

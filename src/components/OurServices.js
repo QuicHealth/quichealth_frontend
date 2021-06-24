@@ -46,7 +46,7 @@ function OurServices() {
             <ServiceBody>
               <SectionChild
                 ImgUrl={"./images/service2.png"}
-                Title={"Schedule an appointment "}
+                Title={"Schedule an appointment with ID specialists."}
                 Body={
                   "Schedule/terminate online or offline appointment with out league of specialists at any convenient timethat works best for you."
                 }
@@ -110,7 +110,13 @@ export const SectionSplit = styled.div`
   margin: 0 auto;
   border: 4px solid #070647;
   background-color: #070647;
+  @media (max-width: ${500}px) {
+       border:2px solid #070647;
+       width: 3em;
+      
+    }
 `;
+
 const SectionName = styled.h1`
   width: 100%;
   margin: 0 auto;
@@ -119,6 +125,13 @@ const SectionName = styled.h1`
   padding-top: 0.2em;
   font-size: 3.1em;
   margin-bottom: 1em;
+  @media (max-width: ${500}px) {
+       font-size: 24px;
+       line-height: 36px;
+       font-weight: 700;
+      
+    }
+
 `;
 const SectionBody = styled.p`
   width: 80%;
@@ -146,8 +159,8 @@ const SectionContainer = styled.div`
 `;
 
 const Left = styled.div`
-  width: 39em;
-  height: 16em;
+  width: 95%;
+  //height: 16em;
   border-radius: 20px;
   border: 1px solid #9c9c9c4a;
   padding: 1em;
@@ -157,10 +170,13 @@ const Left = styled.div`
   -moz-box-shadow: 3px 4px 14px 12px #0000000d;
   animation: ${AnimateBtn} 2s 1s ease backwards;
   @media (max-width: ${500}px) {
-    width: 95%;
+    //width: 95%;
     padding: 1em 0.5em;
     margin-bottom: 2em;
-      
+    width: 91%;
+    height: unset;
+    box-shadow: 0px 0px 47px 1px rgba(0, 0, 0, 0.12);
+    border-radius: 33px;
     }
 `;
 
@@ -168,6 +184,10 @@ const ServiceBody = styled.div`
   display: grid;
   grid-template-columns: 30% 70%;
   column-gap: 1em;
+  @media (max-width: ${400}px) {
+    grid-template-columns: 35% 65%;
+    }
+
 `;
 
 const ImgBox = styled.div`
@@ -193,8 +213,15 @@ export const ServiceChild = styled.div`
     font-size: 1.5em;
     padding: 1em 0;
     @media (max-width: ${500}px) {
-       font-size:1.4em;
-      
+       font-size: 14px;
+       font-weight: 700;
+       line-height: 21px;
+       padding-right: 1em;
+       padding-bottom: .5em;
+    }
+    @media (max-width: ${400}px) {
+       padding-right: 2em;
+       padding-bottom: .5em;
     }
   }
   > p {
@@ -203,10 +230,15 @@ export const ServiceChild = styled.div`
     //font-weight: 600;
     line-height: 1.7em;
     padding-bottom: 1em;
+    padding-right: 2em;
     color: #07064766;
     @media (max-width: ${500}px) {
-       font-size: .9em;
-      
+       font-size: 13px;
+       line-height: 23px;
+    }
+    @media (max-width: ${390}px) {
+       font-size: 11px;
+       line-height: unset;
     }
   }
 `;

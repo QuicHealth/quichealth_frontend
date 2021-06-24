@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import store from './redux/store'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, Slide } from 'react-toastify'
 
 
 //pages
@@ -52,6 +54,7 @@ class Main extends React.Component {
             <Route exact path='/booked' component={BookedPage} />
           </Switch>
         </Router>
+        <ToastContainer position="top-right" autoClose={4000} hideProgressBar transition={Slide}/>
     </React.StrictMode>
     )
   }

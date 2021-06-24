@@ -54,9 +54,10 @@ export const Container = styled.section`
     height: 100vh;
     margin-bottom: 10em;
     @media (max-width: ${500}px) {
-        padding: 25em 0;
+        padding: 19em 0 0 0;
       
     }
+
 `;
 
 const SubsectionContainer = styled.div`
@@ -66,16 +67,20 @@ const SubsectionContainer = styled.div`
     //width: 80%;
     margin: 0 auto;
     position: relative;
-    padding: 0 6em;
+    padding: 0 5em;
     @media (max-width: ${500}px) {
-       grid-template-columns:100%
-      
+       grid-template-columns:100%;
+       padding: 0 4em;
     }
 `;
 const Segment = styled.div`
     width: 90%;
     margin:1em;
     text-align:center;
+    @media (max-width: ${500}px) {
+       margin-bottom:5em;
+      
+    }
 
     >div{
         justify-content: center;
@@ -83,7 +88,18 @@ const Segment = styled.div`
         >img{
             width: fit-content;
             //height: 8em;
+            @media (max-width: ${500}px) {
+                width: unset;
+            }
         }
+    }
+    p{
+        @media (max-width: ${500}px) {
+            padding-right: 0;
+            width: 90%;
+            margin: 0 auto;
+      
+    }
     }
 
 `;
@@ -99,5 +115,7 @@ const Waves = styled.div`
     >img{
         width: 80%;
         height:30em;
+        position: relative;
+        right: -1em;
     }
 `;

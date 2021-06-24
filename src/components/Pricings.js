@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Containa, IconBox, Title, Margin, Button } from "./SelectAppointment";
 import { Container, MainBody } from "./Appointments";
 import SideBar from "./SideBar";
+import { ProfileImage } from "./Overview";
 
 const PricePlan = ({ type, amount, session, select }) => {
   return (
@@ -56,6 +57,12 @@ function Pricings({ openSidebar }) {
     <Container sidebar={openSidebar}>
       <SideBar />
       <MainBody>
+      <ProfileImage>
+          <img
+            src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+            alt=""
+          />
+        </ProfileImage>
         <PriceComponent />
       </MainBody>
     </Container>
@@ -77,7 +84,7 @@ const PlanBox = styled.div`
   align-items: center;
 
   @media (max-width: ${500}px) {
-       grid-template-columns: 1fr 1fr
+       grid-template-columns: 100%
     }
 `;
 
@@ -103,7 +110,13 @@ export const Plan = styled.div`
   }
   &.select {
     padding: 3em 2em;
+    @media (max-width: ${500}px) {
+      padding: 1em 2em;
+    }
   }
+  @media (max-width: ${500}px) {
+       margin-bottom: 1.3em;
+    }
 `;
 
 const PlanType = styled.h4`
@@ -143,6 +156,9 @@ const SelectPlan = styled.div`
       background-color: #2fa5a9;
       color: #ffffffd6;
       border: 0;
+      @media (max-width: ${500}px) {
+        background-color: #070647;
+      }
     }
   }
 `;

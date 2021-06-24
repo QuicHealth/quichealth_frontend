@@ -1,30 +1,30 @@
-import * as yup from "yup";
+//import * as yup from "yup";
 
-export const userSchema = yup.object().shape({
-  firstname: yup
-    .string()
-    .max(25, "Must be 25 characters or less")
-    .required("First Name is required"),
-  lastname: yup
-    .string()
-    .max(25, "Must be 25 characters or less")
-    .required("Last Name is required"),
-  email: yup.string().email("Email is invalid").required("Email is required"),
-  mobileNo: yup
-    .string()
-    .max(25, "Must be 25 characters or less")
-    .required("Mobile Number is required"),
-  password: yup
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "Password must match")
-    .required("Confirm Password is required"),
-  gender: yup.string().required("gender is required"),
-  dob: yup.string().required("Dob is required"),
-});
+// export const userSchema = yup.object().shape({
+//   firstname: yup
+//     .string()
+//     .max(25, "Must be 25 characters or less")
+//     .required("First Name is required"),
+//   lastname: yup
+//     .string()
+//     .max(25, "Must be 25 characters or less")
+//     .required("Last Name is required"),
+//   email: yup.string().email("Email is invalid").required("Email is required"),
+//   mobileNo: yup
+//     .string()
+//     .max(25, "Must be 25 characters or less")
+//     .required("Mobile Number is required"),
+//   password: yup
+//     .string()
+//     .min(6, "Password must be at least 6 characters")
+//     .required("Password is required"),
+//   confirmPassword: yup
+//     .string()
+//     .oneOf([yup.ref("password"), null], "Password must match")
+//     .required("Confirm Password is required"),
+//   gender: yup.string().required("gender is required"),
+//   dob: yup.string().required("Dob is required"),
+// });
 
 export const userAuth = (values) => {
   let errors = {};
@@ -51,11 +51,11 @@ export const userAuth = (values) => {
   }
 
   //Password confirmation
-  if (values.hasOwnProperty("confirmPassword")) {
-    if (!values.confirmPassword) {
-      errors.confirmPassword = "Password confirmation is required";
-    } else if (values.password !== values.confirmPassword) {
-      errors.confirmPassword = "password must match";
+  if (values.hasOwnProperty("password_confirmation")) {
+    if (!values.password_confirmation) {
+      errors.password_confirmation = "Password confirmation is required";
+    } else if (values.password !== values.password_confirmation) {
+      errors.password_confirmation = "password must match";
     }
   }
 
@@ -78,11 +78,11 @@ export const userAuth = (values) => {
     }
   }
 
-  if (values.hasOwnProperty("mobileNo")) {
-    if (!values.mobileNo) {
-      errors.mobileNo = "Mobile number is required";
-    } else if (values.mobileNo.length < 3) {
-      errors.mobileNo = "Must be at least 25 characters or less";
+  if (values.hasOwnProperty("phone")) {
+    if (!values.phone) {
+      errors.phone = "Mobile number is required";
+    } else if (values.phone.length < 3) {
+      errors.phone = "Must be at least 25 characters or less";
     }
   }
 

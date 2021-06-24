@@ -86,6 +86,13 @@ const BotChat= styled(AppointmentContainer)`
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
     padding: .5em 4em;
+    
+    @media (max-width: ${500}px) {
+        font-size: 13px;
+        line-height: 19.5px;
+        padding: .5em;
+        //height: 4em;
+    }
 
 `;
 

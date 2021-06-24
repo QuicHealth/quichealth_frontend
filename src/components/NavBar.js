@@ -38,7 +38,7 @@ function NavBar() {
     <Container>
       <LogoImg>
         <div>
-          <img src="./images/QuicHealth 1.png" alt="" />
+          <img src="./images/QuicHealth-1.png" alt="" />
         </div>
         <NavbarIcon>
           <IconButton>
@@ -61,7 +61,7 @@ function NavBar() {
         <div style={{ display: "flex" }}>
           <ListItem>
             <SignUpSpan>
-              <StyledLink to="/register" style={{ color: "#ffffffd9" }}>
+              <StyledLink to="/register" style={{ color: "#ffffffd9" , borderRadius: "40px"}}>
                 Sign up
               </StyledLink>
             </SignUpSpan>

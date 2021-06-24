@@ -5,6 +5,7 @@ import StarIcon from "@material-ui/icons/StarOutlined";
 import { InputLabel, Input } from "./RegisterBody";
 import { Container, MainBody, ViewProfile } from "./Appointments";
 import SideBar from "./SideBar";
+import { ProfileImage } from "./Overview";
 
 export const DocAppointment = ({ name, NoIcon }) => {
   return (
@@ -29,7 +30,7 @@ export const DocAppointment = ({ name, NoIcon }) => {
         </DProfile>
         <DTime>
           <Icon>
-            <i className="far fa-clock"></i>
+          <i class="fas fa-calendar-alt"></i> &nbsp;
           </Icon>
           <Time> 10:45AM GMT +1 </Time>
           <Icon>
@@ -66,29 +67,31 @@ const AppointmentComponent = ({sidebar}) => {
           <InputLabel htmlFor="Location"> Location </InputLabel>
           <Input type="text" placeholder="e.g Lekki, Lagos" />
         </div>
+        <SecondInputBox>
+          <div>
+            <InputLabel htmlFor="Time"> Time </InputLabel>
+            <Input type="text" placeholder="01/01/2020" />
+          </div>
+          <div>
+            <InputLabel htmlFor="Persona"> Persona </InputLabel>
+            <Input type="text" placeholder="Adult" />
+          </div>       
+        </SecondInputBox>
         <div>
-          <InputLabel htmlFor="Time"> Time </InputLabel>
-          <Input type="text" placeholder="01/01/2020" />
-        </div>
-        <div>
-          <InputLabel htmlFor="Persona"> Personal </InputLabel>
-          <Input type="text" placeholder="Adult" />
-        </div>
-        <div>
-           <ViewMore><Button>Search</Button></ViewMore>
+           <ViewMore className="search"><Button className="search">Search</Button></ViewMore>
         </div>
       </SelectBox>
       <Bookings sidebar={openSidebar}>
         <Available>Available</Available>
         <Margin></Margin>
         <BookAppointment name="Dr Alice Walton" />
-        <Margin></Margin>
+        <Margin className="booking"></Margin>
         <BookAppointment name="Dr Alice Walton" />
-        <Margin></Margin>
+        <Margin className="booking"></Margin>
         <BookAppointment name="Dr Alice Walton" />
-        <Margin></Margin>
+        <Margin className="booking"></Margin>
         <BookAppointment name="Dr Alice Walton" />
-        <Margin></Margin>
+        <Margin className="booking"></Margin>
 
         <ViewMore>
           <Button className="nobtn">
@@ -105,6 +108,12 @@ const AppointmentComponent = ({sidebar}) => {
     <Container sidebar={openSidebar}>
       <SideBar />
       <MainBody>
+      <ProfileImage>
+          <img
+            src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+            alt=""
+          />
+        </ProfileImage>
         <AppointmentComponent sidebar={openSidebar} />
       </MainBody>
     </Container>
@@ -141,7 +150,7 @@ export const Title = styled.h2`
 `;
 const SelectBox = styled.div`
   display: grid;
-  grid-template-columns: 30% 23% 22% 20%;
+  grid-template-columns: 30% 45% 20%;
   column-gap: 2em;
   width: 100%;
   margin: 2em auto 1em auto;
@@ -149,8 +158,8 @@ const SelectBox = styled.div`
   left: -1em;
   @media (max-width: ${500}px) {
     grid-template-columns: 1fr;
-    width: 100%;
-    //left: 1em;
+    width: 110%;
+    left: -3em;
   }
   > div {
     padding: 0;
@@ -158,24 +167,28 @@ const SelectBox = styled.div`
     @media (max-width: ${500}px) {
       width: 100%;
       margin: 0 auto;
-      padding: 0 3em;
+      padding: 0em;
     }
     input {
       border: 2px solid #2fa5a9;
       width: 100%;
       padding: .5em;
       font-size: 1em;
+      line-height: 21px;
+      background-color: inherit;
       @media (max-width: ${750}px) {
         width: 70%;
       }
       @media (max-width: ${500}px) {
         width: 100%;
         margin-bottom: 1em;
+        border: 1px solid #2fa5a9;
+        height: unset;
       }
     }
     >div{
         @media (max-width: ${500}px) {
-            justify-content:flex-start;
+            //justify-content:flex-s;
       }
     }
   }
@@ -208,6 +221,14 @@ export const Margin = styled.div`
   width: 100%;
   height: 1px;
   background-color: #2fa5a9;
+  @media (max-width: ${500}px){
+    margin-bottom: 2em;
+  }
+  &.booking{
+    @media (max-width: ${500}px) {
+      display: none;
+    }
+  }
 `;
 const BookingDetails = styled.div`
   display: flex;
@@ -215,6 +236,13 @@ const BookingDetails = styled.div`
   width: 100%;
   padding: 1em 0;
   align-items: center;
+
+  @media (max-width: ${500}px) {
+    background-color: #e9e9ef;
+    border-radius: 16px;
+    padding: 1em;
+    margin-bottom:1em;
+}
 `;
 const DocImg = styled.div`
   > img {
@@ -228,6 +256,11 @@ const DocDesc = styled.div`
   display: flex;
   justify-content: space-between;
   width: 16em;
+
+  @media (max-width: ${500}px) {
+    width: unset;
+    justify-content: none;
+  }
 `;
 
 const DocDetails = styled.div`
@@ -267,8 +300,10 @@ const DTime = styled.div`
 const Icon = styled.span`
   padding-left: 0.5em;
   > i {
+    color: #8d82828f;
+    font-weight: 500;
     &.down {
-      color: #8d8282;
+      font-weight: 900;
     }
   }
 `;
@@ -300,13 +335,23 @@ export const Button = styled.button`
     opacity: 0.6;
     transition: all 0.5s;
   }
+  &.search{
+    padding: .6em 2.5em;
+
+    @media (max-width:${500}px) {
+      width: 50%;
+      line-height: 21px;
+      font-size: 1em;
+    }
+  }
 `;
 
 export const ViewMore = styled.div`
   width: 100%;
-  margin: 1.7em auto;
+  margin: 1.4em auto;
   display: flex;
   justify-content: space-around;
+
   @media (max-width: ${500}px) {
     justify-content: center;
     //width: 100%   ;
@@ -319,6 +364,24 @@ export const ViewMore = styled.div`
         width: 100% ;
         padding: .7em 1.5em;
     }
+    &.search{
+      
+    }
   }
   
+`;
+
+const SecondInputBox = styled.div`
+  display: flex;
+  @media (max-width: ${500}px) {
+        display: grid;
+        grid-template-columns:1fr 1fr;
+        column-gap: 2em;
+    }
+    >div{
+      padding-right: 1em;
+      @media (max-width: ${500}px) {
+        padding-right: 0;
+      }
+    }
 `;

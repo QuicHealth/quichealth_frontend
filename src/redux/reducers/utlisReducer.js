@@ -2,7 +2,7 @@ import * as actionTypes from "../actionTypes";
 import initialState from "../state";
 
 const utilsReducer = (state = initialState, action) => {
-  const { type, payload } = action;
+  const { type, payload, user } = action;
 
   switch (type) {
     case actionTypes.SHOW_SIDEBAR:
@@ -15,6 +15,12 @@ const utilsReducer = (state = initialState, action) => {
         ...state,
         openSidebar: false,
       };
+      case actionTypes.SET_CURRENT_USER:
+        return {
+          ...state,
+          isAuthenticated: true,
+          user
+        }
     default:
       return state;
   }

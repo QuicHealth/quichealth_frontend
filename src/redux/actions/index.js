@@ -1,8 +1,11 @@
 import React from "react";
 import * as actionTypes from "./../actionTypes";
 import axios from "axios";
-import history from "./../../history";
+import jwt from 'jsonwebtoken';
 import { toast } from "react-toastify";
+
+import history from "./../../history";
+import {setToken, setAuthorizationToken } from './../setToken';
 
 let token;
 
@@ -26,6 +29,14 @@ export const notShowSidebar = () => (dispatch) => {
     type: actionTypes.NOT_SHOW_SIDEBAR,
   });
 };
+
+//set user
+export const setCurrentUser = (user) => {
+    return {
+      type: actionTypes.SET_CURRENT_USER,
+      user
+    }
+}
 
 // Register or Signup a User
 export const registerUser = (value) => async (dispatch) => {
@@ -59,6 +70,45 @@ export const registerUser = (value) => async (dispatch) => {
     });
     toast.error(
       error.response.data.errors[Object.keys(error.response.data.errors)][0]
+    );
+  }
+};
+
+//Login or Signup a user
+export const signIn = (value) => async (dispatch) => {
+  dispatch({
+    type: actionTypes.IS_LOADING,
+  });
+  try {
+    let response = await api.post("api/v1/login", value);
+    token = response.data.token;
+    setAuthorizationToken(token)
+    console.log(response);
+    toast.success(response.data.message);
+    dispatch({
+        type: actionTypes.SIGNIN_SUCCESS,
+        payload: response
+    })
+    setTimeout(() => {
+        history.push("/dashboard-overview");
+        window.location.reload();
+      }, 2000);
+  } catch (error) {
+      console.log(error.response);
+    if (!error.response) {
+      toast.error(error.message);
+      return dispatch({
+        type: actionTypes.SIGNIN_FAIL,
+        payload: error.message,
+      });
+    }
+    dispatch({
+      type: actionTypes.SIGNIN_FAIL,
+      payload:
+        error.response.data.message,
+    });
+    toast.error(
+      error.response.data.message
     );
   }
 };

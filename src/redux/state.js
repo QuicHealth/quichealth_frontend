@@ -4,5 +4,10 @@ const initialState = {
     isRegistered : false,
     isLoading: false,
     successMessage: "",
-    errorMessage: ""
+    errorMessage: "",
+    isAuthenticated: "",
+    user: "",
+    isLoggedIn: false
 }
+
+export default initialState;

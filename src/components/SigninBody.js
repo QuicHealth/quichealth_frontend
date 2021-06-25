@@ -1,79 +1,164 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import styled from 'styled-components';
-import {TermsParagraph, AlreadyHaveAccount, InputLabel, RegisterMinContainer,FormContainer, InputContainer} from "./RegisterBody";
-import {Slidein} from './RegisterBody'
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import styled from "styled-components";
 
-function SigninBody() {
-    return (
-        <Container>
-            <RegisterMinContainer >
-                <h1>Sign in</h1>
-                <FormContainer>
-                    <InputContainer>
-                        <InputLabel htmlFor="email"> Email</InputLabel>
-                        <div style={{display: "grid"}}> 
-                            <Input type="email" placeholder="example@xxx.com"/> 
-                        </div>
-                        <br />
+import { signIn } from "./../redux/actions";
+import {
+  TermsParagraph,
+  AlreadyHaveAccount,
+  InputLabel,
+  RegisterMinContainer,
+  FormContainer,
+  InputContainer,
+  Text,
+} from "./RegisterBody";
+import { Slidein } from "./RegisterBody";
 
-                        <InputLabel htmlFor="password"> Password</InputLabel>
-                        <div style={{display: "grid"}}> 
-                            <Input type="password" placeholder=""/> 
-                        </div>
-                        <br />
+import { userAuth } from "./../Validations/UserValidation";
+import useForm from "./../utils/useForm";
+import { Spin } from "../pages/Register";
 
-                        <div style={{display: "flex", justifyContent: "space-between", fontSize: "12px"}}>
-                        <AlreadyHaveAccount style={{padding: 0}}><StyledLink to="/reset-password">Forgot password? </StyledLink></AlreadyHaveAccount>  
-                        <AlreadyHaveAccount style={{padding: 0}}>Dont have an account? <StyledLink to="/signin"><b>CreateAccount</b></StyledLink> </AlreadyHaveAccount>
-                        </div>
-                        
-                        <br />
-                        <br />
-                        <submit type="submit"> Continue </submit>
-                        <br />
-                    
-                    </InputContainer>
-                </FormContainer>
-            </RegisterMinContainer>
+function SigninBody(props) {
+  const {
+    values,
+    errors,
+    setErrors,
+    setDisabledSubmit,
+    handleChange,
+    handleBlur,
+    setValues,
+    disabledSubmit,
+    setIsSubmit,
+  } = useForm("login");
 
-            <TermsParagraph style={{paddingTop: "1em"}}> By Clicking <StyledLink to="/signin">"Continue"</StyledLink>, you are agreeing to the QuicHealth Terms of</TermsParagraph>
-            <TermsParagraph> Use, Privacy Policy, and Telehealth Consent Policy</TermsParagraph> 
-        </Container>
-    )
+  const {isLoading, signIn} = props
+
+  const signin = (e) => {
+    e.preventDefault();
+    const formError = userAuth(values);
+    setErrors(formError);
+    setDisabledSubmit(true);
+    setIsSubmit(true);
+    const noErrors = Object.keys(formError).length === 0;
+    if (noErrors) {
+      signIn(values);
+    }
+  };
+  return (
+    <Container>
+      {isLoading ? <Spin /> : ""}
+      <RegisterMinContainer>
+        <h1>Sign in</h1>
+        <FormContainer>
+          <InputContainer>
+            <InputLabel htmlFor="email"> Email</InputLabel>
+            <div style={{ display: "grid" }}>
+              <Input
+                type="email"
+                border={errors.email && "1px solid red"}
+                name="email"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+                placeholder="example@xxx.com"
+              />
+            </div>
+            {errors.email && <Text color="red">{errors.email}</Text>}
+            <br />
+
+            <InputLabel htmlFor="password"> Password</InputLabel>
+            <div style={{ display: "grid" }}>
+              <Input 
+              border={errors.password && "1px solid red"}
+              type="password" 
+              name="password"
+              value={values.password}
+              onChange={handleChange}
+              placeholder="" />
+            </div>
+            {errors.password && <Text color="red">{errors.password}</Text>}
+            <br />
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: "12px",
+              }}
+            >
+              <AlreadyHaveAccount style={{ padding: 0 }}>
+                <StyledLink to="/reset-password">Forgot password? </StyledLink>
+              </AlreadyHaveAccount>
+              <AlreadyHaveAccount style={{ padding: 0 }}>
+                Dont have an account?{" "}
+                <StyledLink to="/signin">
+                  <b>CreateAccount</b>
+                </StyledLink>{" "}
+              </AlreadyHaveAccount>
+            </div>
+
+            <br />
+            <br />
+            <button disabled={disabledSubmit} onClick={signin}  type="submit"> Continue </button>
+            <br />
+          </InputContainer>
+        </FormContainer>
+      </RegisterMinContainer>
+
+      <TermsParagraph style={{ paddingTop: "1em" }}>
+        {" "}
+        By Clicking <StyledLink to="/signin">"Continue"</StyledLink>, you are
+        agreeing to the QuicHealth Terms of
+      </TermsParagraph>
+      <TermsParagraph>
+        {" "}
+        Use, Privacy Policy, and Telehealth Consent Policy
+      </TermsParagraph>
+    </Container>
+  );
 }
 
-export default SigninBody
+const mapStateToProps = (state) => ({
+    isLoading: state.signIn.isLoading,
+})
+const mapDispatchToProps = (dispatch) => {
+    return {
+        signIn: (value) => dispatch(signIn(value))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SigninBody);
 
 const Container = styled.div`
-    background-color: #fafafb;
-    margin: 0em .8em;
-    border-radius: 15px;
-    height: 100vh;
-    width: 98%;
-    padding-top:3em;
-    font-size: 1em;
-    transform-origin: right;
-    animation: ${Slidein} 500ms 0s ease-in-out;
+  background-color: #fafafb;
+  margin: 0em 0.8em;
+  border-radius: 15px;
+  height: 100vh;
+  width: 98%;
+  padding-top: 3em;
+  font-size: 1em;
+  transform-origin: right;
+  animation: ${Slidein} 500ms 0s ease-in-out;
 `;
 
 const Input = styled.input`
-    padding: .6em 2em .6em 1em;
-    border-radius: 14px;
-    border: 1px solid #2fa5a9;
-    outline: none;
-    ::placeholder{
-         color: #bdbdbe;
-    }
+  padding: 0.6em 2em 0.6em 1em;
+  border-radius: 14px;
+  border: 1px solid #2fa5a9;
+  outline: none;
+  ::placeholder {
+    color: #bdbdbe;
+  }
 `;
 
-const StyledLink =styled(Link)`
-    text-decoration: none;
-    color: #070647;
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: #070647;
 
-    &:hover{
-        cursor: pointer;
-        opacity:.8;
-        transition: all .3s;
-    }
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: all 0.3s;
+  }
 `;

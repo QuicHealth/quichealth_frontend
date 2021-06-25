@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect,Switch} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import store from './redux/store'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, Slide } from 'react-toastify'
+import jwt from 'jsonwebtoken';
 
 
 //pages
@@ -27,31 +28,42 @@ import Meeting from './pages/Meeting';
 import ChatBotPage from './pages/ChatBotPage'
 import PaymentPage from './pages/PaymentPage'
 import BookedPage from './pages/BookedPage';
+import { setAuthorizationToken } from './redux/setToken';
+import { setCurrentUser } from './redux/actions';
+import history from './history';
+import { ProtectedRoute } from './components/ProtectedRoute';
+
+if (localStorage.token) {
+  setAuthorizationToken(localStorage.token);
+  store.dispatch(setCurrentUser(jwt.decode(localStorage.token)));
+}
 
 class Main extends React.Component {
   render() {
     return (
       <React.StrictMode>
-        <Router>
+        <Router history={history}>
           <Switch>
-            <Route exact path='/home' component={HomePage} />
+            <Route exact path='/' component={HomePage} />
             <Route exact path='/about-us' component={AboutServices} />
             <Route exact path='/register' component={Register} />
             <Route exact path='/signin' component={Signin} />
             <Route exact path='/reset-password' component={Resetpassword} />
-            <Route exact path='/dashboard-overview' component={DashboardOverview} />
-            <Route exact path='/appointments' component={DashboardAppointments} />
-            <Route exact path='/notifications' component={DashboardNotification} />
-            <Route exact path='/history' component={DashboardHistory} />
-            <Route exact path='/health-profile' component={DashboardHealthProfile} />
-            <Route exact path='/settings' component={DashboardSettings} />
-            <Route exact path='/help' component={DashboardHelp} />
-            <Route exact path='/select-appointment' component={SelectAppointment} />
-            <Route exact path='/pricings' component={Pricing} />
-            <Route exact path='/meeting' component={Meeting} />
-            <Route exact path='/chatbot' component={ChatBotPage} />
-            <Route exact path='/payment' component={PaymentPage} />
-            <Route exact path='/booked' component={BookedPage} />
+            <ProtectedRoute exact path='/dashboard-overview' component={DashboardOverview} />
+            <ProtectedRoute exact path='/appointments' component={DashboardAppointments} />
+            <ProtectedRoute exact path='/notifications' component={DashboardNotification} />
+            <ProtectedRoute exact path='/history' component={DashboardHistory} />
+            <ProtectedRoute exact path='/health-profile' component={DashboardHealthProfile} />
+            <ProtectedRoute exact path='/settings' component={DashboardSettings} />
+            <ProtectedRoute exact path='/help' component={DashboardHelp} />
+            <ProtectedRoute exact path='/select-appointment' component={SelectAppointment} />
+            <ProtectedRoute exact path='/pricings' component={Pricing} />
+            <ProtectedRoute exact path='/meeting' component={Meeting} />
+            <ProtectedRoute exact path='/chatbot' component={ChatBotPage} />
+            <ProtectedRoute exact path='/payment' component={PaymentPage} />
+            <ProtectedRoute exact path='/booked' component={BookedPage} />
+            {/* <Route exact path='/404' component={} /> */}
+            <Redirect to='/404' />
           </Switch>
         </Router>
         <ToastContainer position="top-right" autoClose={4000} hideProgressBar transition={Slide}/>

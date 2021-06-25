@@ -99,15 +99,23 @@ export const userAuth = (values) => {
       errors.dob = "DOB must be characters";
     }
   }
-  if (!values.day){
-      errors.day = "day is required"
+  if (values.hasOwnProperty("day")) {
+    if (!values.day) {
+      errors.day = "day is required";
+    }
   }
-  if (!values.month){
-    errors.month = "month is required"
-}
-if (!values.year){
-    errors.year = "year is required"
-}
+
+  if (values.hasOwnProperty("month")) {
+    if (!values.month) {
+      errors.month = "month is required";
+    }
+  }
+
+  if (values.hasOwnProperty("year")) {
+    if (!values.year) {
+      errors.year = "year is required";
+    }
+  }
 
   return errors;
 };

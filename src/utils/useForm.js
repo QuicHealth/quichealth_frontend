@@ -1,22 +1,28 @@
 import React, {useState} from 'react';
 import { userAuth } from "./../Validations/UserValidation";
 
-const useForm = () => {
+const useForm = (login) => {
     const genders = ["Male", "Female"];
-    const INITIAL_STATE = {
-      firstname: "",
-      lastname: "",
+    let INITIAL_STATE;
+    INITIAL_STATE = {
       email: "",
-      phone: "",
-      password: "",
-      password_confirmation: "",
-      gender: "",
-      day: "",
-      month: "",
-      year: "",
-      dob: "",
-    };
-  
+      password: ""
+    }
+    if(!login){
+      INITIAL_STATE = {
+        firstname: "",
+        lastname: "",
+        email: "",
+        phone: "",
+        password: "",
+        password_confirmation: "",
+        gender: "",
+        day: "",
+        month: "",
+        year: "",
+        dob: "",
+      };
+    }
     const [values, setValues] = useState(INITIAL_STATE);
   
     const [errors, setErrors] = useState({});

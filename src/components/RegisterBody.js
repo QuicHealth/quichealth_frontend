@@ -1,21 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components";
-import  { toast } from "react-toastify";
 
 import { dates, months, years } from "../utils/utils";
 import { userAuth } from "./../Validations/UserValidation";
 import useForm from "./../utils/useForm";
-import { registerUser } from "./../redux/actions"
+import { registerUser } from "./../redux/actions";
 import { Spin } from "../pages/Register";
 
 function RegisterBody(props) {
-    const {values, errors, setErrors, setDisabledSubmit, handleChange, handleBlur, setValues, genders, disabledSubmit, setIsSubmit} = useForm();
-    const { registerUser, errorMessage, successMessage, isLoading } = props
-    const [day, setDay] = useState("");
-    const [month, setMonth] = useState("");
-    const [year, setYear] = useState("");
+  const {
+    values,
+    errors,
+    setErrors,
+    setDisabledSubmit,
+    handleChange,
+    handleBlur,
+    setValues,
+    genders,
+    disabledSubmit,
+    setIsSubmit,
+  } = useForm();
+  const { registerUser, errorMessage, successMessage, isLoading } = props;
+  const [day, setDay] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
 
   const register = (e) => {
     e.preventDefault();
@@ -27,14 +37,10 @@ function RegisterBody(props) {
     setIsSubmit(true);
     const noErrors = Object.keys(formError).length === 0;
     if (noErrors) {
-      registerUser(values)
+      registerUser(values);
     }
   };
 
-  /* 
-  {errorMessage && toast.error(errorMessage)}
-      {successMessage && toast.success(successMessage)}
-  */
   return (
     <Container>
       {isLoading ? <Spin /> : ""}
@@ -273,18 +279,16 @@ function RegisterBody(props) {
   );
 }
 
-const mapStateToProps = state => ({
-      isLoading: state.signup.isLoading,
-      errorMessage: state.signup.errorMessage,
-      successMessage: state.signup.successMessage,
-
-
-})
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = (state) => ({
+  isLoading: state.signup.isLoading,
+  errorMessage: state.signup.errorMessage,
+  successMessage: state.signup.successMessage,
+});
+const mapDispatchToProps = (dispatch) => {
   return {
     registerUser: (value) => dispatch(registerUser(value)),
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterBody);
 

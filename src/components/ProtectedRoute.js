@@ -1,5 +1,6 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
+import { connect } from "react-redux";
 
 export let ProtectedRoute = ({
   component: Component,
@@ -16,7 +17,7 @@ export let ProtectedRoute = ({
           return (
             <Redirect
               to={{
-                pathname: "/login",
+                pathname: "/signin",
                 state: {
                   from: props.location,
                 },
@@ -28,3 +29,10 @@ export let ProtectedRoute = ({
     />
   );
 };
+
+
+const mapStateToProps = (state) =>({
+    authenticated: state.utils.isAuthenticated
+})
+
+ProtectedRoute = connect(mapStateToProps)(ProtectedRoute);

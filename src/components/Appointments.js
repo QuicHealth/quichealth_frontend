@@ -3,19 +3,23 @@ import styled from "styled-components";
 import { connect } from "react-redux";
 import SideBar from "./SideBar";
 import { ProfileImage } from "./Overview";
+import { Icon } from "./SelectAppointment";
 
 function Appointments({ openSidebar }) {
   return (
     <Container sidebar={openSidebar}>
       <SideBar />
       <MainBody>
-        <ProfileImage>
-          <img
-            src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-            alt=""
-          />
-        </ProfileImage>
-        <AppointmentContainerWrapper>
+        <HeadSection sidebar={openSidebar}>
+          <h1>Appointments</h1>
+          <ProfileImage sidebar={openSidebar} className="noTopPadding">
+            <img
+              src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+              alt=""
+            />
+          </ProfileImage>
+        </HeadSection>
+        <AppointmentContainerWrapper sidebar={openSidebar}>
           <AppointmentContainer>
             <CheckBox className="active"></CheckBox>
             <Image>
@@ -25,12 +29,25 @@ function Appointments({ openSidebar }) {
               />
             </Image>
             <Details>
-              <Name>Dr. Alice Walton</Name>
-              <ViewProfile>view profile</ViewProfile>
+              <div>
+                <Name>Dr. Alice Walton</Name>
+                <ViewProfile>view profile</ViewProfile>
+              </div>
+              <Date>
+                <Icon className="noLeftPadding">
+                  <i class="fas fa-calendar-alt"></i>
+                </Icon>
+                <span>07/10/2021</span>
+              </Date>
+              <Time>10:45AM</Time>
+              <Minutes>
+                {" "}
+                <Icon className="noLeftPadding">
+                  <i class="far fa-clock"></i>
+                </Icon>
+                <span>30 Minutes</span>
+              </Minutes>
             </Details>
-            <Date>07/10/2021</Date>
-            <Time>10:45AM</Time>
-            <Minutes>30 Minutes</Minutes>
             <Meeting className="active">Join Meeting</Meeting>
           </AppointmentContainer>
           <AppointmentContainer>
@@ -42,13 +59,28 @@ function Appointments({ openSidebar }) {
               />
             </Image>
             <Details>
-              <Name>Dr. Alice Walton</Name>
-              <ViewProfile>view profile</ViewProfile>
+              <div>
+                <Name>Dr. Alice Walton</Name>
+                <ViewProfile>view profile</ViewProfile>
+              </div>
+              <Date>
+                <Icon className="noLeftPadding">
+                  <i class="fas fa-calendar-alt"></i>
+                </Icon>
+                <span>07/10/2021</span>
+              </Date>
+              <Time>10:45AM</Time>
+              <Minutes>
+                {" "}
+                <Icon className="noLeftPadding">
+                  <i class="far fa-clock"></i>
+                </Icon>
+                <span>30 Minutes</span>
+              </Minutes>
             </Details>
-            <Date>07/10/2021</Date>
-            <Time>10:45AM</Time>
-            <Minutes>30 Minutes</Minutes>
-            <Meeting>-</Meeting>
+            <Meeting>
+              <i class="fas fa-ellipsis-h"></i>
+            </Meeting>
           </AppointmentContainer>
           <AppointmentContainer>
             <CheckBox></CheckBox>
@@ -59,13 +91,28 @@ function Appointments({ openSidebar }) {
               />
             </Image>
             <Details>
-              <Name>Dr. Alice Walton</Name>
-              <ViewProfile>view profile</ViewProfile>
+              <div>
+                <Name>Dr. Alice Walton</Name>
+                <ViewProfile>view profile</ViewProfile>
+              </div>
+              <Date>
+                <Icon className="noLeftPadding">
+                  <i class="fas fa-calendar-alt"></i>
+                </Icon>
+                <span>07/10/2021</span>
+              </Date>
+              <Time>10:45AM</Time>
+              <Minutes>
+                {" "}
+                <Icon className="noLeftPadding">
+                  <i class="far fa-clock"></i>
+                </Icon>
+                <span>30 Minutes</span>
+              </Minutes>
             </Details>
-            <Date>07/10/2021</Date>
-            <Time>10:45AM</Time>
-            <Minutes>30 Minutes</Minutes>
-            <Meeting>-</Meeting>
+            <Meeting>
+              <i class="fas fa-ellipsis-h"></i>
+            </Meeting>
           </AppointmentContainer>
         </AppointmentContainerWrapper>
       </MainBody>
@@ -112,11 +159,16 @@ export const MainBody = styled.div`
   @media (max-width: ${500}px) {
     font-size: 9px;
     padding: 1.5em 1em 3em 1em;
+
+    &.notify{
+      padding: 1.5em 0 1.5em 0;
+
+    }
   }
 `;
 export const AppointmentContainer = styled.div`
   display: grid;
-  grid-template-columns: 5% 10% 20% 15% 15% 15% 20%;
+  grid-template-columns: 5% 10% 65% 20%;
   margin-top: 1em;
   padding: 1em;
   background-color: white;
@@ -135,9 +187,13 @@ export const AppointmentContainer = styled.div`
     padding: 0.5em;
   }
   @media (max-width: ${500}px) {
-    font-size: 7px;
-    padding: 2em;
+    font-size: 11px;
+    padding: 1em;
     width: 100%;
+    grid-template-columns: 5% 23% 47% 25%;
+    background-color: #e9e9ef;
+    border-radius: 16px;
+    box-shadow: none;
   }
 `;
 export const CheckBox = styled.div`
@@ -163,24 +219,46 @@ export const Image = styled.div`
     width: 5em;
     height: 5em;
     border-radius: 100%;
-    ///object-fit: contain;
 
     @media (max-width: ${750}px) {
       width: 4em;
+      height: 4em;
     }
     @media (max-width: ${500}px) {
+      width: 4em;
+      height: 4em;
+
+      &.notify{
+        width: 2.5em;
+        height: 2.5em;
+      }
+    }
+    &.history{
       width: 3em;
+      height: 4em;
+      padding: .5em 0;
     }
   }
 `;
-export const Details = styled.div``;
+export const Details = styled.div`
+  display: grid;
+  grid-template-columns: 30% 20% 25% 20%;
+  align-items: center;
+
+  @media (max-width: ${500}px) {
+    grid-template-columns: 100%;
+  }
+  &.history{
+    grid-template-columns: 100%;
+  }
+`;
 export const Name = styled.h4`
   font-size: 1.3em;
   @media (max-width: ${750}px) {
     font-size: 10px;
   }
   @media (max-width: ${500}px) {
-    font-size: 7px;
+    font-size: 14px;
   }
 `;
 export const ViewProfile = styled.span`
@@ -189,51 +267,62 @@ export const ViewProfile = styled.span`
   font-weight: 500;
 
   @media (max-width: ${750}px) {
-    font-size: 10px;
+    // font-size: 10px;
   }
   @media (max-width: ${500}px) {
-    font-size: 7px;
+    font-size: 11px;
   }
   &:hover {
     opacity: 0.7;
     cursor: pointer;
   }
 `;
-const Date = styled.div`
+export const Date = styled.div`
   @media (max-width: ${750}px) {
     font-size: 10px;
   }
   @media (max-width: ${500}px) {
-    font-size: 7px;
+    display: flex;
+    font-size: 10px;
   }
 `;
-const Time = styled.div`
+export const Time = styled.div`
+  display: block;
+  text-align: center;
+  line-height: 15px;
+
   @media (max-width: ${750}px) {
     font-size: 10px;
   }
   @media (max-width: ${500}px) {
-    font-size: 7px;
+    display: none;
+    font-size: 10px;
     text-align: center;
+    font-weight: 300;
   }
 `;
-const Minutes = styled.div`
+export const Minutes = styled.div`
+  line-height: 15px;
   @media (max-width: ${750}px) {
     font-size: 10px;
   }
   @media (max-width: ${500}px) {
-    font-size: 7px;
+    font-size: 10px;
+    display: flex;
+    font-weight: 300;
   }
 `;
 export const Meeting = styled.div`
   text-align: center;
   width: 8em;
   padding: 0.5em;
+  line-height: 16px;
 
   @media (max-width: ${750}px) {
     font-size: 10px;
   }
   @media (max-width: ${500}px) {
-    font-size: 7px;
+    font-size: 9px;
   }
   &.active {
     background-color: #2fa5a9;
@@ -247,7 +336,33 @@ export const Meeting = styled.div`
 `;
 
 export const AppointmentContainerWrapper = styled.div`
-      @media (max-width: ${500}px) {
-        padding-top: 3em;
+  @media (max-width: ${500}px) {
+    padding-top: 7em;
+    position: relative;
+    width: 100%;
+    /* padding: 0 0em; */
+    right: ${({ sidebar }) => (sidebar ? "0" : "1.5em")};
+    padding: ${({sidebar}) => sidebar? "7em 1em 0em 1em": "7em 0em 0 0em"};
+  }
+`;
+
+export const HeadSection = styled.div`
+  display: grid;
+
+  @media (max-width: ${500}px) {
+    grid-template-columns: 80% 20%;
+  }
+
+  h1 {
+    display: none;
+
+    @media (max-width: ${500}px) {
+      display: block;
+      text-align: center;
+      font-size: 20px;
+      position: relative;
+      left: ${({ sidebar }) => (sidebar ? "0em" : "1em")};
+      top: ${({ sidebar }) => (sidebar ? "0em" : "0.3em")};
+    }
   }
 `;

@@ -7,7 +7,7 @@ const signupReducer = (state = initialState, action) => {
         case actionTypes.SIGNUP_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
+                //isLoading: false,
                 isRegistered: true,
                 successMessage: "Sign up was successful"
             }

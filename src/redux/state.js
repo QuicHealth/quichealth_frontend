@@ -7,7 +7,10 @@ const initialState = {
     errorMessage: "",
     isAuthenticated: "",
     user: "",
-    isLoggedIn: false
+    isLoggedIn: false,
+    link:"",
+    resetToken: localStorage.getItem('resetToken'),
+    data: {}
 }
 
 export default initialState;

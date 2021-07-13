@@ -14,10 +14,10 @@ import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import InfoIcon from "@material-ui/icons/InfoOutlined";
 import LogoutIcon from "@material-ui/icons/ExitToAppOutlined";
 
-import { notShowSidebar, showSidebar } from "./../redux/actions";
+import { notShowSidebar, showSidebar, logout } from "./../redux/actions";
 
 function SideBar(props) {
-  const { openSidebar, showSidebar, notShowSidebar } = props;
+  const { openSidebar, showSidebar, notShowSidebar, logout } = props;
 
   return (
     <Container
@@ -95,9 +95,9 @@ function SideBar(props) {
         </StyledLink>
         <ListItem>
           <ListIcon>
-            <LogoutIcon />
+            <LogoutIcon onClick={()=> logout()} />
           </ListIcon>
-          <ListName>Signout</ListName>
+          <ListName onClick={()=> logout()}>Signout</ListName>
         </ListItem>
       </List>
     </Container>
@@ -112,6 +112,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     showSidebar: () => dispatch(showSidebar()),
     notShowSidebar: () => dispatch(notShowSidebar()),
+    logout: () => dispatch(logout()),
   };
 };
 export default SideBar = connect(mapStateProps, mapDispatchToProps)(SideBar);

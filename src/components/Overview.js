@@ -1,20 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import SideBar from "./SideBar";
+import { getDashboard, pageUp} from "../redux/actions";
 
-function Overview({ openSidebar }) {
+function Overview({ openSidebar, getDashboard, pageUp }) {
+  let firstName;
+  firstName = localStorage.getItem('firstname');
+  useEffect(() => {
+      getDashboard();
+      pageUp()
+  }, [])
+
   return (
     <Container sidebar={openSidebar}>
       <SideBar />
       <MainBody>
-      <ProfileImage>
+      <ProfileImage sidebar={openSidebar}>
           <img
             src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
             alt=""
           />
         </ProfileImage>
-        <BodyHeading>Welcome, <span className="bold">Tobi!,</span></BodyHeading>
+        <BodyHeading>Welcome, <span className="bold name">{firstName}!,</span></BodyHeading>
         <BodySection>
           <BodyHeading className="bold">What do you want to do today?</BodyHeading>
           <BodyOption>
@@ -30,8 +38,13 @@ function Overview({ openSidebar }) {
 const mapStateProps = (state) => ({
   openSidebar: state.utils.openSidebar,
 });
-
-Overview = connect(mapStateProps)(Overview);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getDashboard: () => dispatch(getDashboard()),
+    pageUp: () => dispatch(pageUp())
+  }
+}
+Overview = connect(mapStateProps, mapDispatchToProps)(Overview);
 export default Overview;
 
 const slidein = keyframes`
@@ -86,6 +99,9 @@ const BodyHeading = styled.h2`
       margin: 0 auto;
       line-height: 36px;
     }
+  }
+  &.name {
+    text-transform: capitalize;
   }
 `;
 
@@ -165,10 +181,17 @@ export const ProfileImage = styled.div`
     width: 2.5em;
     border-radius: 100%;
     object-fit: contain;
+    @media (max-width: ${500}px) {
+      object-fit: cover;
+    }
   }
   @media (max-width: ${500}px) {
     display: flex;
     padding: 1em 2em;
     justify-content: flex-end;
+    &.noTopPadding{
+      padding: ${({ sidebar }) => (sidebar ? "0 1em" : "1em")};
+      
+    }
   }
 `;

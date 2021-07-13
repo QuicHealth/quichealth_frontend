@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import SideBar from "./SideBar";
-import { Container, MainBody } from "./Appointments";
+import {
+  AppointmentContainerWrapper,
+  Container,
+  HeadSection,
+  MainBody,
+} from "./Appointments";
 import {
   InputNameContainer,
   InputLabel,
@@ -11,6 +16,7 @@ import {
 } from "./RegisterBody";
 import { SectionFive, SaveChanges, Right } from "./HealthProfile";
 import { Avatar } from "@material-ui/core";
+import { ProfileImage } from "./Overview";
 
 const AccountSection = () => {
   return (
@@ -28,24 +34,24 @@ const AccountSection = () => {
           </ImageButton>
         </SettingsImage>
         <div>
-          <InputNameContainer>
+          <InputNameContainer className="settings">
             <SettingInput type="text" placeholder="Email" />
             <SettingInput type="text" placeholder="Patient Phone number" />
           </InputNameContainer>
-          <br />
-          <InputNameContainer>
+
+          <InputNameContainer className="settings">
             <SettingInput type="text" placeholder="Address" />
             <SettingInput type="text" placeholder="Date of Birth" />
           </InputNameContainer>
-          <br />
+
           <SettingInputBox>
             <Input type="text" placeholder="City" />
             <Input type="text" placeholder="Gender" />
             <Input type="text" placeholder="Emergency contact number" />
           </SettingInputBox>
 
-          <SectionFive>
-            <Right>
+          <SectionFive className="settings">
+            <Right className="settings">
               <SaveChanges>Save changes</SaveChanges>
             </Right>
           </SectionFive>
@@ -58,15 +64,15 @@ const AccountSection = () => {
 const UpdateLoginSection = () => {
   return (
     <>
-      <SettingsForm style={{ marginTop: "1em" }}>
+      <SettingsForm className="update">
         <div>
           <InputLabel htmlFor="">Input Username</InputLabel>
-          <InputNameContainer>
+          <InputNameContainer className="update">
             <SettingInput type="text" placeholder="First Name" />
             <div></div>
           </InputNameContainer>
           <br />
-          <InputNameContainer>
+          <InputNameContainer className="update">
             <SettingInput type="text" placeholder="Last Name" />
             <div></div>
           </InputNameContainer>
@@ -75,25 +81,25 @@ const UpdateLoginSection = () => {
         </div>
         <div>
           <InputLabel htmlFor="">Change Password</InputLabel>
-          <InputNameContainer>
+          <InputNameContainer className="update">
             <SettingInput type="text" placeholder="Current Password" />
             <div></div>
           </InputNameContainer>
           <br />
-          <InputNameContainer>
+          <InputNameContainer className="update">
             <SettingInput type="text" placeholder="New Password" />
             <div></div>
           </InputNameContainer>
           <br />
-          <InputNameContainer>
+          <InputNameContainer className="update">
             <SettingInput type="text" placeholder="Confirm new password" />
             <div></div>
           </InputNameContainer>
           <br />
-          <SectionFive style={{ justifyContent: "flex-start" }}>
+          <SectionFive className="update">
             <div>
               {" "}
-              <SaveChanges>Save changes</SaveChanges>
+              <SaveChanges className="update">Save changes</SaveChanges>
             </div>
             <div></div>
           </SectionFive>
@@ -110,32 +116,43 @@ function Settings({ openSidebar }) {
     <Container sidebar={openSidebar}>
       <SideBar />
       <MainBody>
-        <SettingsContainer sidebar={openSidebar}>
-          <SettingsTab>
-            {!isPassiveTab ? (
-              <>
-                <Tab>Account</Tab>
-                <Tab
-                  className="passive-tab"
-                  onClick={() => setIsPassiveTab(true)}
-                >
-                  Update Login details
-                </Tab>
-              </>
-            ) : (
-              <>
-                <Tab
-                  className="passive-tab"
-                  onClick={() => setIsPassiveTab(false)}
-                >
-                  Account
-                </Tab>
-                <Tab>Update Login details</Tab>
-              </>
-            )}
-          </SettingsTab>
-          {!isPassiveTab ? <AccountSection /> : <UpdateLoginSection />}
-        </SettingsContainer>
+        <HeadSection sidebar={openSidebar}>
+          <h1>Setting</h1>
+          <ProfileImage sidebar={openSidebar} className="noTopPadding">
+            <img
+              src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+              alt=""
+            />
+          </ProfileImage>
+        </HeadSection>
+        <AppointmentContainerWrapper sidebar={openSidebar}>
+          <SettingsContainer sidebar={openSidebar}>
+            <SettingsTab>
+              {!isPassiveTab ? (
+                <>
+                  <Tab>Account</Tab>
+                  <Tab
+                    className="passive-tab"
+                    onClick={() => setIsPassiveTab(true)}
+                  >
+                    Update Login details
+                  </Tab>
+                </>
+              ) : (
+                <>
+                  <Tab
+                    className="passive-tab"
+                    onClick={() => setIsPassiveTab(false)}
+                  >
+                    Account
+                  </Tab>
+                  <Tab>Update Login details</Tab>
+                </>
+              )}
+            </SettingsTab>
+            {!isPassiveTab ? <AccountSection /> : <UpdateLoginSection />}
+          </SettingsContainer>
+        </AppointmentContainerWrapper>
       </MainBody>
     </Container>
   );
@@ -151,18 +168,23 @@ const SettingsContainer = styled.div`
   width: 55em;
   margin: 3em auto;
   background-color: white;
-  transition: all .5s ease ;
+  transition: all 0.5s ease;
   @media (max-width: ${950}px) {
     width: 100%;
     position: relative;
-    left: ${({sidebar}) => (!sidebar? "-2em": "0em")}
+    left: ${({ sidebar }) => (!sidebar ? "0em" : "0em")};
+    background: transparent;
   }
 `;
 const SettingsTab = styled.div`
   display: grid;
   grid-template-columns: 50% 50%;
   width: 100%;
-  text-align: center;
+  //text-align: center;
+  @media (max-width: ${500}px) {
+    grid-template-columns: 30% 70%;
+    column-gap: 1em;
+  }
 `;
 const Tab = styled.span`
   padding: 0.5em 0;
@@ -172,27 +194,53 @@ const Tab = styled.span`
     background-color: #fafafb;
     color: #87878a8c;
     padding: 0.1em 1.3em;
+    @media (max-width: ${500}px) {
+      padding: 0.5em 0;
+      //text-align: center;
+      background-color: unset;
+      font-size: 18px;
+      border: 0;
+    }
   }
   &:hover {
     cursor: pointer;
     opacity: 0.6;
+  }
+  @media (max-width: ${500}px) {
+    font-size: 18px;
+    border-bottom: 2px solid #070647;
+    height: 2.2em;
   }
 `;
 const SettingsTitle = styled.p`
   margin: 2em 1em 0 1em;
   font-size: 1.1em;
   font-weight: 500;
+  display: block;
   @media (max-width: ${750}px) {
     //font-size:12px;
   }
   @media (max-width: ${500}px) {
     font-size: 10px;
+    display: none;
   }
 `;
 const SettingsForm = styled.form`
   width: 100%;
   padding: 1em;
   box-shadow: 0px 2px #2e302f4a;
+
+  @media (max-width: ${500}px) {
+    padding: 0;
+    box-shadow: none;
+  }
+
+  &.update{
+    margin-top: 1em;
+    @media (max-width: ${500}px){
+      margin-top: 5em;
+    }
+  }
 `;
 const SettingsImage = styled.div`
   width: 80%;
@@ -202,15 +250,16 @@ const SettingsImage = styled.div`
   padding: 1em 0 3em 0;
   @media (max-width: ${800}px) {
     width: 100%;
-    grid-template-columns: 22% 78%;
+    grid-template-columns: 30% 70%;
+    margin-top: 3em;
   }
   .MuiAvatar-colorDefault {
     color: #747474;
     width: 6em;
     height: 6em;
     @media (max-width: ${500}px) {
-      width: 2em;
-      height: 2em;
+      width: 4em;
+      height: 4em;
     }
   }
 `;
@@ -230,7 +279,7 @@ const Btn = styled.span`
   box-shadow: 1px 2px #2e302f4a;
 
   @media (max-width: ${500}px) {
-    font-size: 11px;
+    font-size: 14px;
   }
 
   &.remove {
@@ -248,23 +297,38 @@ const Btn = styled.span`
 const SettingInput = styled(Input)`
   width: 47%;
   font-size: 1.1em;
+  line-height: 21px;
+  border: 2px solid #2FA5A9;
+  background-color: transparent;
+  border-radius: 10px;
+  margin-bottom: 0;
   @media (max-width: ${800}px) {
     width: 100%;
   }
   @media (max-width: ${500}px) {
     width: 100%;
     padding: 0.5em;
-    font-size: 8px;
+    font-size: 14px;
+    margin-bottom: 2em;
+    border: 1px solid #000;
   }
 `;
 
 const SettingInputBox = styled(InputTypeBox)`
   grid-template-columns: 30% 32% auto;
   column-gap: 1em;
-  >input{
-    font-size: 1.1em ;
+  > input {
+    font-size: 1.1em;
+    border: 2px solid #2FA5A9;
+    background-color: transparent;
+    border-radius: 10px;
     @media (max-width: ${500}px) {
-    font-size: 8px;
+      font-size: 14px;
+      margin-bottom: 2em;
+      border: 1px solid #000;
     }
+  }
+  @media (max-width: ${500}px) {
+    grid-template-columns: 100%;
   }
 `;

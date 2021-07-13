@@ -62,7 +62,7 @@ const AppointmentComponent = ({sidebar}) => {
   return (
     <Containa>
       <Title>Select Appointment</Title>
-      <SelectBox>
+      <SelectBox sidebar={openSidebar}>
         <div>
           <InputLabel htmlFor="Location"> Location </InputLabel>
           <Input type="text" placeholder="e.g Lekki, Lagos" />
@@ -158,8 +158,8 @@ const SelectBox = styled.div`
   left: -1em;
   @media (max-width: ${500}px) {
     grid-template-columns: 1fr;
-    width: 110%;
-    left: -3em;
+    width: ${({ sidebar}) => (sidebar? "100%": "110%")};
+    left: ${({ sidebar}) => (sidebar? "0em": "-3em")};
   }
   > div {
     padding: 0;
@@ -223,6 +223,11 @@ export const Margin = styled.div`
   background-color: #2fa5a9;
   @media (max-width: ${500}px){
     margin-bottom: 2em;
+    &.notify{
+      background-color: #C4C4C4;
+      margin-bottom: 0;
+      //margin-top: 2em;
+    }
   }
   &.booking{
     @media (max-width: ${500}px) {
@@ -297,7 +302,7 @@ const DTime = styled.div`
   width: 100%;
   justify-content: space-evenly;
 `;
-const Icon = styled.span`
+export const Icon = styled.span`
   padding-left: 0.5em;
   > i {
     color: #8d82828f;
@@ -306,6 +311,14 @@ const Icon = styled.span`
       font-weight: 900;
     }
   }
+  &.noLeftPadding {
+      display: none;
+      @media (max-width: ${500}px) {
+        display: block;
+        padding-left:0;
+        padding-right: .5em;
+      }
+    }
 `;
 const Time = styled.span``;
 

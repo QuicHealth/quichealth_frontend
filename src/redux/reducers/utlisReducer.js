@@ -21,6 +21,11 @@ const utilsReducer = (state = initialState, action) => {
           isAuthenticated: true,
           user
         }
+        case actionTypes.NOT_LOADING:
+          return {
+            ...state,
+            isLoading: false,
+          }
     default:
       return state;
   }

@@ -5,14 +5,16 @@ const signinReducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
     case actionTypes.SIGNIN_SUCCESS:
-      localStorage.setItem("token", payload.data.data.token);
+      const user = `${payload.data.data.firstname} ${payload.data.data.lastname}`
+      localStorage.setItem("user", user);
+      localStorage.setItem("firstname", payload.data.data.firstname);
       return {
         ...state,
-        isLoading: false,
+        //isLoading: false,
         isLoggedIn: true,
         successMessage: payload.data.message,
-        user: `${payload.data.data.firstname} ${payload.data.data.lastname}`,
-        isAuthenticated: true
+        user,
+        isAuthenticated: true,
       };
     case actionTypes.LOAD_USER:
       localStorage.getItem("token", payload);
@@ -29,21 +31,20 @@ const signinReducer = (state = initialState, action) => {
       return {
         ...state,
         successMessage: "",
-        errorMessage: ""
+        errorMessage: "",
       };
     case actionTypes.SIGNIN_FAIL:
-        localStorage.removeItem('token');
-        return {
-            ...state,
-            isLoading: false,
-            isLoggedIn: false,
-            errors: payload,
-            errorMessage: payload
-        }
-        default:
-            return state;
+      localStorage.removeItem("token");
+      return {
+        ...state,
+        isLoading: false,
+        isLoggedIn: false,
+        errors: payload,
+        errorMessage: payload,
+      };
+    default:
+      return state;
   }
 };
-
 
 export default signinReducer;

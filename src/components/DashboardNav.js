@@ -2,13 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 function DashboardNav() {
+  let user;
+  user = localStorage.getItem("user");
   return (
     <Container>
       <LogoImg>
-        <img
-          src="./images/QuicHealth-1.png"
-          alt=""
-        />
+        <img src="./images/QuicHealth-1.png" alt="" />
       </LogoImg>
       <UserName>
         <Image>
@@ -17,7 +16,7 @@ function DashboardNav() {
             alt=""
           />
         </Image>
-        <Name> Oluwatobi, Jemima</Name>
+        <Name> {user}</Name>
       </UserName>
     </Container>
   );
@@ -30,30 +29,30 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 1em 2em;
   @media (max-width: ${700}px) {
-      padding: .5em 1em;
-      //padding-top: 1em;
-    }
+    padding: 0.5em 1em;
+    //padding-top: 1em;
+  }
 `;
 
 const LogoImg = styled.div`
   width: 4em;
   position: relative;
   img {
-        position: absolute;
-        margin-top: -1.5em;
-        width: 170px;
-    @media (max-width: ${500}px){
-          //height: 11em;
-          width: 170px;
-          //height: 72px;
-          position: absolute;
-          margin-top: -2.5em;
-          //width: 10em;
+    position: absolute;
+    margin-top: -1.5em;
+    width: 170px;
+    @media (max-width: ${500}px) {
+      //height: 11em;
+      width: 170px;
+      //height: 72px;
+      position: absolute;
+      margin-top: -2.5em;
+      //width: 10em;
     }
   }
   @media (max-width: ${700}px) {
-      width: 2em;
-    }
+    width: 2em;
+  }
 `;
 
 const UserName = styled.div`
@@ -62,7 +61,7 @@ const UserName = styled.div`
   padding: 1em 2em;
   align-items: center;
   height: unset;
-  @media (max-width: ${500}px){
+  @media (max-width: ${500}px) {
     height: 5.8em;
   }
 `;

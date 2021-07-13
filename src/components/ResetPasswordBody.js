@@ -1,107 +1,156 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
-function ResetPasswordBody() {
-    return (
-        <Container>
-            <RegisterMinContainer >
-                <h1>Password Reset</h1>
-                <FormContainer>
-                    <InputContainer>
+import { Slidein, Text, InputContainer } from "./RegisterBody";
 
-                                <InputLabel htmlFor="email"> Email</InputLabel>
-                                <div style={{display: "grid"}}> 
-                                    <Input type="email" placeholder="example@xxx.com"/> 
-                                </div>
-                                <br />
+import { userAuth } from "./../Validations/UserValidation";
+import useForm from "./../utils/useForm";
+import { Spin } from "../pages/Register";
+import { changePassword, verifyResetToken } from "../redux/actions";
 
-                                <InputLabel htmlFor="password"> New Password</InputLabel>
-                                <div style={{display: "grid"}}> 
-                                    <Input type="password" placeholder=""/> 
-                                </div>
-                                <br />
-                                <InputLabel htmlFor="password">Confirm Password</InputLabel>
-                                <div style={{display: "grid"}}> 
-                                    <Input type="password" placeholder=""/> 
-                                </div>
-                                <br />
-                                <br />
+function ResetPasswordBody(props) {
+  const {
+    values,
+    errors,
+    setErrors,
+    setDisabledSubmit,
+    handleChange,
+    handleBlur,
+    disabledSubmit,
+    setIsSubmit,
+  } = useForm("passwordreset");
 
-                                    <submit type="submit"> Continue </submit>
-                                <br />
-    
-                    
-                    </InputContainer>
-                </FormContainer>
-            </RegisterMinContainer>
+  const { isLoading, resetToken, changePassword, verifyResetToken } = props;
 
-            
-        </Container>
-    )
+  const resetPassword = (e) => {
+    e.preventDefault();
+    const formError = userAuth(values);
+    values.token = resetToken;
+    setErrors(formError);
+    setDisabledSubmit(true);
+    setIsSubmit(true);
+    console.log(values)
+    const noErrors = Object.keys(formError).length === 0;
+    if (noErrors) {
+      changePassword(values);
+    }
+  };
+
+  useEffect(() => {
+    verifyResetToken();
+  }, [])
+
+  return (
+    <Container>
+      {isLoading ? <Spin /> : ""}
+      <RegisterMinContainer>
+        <h1>Password Reset</h1>
+        <FormContainer>
+          <InputContainer>
+            <InputLabel htmlFor="password"> New Password</InputLabel>
+            <div style={{ display: "grid" }}>
+              <Input
+                border={errors.password && "1px solid red"}
+                type="password"
+                name="password"
+                onBlur={handleBlur}
+                value={values.password}
+                onChange={handleChange}
+                placeholder=""
+              />
+            </div>
+            {errors.password && <Text color="red">{errors.password}</Text>}
+            <br />
+            <InputLabel htmlFor="password">Confirm Password</InputLabel>
+            <div style={{ display: "grid" }}>
+              <Input
+                border={errors.password_confirmation && "1px solid red"}
+                type="password"
+                onChange={handleChange}
+                name="password_confirmation"
+                value={values.password_confirmation}
+                onChange={handleChange}
+                placeholder="password"
+              />
+            </div>
+            {errors.password_confirmation && (
+              <Text color="red">{errors.password_confirmation}</Text>
+            )}
+            <br />
+            <br />
+
+            <button
+              disabled={disabledSubmit}
+              onClick={resetPassword}
+              type="submit"
+            >
+              Continue
+            </button>
+            <br />
+          </InputContainer>
+        </FormContainer>
+      </RegisterMinContainer>
+    </Container>
+  );
 }
 
-export default ResetPasswordBody
+const mapStateToProps = (state) => ({
+  isLoading: state.signup.isLoading,
+  resetToken: state.resetPassword.resetToken,
+});
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changePassword: (value) => dispatch(changePassword(value)),
+    verifyResetToken: () => dispatch(verifyResetToken()),
+  };
+};
 
-const Container = styled.div`
-    background-color: #fafafb;
-    margin: 0 .8em;
-    border-radius: 15px;
-    height: 100vh;
-    width: 98%;
+export default connect(mapStateToProps, mapDispatchToProps)(ResetPasswordBody);
+
+export const Container = styled.div`
+  background-color: #fafafb;
+  margin: 0 0.8em;
+  border-radius: 15px;
+  height: 100vh;
+  width: 98%;
 `;
 
-const RegisterMinContainer = styled.div`
-    width: 80%;
-    margin: 0 auto;
-    color: #070647;
-    text-align: center;
-    padding-top: 1.5em;
-    
-    >h1{
-        letter-spacing: -2.7px;
-        font-size: 1.7em;
-        margin-bottom: 1em;
-    }
-`;
-const FormContainer = styled.div`
-    width: 30em;
-    margin: 0 auto;
+export const RegisterMinContainer = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  color: #070647;
+  text-align: center;
+  padding-top: 1.5em;
 
-    @media (max-width: ${700}px) {
-       width:auto;
-    }
-    
+  > h1 {
+    letter-spacing: -2.7px;
+    font-size: 1.7em;
+    margin-bottom: 1em;
+  }
 `;
-const InputContainer = styled.form`
+export const FormContainer = styled.div`
+  width: 30em;
+  margin: 0 auto;
 
-    >Submit{
-        padding: .5em 2.5em;
-        border-radius: 20px;
-        background-color: #2fa5a9;
-        color: white;
-        text-align: center;
-        
-
-        &:hover{
-            cursor: pointer;
-            opacity: .6;
-            transition: all .5s;
-        }
-    }
-`;
-const InputLabel = styled.label`
-    text-align: left;
-    display: flex;
-    font-weight: 700;
-    margin-bottom: .3em;
-`;
-const Input = styled.input`
-    padding: .6em 2em .6em 1em;
-    border-radius: 14px;
-    border: 1px solid #2fa5a9;
-    outline: none;
-    ::placeholder{
-         color: #bdbdbe;
-    }
+  @media (max-width: ${700}px) {
+    width: auto;
+  }
 `;
 
+export const InputLabel = styled.label`
+  text-align: left;
+  display: flex;
+  font-weight: 700;
+  margin-bottom: 0.3em;
+`;
+export const Input = styled.input`
+  padding: 0.6em 2em 0.6em 1em;
+  border-radius: 14px;
+  border: 1px solid #2fa5a9;
+  outline: none;
+  ::placeholder {
+    color: #bdbdbe;
+  }
+`;

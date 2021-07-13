@@ -23,6 +23,17 @@ const useForm = (login) => {
         dob: "",
       };
     }
+    if (login=="passwordreset"){
+      INITIAL_STATE = {
+        password: "",
+        password_confirmation: "",
+      }
+    }
+    if (login=="newpasslink"){
+      INITIAL_STATE = {
+        email: ""
+      }
+    }
     const [values, setValues] = useState(INITIAL_STATE);
   
     const [errors, setErrors] = useState({});

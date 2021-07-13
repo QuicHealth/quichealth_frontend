@@ -163,7 +163,7 @@ function RegisterBody(props) {
             <br />
 
             <InputLabel htmlFor="gender"> Gender </InputLabel>
-            <div style={{ textAlign: "left" }}>
+            <GenderContainer >
               {genders.map((gend, key) => {
                 return (
                   <>
@@ -178,7 +178,6 @@ function RegisterBody(props) {
                     &nbsp;
                     <label
                       htmlFor={gend}
-                      style={{ position: "relative", bottom: ".6em" }}
                     >
                       {" "}
                       {gend}
@@ -192,7 +191,7 @@ function RegisterBody(props) {
                   {errors.gender}
                 </Text>
               )}
-            </div>
+            </GenderContainer>
             <br />
 
             <InputLabel htmlFor="mobile"> Mobile</InputLabel>
@@ -339,7 +338,30 @@ export const InputNameContainer = styled.div`
     display: grid;
     grid-template-columns: 45% 47%;
     column-gap: 2em;
+
+    &.settings {
+      grid-template-columns:100%;
+    }
+   
   }
+  &.settings{
+      margin-bottom:2rem;
+
+      @media (max-width: ${700}px){
+        grid-template-columns: 100%;
+        margin-bottom: 0;
+      }
+      
+    }
+    &.update{
+      margin-bottom:0rem;
+
+      @media (max-width: ${700}px){
+        grid-template-columns: 100%;
+        margin-bottom: 0;
+      }
+      
+    }
 `;
 
 export const RegisterMinContainer = styled.div`
@@ -387,6 +409,9 @@ export const InputLabel = styled.label`
   display: flex;
   font-weight: 700;
   margin-bottom: 0.3em;
+  @media (max-width: ${700}px) {
+    font-size: 18px;
+  }
 `;
 export const Input = styled.input`
   padding: 0.6em 2em 0.6em 1em;
@@ -397,12 +422,23 @@ export const Input = styled.input`
     padding: 0.5em;
     font-size: 10px;
     height: 2.5em;
-    //width: 100%;
     width: ${(props) => (props.width ? "100%" : " inherit")};
   }
   ::placeholder {
     color: #bdbdbe;
   }
+`;
+
+const GenderContainer = styled.div`
+    text-align: left;
+    
+    label{
+      position: relative;
+      bottom: 0em;
+      @media (max-width: ${500}px) {
+        bottom: 0.6em;
+      }
+    }
 `;
 
 export const Text = styled.p`

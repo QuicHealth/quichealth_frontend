@@ -3,125 +3,128 @@ import styled from "styled-components";
 import SideBar from "./SideBar";
 import { connect } from "react-redux";
 import { Avatar } from "@material-ui/core";
-import { Container, MainBody } from "./Appointments";
+import {
+  AppointmentContainerWrapper,
+  Container,
+  HeadSection,
+  MainBody,
+} from "./Appointments";
 import { AnimateBtn } from "./LandingSection";
+import { ProfileImage } from "./Overview";
 
 function HealthProfile({ openSidebar }) {
   return (
     <Container sidebar={openSidebar}>
       <SideBar />
       <MainBodys>
-        <BodyHeading>
-          <Avatar />
-          <h3>Oluwatobi</h3>
-        </BodyHeading>
-        <ProfileSection>
-          <SectionOne>
-            <Left>
-              <Genotype>Blood Group</Genotype>
-              <GenotypeBox></GenotypeBox>
-            </Left>
-            <Right></Right>
-          </SectionOne>
-          <SectionTwo>
-            <Left>
-              <Genotype>Genotype</Genotype>
-              <GenotypeBox></GenotypeBox>
-            </Left>
-            <Right></Right>
-          </SectionTwo>
+        <HeadSection sidebar={openSidebar}>
+          <h1>Health Profile</h1>
+          <ProfileImage sidebar={openSidebar} className="noTopPadding">
+            <img
+              src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+              alt=""
+            />
+          </ProfileImage>
+        </HeadSection>
+        <AppointmentContainerWrapper sidebar={openSidebar}>
+          <BodyHeading>
+            <Avatar />
+            <h3>Oluwatobi Jemima</h3>
+          </BodyHeading>
+          <ProfileSection>
+            <SectionOne>
+              <Left>
+                <Genotype>Blood Group</Genotype>
+                <GenotypeBox></GenotypeBox>
+              </Left>
+              <Right></Right>
+            </SectionOne>
+            <SectionTwo>
+              <Left>
+                <Genotype>Genotype</Genotype>
+                <GenotypeBox></GenotypeBox>
+              </Left>
+              <Right></Right>
+            </SectionTwo>
 
-          <SectionThree>
-            <FullLeft>
-              <MaritalStatus>Marital Status?</MaritalStatus>
-              <SelectBoxContainer>
-                <SelectBox>
-                  <input type="checkbox" />
-                  <label htmlFor="single" style={{ padding: "0 .5em" }}>
-                    single
-                  </label>
-                </SelectBox>
-                <SelectBox>
-                  <input type="checkbox" />
-                  <label htmlFor="married" style={{ padding: "0 .5em" }}>
-                    married
-                  </label>
-                </SelectBox>
-                <SelectBox>
-                  <input type="checkbox" />
-                  <label htmlFor="divorced" style={{ padding: "0 .5em" }}>
-                    divorced
-                  </label>
-                </SelectBox>
-              </SelectBoxContainer>
-            </FullLeft>
-            <Right></Right>
-          </SectionThree>
+            <SectionThree>
+              <FullLeft>
+                <MaritalStatus>Marital Status?</MaritalStatus>
+                <SelectBoxContainer>
+                  <SelectBox>
+                    <input type="checkbox" />
+                    <label htmlFor="single" style={{ padding: "0 .5em" }}>
+                      single
+                    </label>
+                  </SelectBox>
+                  <SelectBox className="left">
+                    <input type="checkbox" />
+                    <label htmlFor="married" style={{ padding: "0 .5em" }}>
+                      married
+                    </label>
+                  </SelectBox>
+                </SelectBoxContainer>
+              </FullLeft>
+              <Right></Right>
+            </SectionThree>
 
-          <SectionFour>
-            <InputTextLeft>
-              <InputText>Are you currently taking any medication?</InputText>
-              <Input type="text" placeholder="Type here..." />
-            </InputTextLeft>
-            <Right>
+            <SectionFour>
               <InputTextLeft>
-                <InputText>Family Medical History</InputText>
+                <InputText>Are you currently taking any medication?</InputText>
                 <Input type="text" placeholder="Type here..." />
               </InputTextLeft>
-            </Right>
-          </SectionFour>
+              <Right>
+                <InputTextLeft>
+                  <InputText>Family Medical History</InputText>
+                  <Input type="text" placeholder="Type here..." />
+                </InputTextLeft>
+              </Right>
+            </SectionFour>
 
-          <SectionFour>
-            <InputTextLeft>
-              <InputText>Do you have any health condition ?</InputText>
-              <Input type="text" placeholder="Type here..." />
-            </InputTextLeft>
-            <Right>
+            <SectionFour>
               <InputTextLeft>
-                <InputText>Peculiar cases</InputText>
+                <InputText>Do you have any health condition ?</InputText>
                 <Input type="text" placeholder="Type here..." />
               </InputTextLeft>
-            </Right>
-          </SectionFour>
-          <SectionFour>
-            <InputTextLeft>
-              <InputText>Any surgery?</InputText>
-              <Input type="text" placeholder="Type here..." />
-            </InputTextLeft>
-            <Right>
+              <Right>
+                <InputTextLeft>
+                  <InputText>Peculiar cases</InputText>
+                  <Input type="text" placeholder="Type here..." />
+                </InputTextLeft>
+              </Right>
+            </SectionFour>
+            <SectionFour>
               <InputTextLeft>
-                <InputText>Do you have any allegies?</InputText>
+                <InputText>Past surgery?</InputText>
                 <Input type="text" placeholder="Type here..." />
               </InputTextLeft>
-            </Right>
-          </SectionFour>
-          <SectionFour>
-            <InputTextLeft>
-              <InputText>Reactions to Allegies</InputText>
-              <Input type="text" placeholder="Type here..." />
-            </InputTextLeft>
-            <Right>
+              <Right>
+                <InputTextLeft>
+                  <InputText>Reaction to any allegies?</InputText>
+                  <Input type="text" placeholder="Type here..." />
+                </InputTextLeft>
+              </Right>
+            </SectionFour>
+            <SectionFour>
               <InputTextLeft>
-                <InputText>Post medical history</InputText>
+                <InputText>Occupation</InputText>
                 <Input type="text" placeholder="Type here..." />
               </InputTextLeft>
-            </Right>
-          </SectionFour>
+              <Right>
+                <InputTextLeft>
+                  <InputText>Post medical history</InputText>
+                  <Input type="text" placeholder="Type here..." />
+                </InputTextLeft>
+              </Right>
+            </SectionFour>
 
-          <SectionFour>
-            <InputTextLeft>
-              <InputText>Occupation</InputText>
-              <Input type="text" placeholder="Type here..." />
-            </InputTextLeft>
-            <Right></Right>
-          </SectionFour>
-
-          <SectionFive>
-            <Right>
-              <SaveChanges>Save changes</SaveChanges>
-            </Right>
-          </SectionFive>
-        </ProfileSection>
+            <SectionFive>
+              <Right className="button">
+                <SaveChanges>Save changes</SaveChanges>
+              </Right>
+            </SectionFive>
+          </ProfileSection>
+        </AppointmentContainerWrapper>
       </MainBodys>
     </Container>
   );
@@ -142,7 +145,7 @@ const MainBodys = styled(MainBody)`
   //font-size: 1.1em;
 
   @media (max-width: ${850}px) {
-    padding: 2em;
+    padding: 2em 0;
     // font-size: 13px;
   }
 `;
@@ -166,18 +169,19 @@ const BodyHeading = styled.h2`
 `;
 const ProfileSection = styled.form`
   margin-top: 1em;
-  border-top: 4px solid #070647;
+  border-top: 2px solid #070647;
   margin-right: 4em;
   width: 45em;
   font-size: 1.1.em;
   padding-top: 1.5em;
   @media (max-width: ${1000}px) {
     width: 100%;
-    font-size: 13px;
+    font-size: 14px;
   }
-  @media (max-width: ${650}px) {
+  @media (max-width: ${500}px) {
     width: 100%;
-    font-size: 10px;
+    font-size: 14px;
+    border-top: 2px solid #070647;
   }
 `;
 const SectionOne = styled.div`
@@ -214,6 +218,19 @@ export const Right = styled.div`
     margin-top: 0.5em;
     padding-left: 0;
   }
+  &.button {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 3.5em;
+  }
+  &.settings {
+    display: flex;
+    justify-content: flex-end;
+    @media (max-width: ${500}px) {
+      display: flex;
+      justify-content: space-around;
+    }
+  }
 `;
 const FullLeft = styled.div`
   width: 25em;
@@ -222,6 +239,7 @@ const FullLeft = styled.div`
   align-items: center;
   @media (max-width: ${1000}px) {
     display: block;
+    width: 100%;
   }
 `;
 
@@ -245,13 +263,16 @@ const SelectBox = styled.div`
     padding-left: 0;
     //display: block;
     //justify-content: flex-start;
+    &.left {
+      padding-left: 1em;
+    }
   }
 `;
 const SelectBoxContainer = styled(Left)`
-  width: 100%;
+  width: 50%;
   @media (max-width: ${1000}px) {
     width: 100%;
-    font-size: 12px;
+    font-size: 14px;
     padding-left: 0;
     align-items: center;
     //display: block;
@@ -265,22 +286,35 @@ const SectionFour = styled(SectionOne)`
 
   @media (max-width: ${850}px) {
     grid-template-columns: 100%;
+    margin-top: 0;
   }
 `;
 
-const InputTextLeft = styled.div``;
+const InputTextLeft = styled.div`
+  @media (max-width: ${500}px) {
+    margin-top: 2em;
+  }
+`;
 
 const InputText = styled.p`
   font-weight: 600;
-  font-size:1.1.em;
+  font-size: 1.1em;
+  @media (max-width: ${500}px) {
+    padding-bottom: 0.7em;
+  }
 `;
 const Input = styled.input`
-  height: 2em;
+  height: 2.5em;
   width: 17em;
-  font-size:1.1em;
+  font-size: 1.1em;
   outline: none;
-  border: 1px solid #070647;
+  border-radius: 10px;
+  border: 1px solid #000000;
   padding-left: 0.5em;
+  @media (max-width: ${500}px) {
+    width: 100%;
+    border: 1px solid #000000;
+  }
 
   ::placeholder {
     color: #bdbdbe;
@@ -289,28 +323,48 @@ const Input = styled.input`
 
 export const SectionFive = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin: 2em 0 3em 0;
 
   @media (max-width: ${850}px) {
     display: block;
+  }
+
+  &.settings {
+    display: flex;
+    justify-content: flex-end;
+    @media (max-width: ${850}px) {
+      justify-content: center;
+    }
+  }
+  &.update {
+    display: flex;
+    justify-content: flex-start;
+    @media (max-width: ${850}px) {
+      justify-content: center;
+    }
   }
 `;
 
 export const SaveChanges = styled.div`
   background-color: #2fa5a9;
   color: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: center;
-  width: 11em;
-  padding: 0.5em;
-  box-shadow: 2px 3px #2e302f4a;
+  width: 14em;
+  padding: .7em 0.5em;
+  line-height: 21px;
+  font-weight: 600;
   animation: ${AnimateBtn} 2s 2s ease backwards;
   &:hover {
     opacity: 0.7;
     cursor: pointer;
   }
   @media (max-width: ${900}px) {
-    font-size: 0.9em;
+    font-size: 14px;
+  }
+
+  &.settings {
+    justify-content: flex-end;
   }
 `;

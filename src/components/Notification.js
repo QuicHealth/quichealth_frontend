@@ -7,25 +7,30 @@ import {
   MainBody,
   CheckBox,
   Image,
+  HeadSection,
   AppointmentContainer,
   AppointmentContainerWrapper,
 } from "./Appointments";
 import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 import SearchIcon from "@material-ui/icons/Search";
 import { ProfileImage } from "./Overview";
+import { Margin } from "./SelectAppointment";
 
 function Notification({ openSidebar }) {
   return (
     <Container sidebar={openSidebar}>
       <SideBar />
-      <MainBody>
-        <ProfileImage>
-          <img
-            src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-            alt=""
-          />
-        </ProfileImage>
-        <AppointmentContainerWrapper>
+      <MainBody className="notify">
+        <HeadSection sidebar={openSidebar}>
+          <h1>Notifications</h1>
+          <ProfileImage sidebar={openSidebar}  className="noTopPadding">
+            <img
+              src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+              alt=""
+            />
+          </ProfileImage>
+        </HeadSection>
+        <AppointmentContainerWrapper sidebar={openSidebar}>
           <NotificationSearch>
             <LeftSide>
               <SelectBox>
@@ -41,12 +46,31 @@ function Notification({ openSidebar }) {
             </RightSide>
           </NotificationSearch>
 
+          <Margin className="notify" />
+          <AppointmentContainers>
+            <CheckBox className="active"></CheckBox>
+            <Image >
+              <img
+                src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+                alt=""
+                className="notify"
+              />
+            </Image>
+            <Details>
+              Tobi, you've got 3 minutes left to your appointment,try not to
+              keep the doctor waiting...
+            </Details>
+            <Time>10:45AM</Time>
+          </AppointmentContainers>
+
+          <Margin className="notify" />
           <AppointmentContainers>
             <CheckBox className="active"></CheckBox>
             <Image>
               <img
                 src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
                 alt=""
+                className="notify"
               />
             </Image>
             <Details>
@@ -55,26 +79,15 @@ function Notification({ openSidebar }) {
             </Details>
             <Time>10:45AM</Time>
           </AppointmentContainers>
-          <AppointmentContainers>
-            <CheckBox className="active"></CheckBox>
-            <Image>
-              <img
-                src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-                alt=""
-              />
-            </Image>
-            <Details>
-              Tobi, you've got 3 minutes left to your appointment,try not to
-              keep the doctor waiting...
-            </Details>
-            <Time>10:45AM</Time>
-          </AppointmentContainers>
+
+          <Margin className="notify" />
           <AppointmentContainers>
             <CheckBox></CheckBox>
             <Image>
               <img
                 src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
                 alt=""
+                className="notify"
               />
             </Image>
             <Details>
@@ -83,12 +96,15 @@ function Notification({ openSidebar }) {
             </Details>
             <Time>10:45AM</Time>
           </AppointmentContainers>
+
+          <Margin className="notify" />
           <AppointmentContainers>
             <CheckBox></CheckBox>
             <Image>
               <img
                 src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
                 alt=""
+                className="notify"
               />
             </Image>
             <Details>
@@ -97,6 +113,7 @@ function Notification({ openSidebar }) {
             </Details>
             <Time>10:45AM</Time>
           </AppointmentContainers>
+          <Margin className="notify" />
         </AppointmentContainerWrapper>
       </MainBody>
     </Container>
@@ -111,7 +128,7 @@ export default Notification = connect(mapStateProps)(Notification);
 
 export const AppointmentContainers = styled(AppointmentContainer)`
   display: grid;
-  grid-template-columns: 5% 10% 70% 15%;
+  grid-template-columns: 5% 10% 75% 10%;
   @media (max-width: ${800}px) {
     font-size: 15px;
   }
@@ -119,15 +136,31 @@ export const AppointmentContainers = styled(AppointmentContainer)`
   @media (max-width: ${750}px) {
     font-size: 11px;
   }
-  @media (max-width: ${400}px) {
-    font-size: 7px;
+  @media (max-width: ${500}px) {
+    font-size: 11px;
+    line-height: 16px;
+    padding: .5em .5em;
+    margin: 0.5em 0;
+    background-color: transparent;
+    border-radius: 0;
   }
 `;
 
-const Details = styled.div``;
+const Details = styled.div`
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+`;
 const Time = styled.div`
   width: 100%;
   text-align: center;
+
+  @media (max-width: ${500}px) {
+    font-size: 10px;
+    line-height: 16px;
+    text-align: center;
+    color: #c5c5c5;
+  }
 `;
 const LeftSide = styled.div`
   display: grid;
@@ -139,19 +172,27 @@ const LeftSide = styled.div`
     cursor: pointer;
     opacity: 0.5;
   }
+  @media (max-width: ${500}px) {
+    display: none;
+  }
 `;
 const RightSide = styled.div``;
 const NotificationSearch = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media (max-width: ${500}px) {
+    display: grid;
+    grid-template-columns: 100%;
+    margin-bottom: 7em;
+  }
 `;
 const SelectBox = styled.div``;
 
 export const NotificationSearchIcon = styled(SearchIcon)`
   position: absolute;
   margin-left: 10px;
-  color: #00000054;
+  color: #c4c4c4;
 `;
 
 export const Search = styled.div`
@@ -159,15 +200,34 @@ export const Search = styled.div`
   align-items: center;
   padding: 20px;
   border-radius: 2px;
+  @media (max-width: ${500}px) {
+    width: 100%;
+    padding: 10px 0;
+  }
+
+  &.help {
+    padding: 5px 20px 20px 20px;
+    @media (max-width: ${500}px) {
+      padding: 0;
+    }
+
+  }
 `;
 
 export const SearchInput = styled.input`
   outline-width: 0;
-  border: none;
+  border: 1px solid #c4c4c4;
+  border-radius: 10px;
   flex: 1;
   padding: 10px;
   padding-left: 40px;
   width: 25em;
+  font-size: 13px;
+  line-height: 15px;
+
+  ::placeholder {
+    color: #c4c4c4;
+  }
 
   @media (max-width: ${500}px) {
     width: 100%;

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components";
 
-import { signIn } from "./../redux/actions";
+import { signIn, pageUp } from "./../redux/actions";
 import {
   TermsParagraph,
   AlreadyHaveAccount,
@@ -32,7 +32,7 @@ function SigninBody(props) {
     setIsSubmit,
   } = useForm("login");
 
-  const {isLoading, signIn} = props
+  const { isLoading, signIn } = props;
 
   const signin = (e) => {
     e.preventDefault();
@@ -45,88 +45,109 @@ function SigninBody(props) {
       signIn(values);
     }
   };
+
+  useEffect(() => {
+    pageUp();
+  }, []);
+
   return (
-    <Container>
-      {isLoading ? <Spin /> : ""}
-      <RegisterMinContainer>
-        <h1>Sign in</h1>
-        <FormContainer>
-          <InputContainer>
-            <InputLabel htmlFor="email"> Email</InputLabel>
-            <div style={{ display: "grid" }}>
-              <Input
-                type="email"
-                border={errors.email && "1px solid red"}
-                name="email"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-                placeholder="example@xxx.com"
-              />
-            </div>
-            {errors.email && <Text color="red">{errors.email}</Text>}
-            <br />
+    <>
+      {isLoading ? (
+        <Spin />
+      ) : (
+        <Container>
+          <RegisterMinContainer>
+            <h1>Sign in</h1>
+            <FormContainer>
+              <InputContainer>
+                <InputLabel htmlFor="email"> Email</InputLabel>
+                <div style={{ display: "grid" }}>
+                  <Input
+                    type="email"
+                    border={errors.email && "1px solid red"}
+                    name="email"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                    placeholder="example@xxx.com"
+                  />
+                </div>
+                {errors.email && <Text color="red">{errors.email}</Text>}
+                <br />
 
-            <InputLabel htmlFor="password"> Password</InputLabel>
-            <div style={{ display: "grid" }}>
-              <Input 
-              border={errors.password && "1px solid red"}
-              type="password" 
-              name="password"
-              value={values.password}
-              onChange={handleChange}
-              placeholder="" />
-            </div>
-            {errors.password && <Text color="red">{errors.password}</Text>}
-            <br />
+                <InputLabel htmlFor="password"> Password</InputLabel>
+                <div style={{ display: "grid" }}>
+                  <Input
+                    border={errors.password && "1px solid red"}
+                    type="password"
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    placeholder=""
+                  />
+                </div>
+                {errors.password && <Text color="red">{errors.password}</Text>}
+                <br />
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontSize: "12px",
-              }}
-            >
-              <AlreadyHaveAccount style={{ padding: 0 }}>
-                <StyledLink to="/reset-password">Forgot password? </StyledLink>
-              </AlreadyHaveAccount>
-              <AlreadyHaveAccount style={{ padding: 0 }}>
-                Dont have an account?{" "}
-                <StyledLink to="/signin">
-                  <b>CreateAccount</b>
-                </StyledLink>{" "}
-              </AlreadyHaveAccount>
-            </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: "12px",
+                  }}
+                >
+                  <AlreadyHaveAccount style={{ padding: 0 }}>
+                    <StyledLink to="/reset-password">
+                      Forgot password?{" "}
+                    </StyledLink>
+                  </AlreadyHaveAccount>
+                  <AlreadyHaveAccount style={{ padding: 0 }}>
+                    Dont have an account?{" "}
+                    <StyledLink to="/signin">
+                      <b>CreateAccount</b>
+                    </StyledLink>{" "}
+                  </AlreadyHaveAccount>
+                </div>
 
-            <br />
-            <br />
-            <button disabled={disabledSubmit} onClick={signin}  type="submit"> Continue </button>
-            <br />
-          </InputContainer>
-        </FormContainer>
-      </RegisterMinContainer>
+                <br />
+                <br />
+                <button
+                  disabled={disabledSubmit}
+                  onClick={signin}
+                  type="submit"
+                >
+                  {" "}
+                  Continue{" "}
+                </button>
+                <br />
+              </InputContainer>
+            </FormContainer>
+          </RegisterMinContainer>
 
-      <TermsParagraph style={{ paddingTop: "1em" }}>
-        {" "}
-        By Clicking <StyledLink to="/signin">"Continue"</StyledLink>, you are
-        agreeing to the QuicHealth Terms of
-      </TermsParagraph>
-      <TermsParagraph>
-        {" "}
-        Use, Privacy Policy, and Telehealth Consent Policy
-      </TermsParagraph>
-    </Container>
+          <TermsParagraph style={{ paddingTop: "1em" }}>
+            {" "}
+            By Clicking <StyledLink to="/signin">"Continue"</StyledLink>, you
+            are agreeing to the QuicHealth Terms of
+          </TermsParagraph>
+          <TermsParagraph>
+            {" "}
+            Use, Privacy Policy, and Telehealth Consent Policy
+          </TermsParagraph>
+        </Container>
+      )}
+    </>
   );
 }
 
 const mapStateToProps = (state) => ({
-    isLoading: state.signIn.isLoading,
-})
+  isLoading: state.signIn.isLoading,
+});
 const mapDispatchToProps = (dispatch) => {
-    return {
-        signIn: (value) => dispatch(signIn(value))
-    }
-}
+  return {
+    signIn: (value) => dispatch(signIn(value)),
+    pageUp: () => dispatch(pageUp())
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SigninBody);
 

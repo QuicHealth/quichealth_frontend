@@ -1,30 +1,105 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import SideBar from "./SideBar";
-import { getDashboard, pageUp} from "../redux/actions";
+import { getDashboard, pageUp } from "../redux/actions";
+import { FitnessCenterSharp } from "@material-ui/icons";
+import { hospitalLongLat } from "./PlacesCoordinate";
 
 function Overview({ openSidebar, getDashboard, pageUp }) {
   let firstName;
-  firstName = localStorage.getItem('firstname');
+  let lat = 0;
+  let lon = 0;
+
+  firstName = localStorage.getItem("firstname");
+  const [userAddress, setUserAddress] = useState("");
+
+  const getLocation = () => {
+    if ("geolocation" in navigator) {
+      console.log("Available");
+      navigator.geolocation.getCurrentPosition(function (position) {
+        lon = position.coords.longitude;
+        lat = position.coords.latitude;
+        localStorage.setItem("latitude", lat);
+        localStorage.setItem("longitude", lon);
+        console.log({ lat, lon });
+      });
+      getAddressofCoordinate();
+    } else {
+      console.log("Not Available");
+    }
+  };
+
+  const getAddressofCoordinate = () => {
+    const longitude = localStorage.getItem("longitude");
+    const latitude = localStorage.getItem("latitude");
+    fetch(
+      `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+    )
+      .then((response) => response.json())
+      .then((data) => setUserAddress(data.results[0].formatted))
+      .catch((error) => alert(error));
+
+    console.log(getClosestHospital(latitude, longitude));
+  };
+
+  const getClosestHospital = (latitude, longitude) => {
+    let distanceInKm = {};
+    //get the distance of each hospital to the user location
+    for (const [key, value] of Object.entries(hospitalLongLat)) {
+      distanceInKm[key] = getDistance([latitude, longitude], value)
+    }
+    
+    //const sortByShortestDistance ;
+   const sortByShortestDistance = Object.entries(distanceInKm)
+   const result =  sortByShortestDistance.sort((a, b) => a[1] - b[1] )
+   return Object.fromEntries(result);
+  };
+
+  const getDistance = (origin, destination) => {
+    const [lat1, lon1] = origin;
+    const [lat2, lon2] = destination;
+    const radius = 6371; //km 25.99765215004212
+
+    const differenceOfLatitude = Math.radians(lat2 - lat1);
+    const differenceOfLongitude = Math.radians(lon2 - lon1);
+    const a =
+      Math.sin(differenceOfLatitude / 2) * Math.sin(differenceOfLatitude / 2) +
+      Math.cos(Math.radians(lat1)) *
+        Math.cos(Math.radians(lat2)) *
+        Math.sin(differenceOfLongitude / 2) *
+        Math.sin(differenceOfLongitude / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = radius * c;
+    return distance;
+  };
+
+   Math.radians = (degree) => degree * Math.PI / 180;
+
   useEffect(() => {
-      getDashboard();
-      pageUp()
-  }, [])
+    //getDashboard();
+    //pageUp()
+    getLocation();
+  }, []);
 
   return (
     <Container sidebar={openSidebar}>
+      {console.log(userAddress)}
       <SideBar />
       <MainBody>
-      <ProfileImage sidebar={openSidebar}>
+        <ProfileImage sidebar={openSidebar}>
           <img
             src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
             alt=""
           />
         </ProfileImage>
-        <BodyHeading>Welcome, <span className="bold name">{firstName}!,</span></BodyHeading>
+        <BodyHeading>
+          Welcome, <span className="bold name">{firstName}!,</span>
+        </BodyHeading>
         <BodySection>
-          <BodyHeading className="bold">What do you want to do today?</BodyHeading>
+          <BodyHeading className="bold">
+            What do you want to do today?
+          </BodyHeading>
           <BodyOption>
             <Option className="left-option">Book a physical appointment</Option>
             <Option>Consult an expert online</Option>
@@ -41,9 +116,9 @@ const mapStateProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     getDashboard: () => dispatch(getDashboard()),
-    pageUp: () => dispatch(pageUp())
-  }
-}
+    pageUp: () => dispatch(pageUp()),
+  };
+};
 Overview = connect(mapStateProps, mapDispatchToProps)(Overview);
 export default Overview;
 
@@ -89,10 +164,11 @@ const BodyHeading = styled.h2`
     padding: 2em 0;
     padding-bottom: 0;
   }
-  &.bold, span {
+  &.bold,
+  span {
     font-weight: 700;
   }
-  &.bold{
+  &.bold {
     @media (max-width: ${700}px) {
       font-size: 24px;
       width: 80%;
@@ -173,7 +249,6 @@ const Option = styled.div`
   }
 `;
 
-
 export const ProfileImage = styled.div`
   padding-right: 1em;
   display: none;
@@ -189,9 +264,8 @@ export const ProfileImage = styled.div`
     display: flex;
     padding: 1em 2em;
     justify-content: flex-end;
-    &.noTopPadding{
+    &.noTopPadding {
       padding: ${({ sidebar }) => (sidebar ? "0 1em" : "1em")};
-      
     }
   }
 `;

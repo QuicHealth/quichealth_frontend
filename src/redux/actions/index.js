@@ -56,7 +56,6 @@ export const registerUser = (value) => async (dispatch) => {
       window.location.reload();
     }, 2000);
   } catch (error) {
-    console.log(error.message, error.response)
     if (!error.response) {
       toast.error(error.message);
       return dispatch({

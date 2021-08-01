@@ -319,6 +319,20 @@ export const Icon = styled.span`
         padding-right: .5em;
       }
     }
+  &.big{
+    font-size: 2em;
+    padding-right: .2em;
+  }
+    &.noIcon{
+    display: block;
+    @media (max-width: ${500}px) {
+        display: none;
+
+        > i {
+
+        }
+    }
+  }
 `;
 const Time = styled.span``;
 

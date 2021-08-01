@@ -13,7 +13,7 @@ export const GetStarted = ({ firsth1, secondh1, body, buttonName }) => {
         <SectionText>{body}</SectionText>
 
         <div>
-          <SaveChanges>
+          <SaveChanges className="landingPage">
             <ButtonLink to="/register">{buttonName}</ButtonLink>
           </SaveChanges>
         </div>

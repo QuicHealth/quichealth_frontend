@@ -4,12 +4,13 @@ import { connect } from "react-redux";
 import SideBar from "./SideBar";
 import { ProfileImage } from "./Overview";
 import { Icon } from "./SelectAppointment";
+import ExpertSidebar from "./Expert/ExpertSidebar";
 
-function Appointments({ openSidebar }) {
+function Appointments({expert, openSidebar }) {
   return (
     <Container sidebar={openSidebar}>
-      <SideBar />
-      <MainBody>
+      {expert ? <ExpertSidebar />: <SideBar />}
+      <MainBody sidebar={openSidebar}>
         <HeadSection sidebar={openSidebar}>
           <h1>Appointments</h1>
           <ProfileImage sidebar={openSidebar} className="noTopPadding">
@@ -144,7 +145,7 @@ export const Container = styled.div`
 export const MainBody = styled.div`
   background: linear-gradient(180deg, #e7e7ed, #ffffff);
   border-top-right-radius: 15px;
-  padding: 3em 2em;
+  padding: ${({sidebar}) => (sidebar? "3em 2em;": "5em 7em 0em 0em;")};
   margin-right: 0.7em;
   font-size: 1em;
 
@@ -165,6 +166,7 @@ export const MainBody = styled.div`
 
     }
   }
+
 `;
 export const AppointmentContainer = styled.div`
   display: grid;

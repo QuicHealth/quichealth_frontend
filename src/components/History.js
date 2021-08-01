@@ -18,12 +18,13 @@ import {
 import { AppointmentContainers } from "./Notification";
 import { Icon } from "./SelectAppointment";
 import { ProfileImage } from "./Overview";
+import ExpertSidebar from "./Expert/ExpertSidebar";
 
-function History({ openSidebar }) {
+function History({expert, openSidebar }) {
   return (
     <Container sidebar={openSidebar}>
-      <SideBar />
-      <MainBody>
+      {expert? <ExpertSidebar/>: <SideBar />}
+      <MainBody sidebar={openSidebar}>
         <HeadSection sidebar={openSidebar}>
           <h1>History</h1>
           <ProfileImage sidebar={openSidebar} className="noTopPadding">

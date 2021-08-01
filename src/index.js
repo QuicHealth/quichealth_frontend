@@ -33,6 +33,13 @@ import { setCurrentUser } from './redux/actions';
 import history from './history';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import NewPasswordLinkPage from './pages/NewPasswordLinkPage';
+import ExpertDashboardOverview from './pages/Expert/ExpertDashboardOverview';
+import ExpertAppointmentPage from './pages/Expert/ExpertAppointmentPage';
+import ExpertNotification from './pages/Expert/ExpertNotification';
+import ExpertHistory from './pages/Expert/ExpertHistory';
+import ExpertSetting from './pages/Expert/ExpertSetting';
+import ExpertHelp from './pages/Expert/ExpertHelp';
+import ExpertHealthProfilePage from './pages/Expert/ExpertHealthProfilePage';
 
 if (localStorage.token) {
   setAuthorizationToken(localStorage.token);
@@ -64,6 +71,13 @@ class Main extends React.Component {
             <Route exact path='/chatbot' component={ChatBotPage} />
             <Route exact path='/payment' component={PaymentPage} />
             <Route exact path='/booked' component={BookedPage} />
+            <Route exact path='/expert-overview' component={ExpertDashboardOverview}/>
+            <Route exact path='/expert-appointments' component={ExpertAppointmentPage}/>
+            <Route exact path='/expert-notifications' component={ExpertNotification}/>
+            <Route exact path='/expert-history' component={ExpertHistory}/>
+            <Route exact path='/expert-settings' component={ExpertSetting}/>
+            <Route exact path='/expert-help' component={ExpertHelp}/>
+            <Route exact path='/expert-healthProfile' component={ExpertHealthProfilePage}/>
             {/* <Route exact path='/404' component={} /> */}
             <Redirect to='/404' />
           </Switch>

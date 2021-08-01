@@ -10,15 +10,16 @@ import ArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import SendIcon from "@material-ui/icons/Send";
 import CallIcon from "@material-ui/icons/Call";
 import { ProfileImage } from "./Overview";
+import ExpertSidebar from "./Expert/ExpertSidebar";
 
-function Help({ openSidebar }) {
+function Help({ expert, openSidebar }) {
   const [isDown, setIsDown] = useState(true);
   const toggleDown = () => setIsDown(!isDown);
 
   return (
     <Container sidebar={openSidebar}>
-      <SideBar />
-      <MainBody>
+      {expert ? <ExpertSidebar />: <SideBar />}
+      <MainBody sidebar={openSidebar}>
         <HeadSection sidebar={openSidebar}>
           <h1>Help</h1>
           <ProfileImage sidebar={openSidebar} className="noTopPadding">

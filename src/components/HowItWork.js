@@ -188,16 +188,21 @@ const GetStartedBox = styled(SectionContainer)`
     line-height: 36px;
     font-size: 24px;
     width: 299px;
-    height: 56px;
+    padding: 0.7em 0.5em;
+    //height: 56px;
     @media (max-width: ${500}px) {
       margin: 0 auto;
       font-weight: 600;
       font-size: 18px;
       line-height: 27px;
       width: 13em;
+      padding: 0.5em 0.5em;
     }
     >a{
         font-size: 24px;
+        @media (max-width: ${500}px){
+          font-size: 18px;
+        }
     }
   }
   > div > h1 {

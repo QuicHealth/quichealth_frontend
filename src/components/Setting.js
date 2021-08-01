@@ -17,6 +17,7 @@ import {
 import { SectionFive, SaveChanges, Right } from "./HealthProfile";
 import { Avatar } from "@material-ui/core";
 import { ProfileImage } from "./Overview";
+import ExpertSidebar from "./Expert/ExpertSidebar";
 
 const AccountSection = () => {
   return (
@@ -109,13 +110,13 @@ const UpdateLoginSection = () => {
   );
 };
 
-function Settings({ openSidebar }) {
+function Settings({ expert, openSidebar }) {
   const [isPassiveTab, setIsPassiveTab] = useState(false);
 
   return (
     <Container sidebar={openSidebar}>
-      <SideBar />
-      <MainBody>
+      {expert ? <ExpertSidebar />:<SideBar /> }
+      <MainBody sidebar={openSidebar}>
         <HeadSection sidebar={openSidebar}>
           <h1>Setting</h1>
           <ProfileImage sidebar={openSidebar} className="noTopPadding">

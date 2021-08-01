@@ -131,7 +131,7 @@ const slidein = keyframes`
     }
 `;
 
-const Container = styled.div`
+export const Container = styled.div`
   display: grid;
   grid-template-columns: ${({ sidebar }) => (sidebar ? "20% 80%" : "10% auto")};
   height: 100vh;
@@ -143,14 +143,14 @@ const Container = styled.div`
     grid-template-columns: 12% 88%;
   }
 `;
-const MainBody = styled.div`
+export const MainBody = styled.div`
   background: linear-gradient(180deg, #e7e7ed, #ffffff);
   border-top-right-radius: 15px;
   margin-right: 0.7em;
   transition: all 2s ease-in;
 `;
 
-const BodyHeading = styled.h2`
+export const BodyHeading = styled.h2`
   color: #070647;
   padding: 1em;
   font-size: 2em;
@@ -254,6 +254,8 @@ export const ProfileImage = styled.div`
   display: none;
   > img {
     width: 2.5em;
+    margin-top: .5em;
+    height: 2.5em;
     border-radius: 100%;
     object-fit: contain;
     @media (max-width: ${500}px) {

@@ -15,12 +15,13 @@ import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 import SearchIcon from "@material-ui/icons/Search";
 import { ProfileImage } from "./Overview";
 import { Margin } from "./SelectAppointment";
+import ExpertSidebar from "./Expert/ExpertSidebar";
 
-function Notification({ openSidebar }) {
+function Notification({ expert, openSidebar }) {
   return (
     <Container sidebar={openSidebar}>
-      <SideBar />
-      <MainBody className="notify">
+      {expert ? <ExpertSidebar /> :<SideBar />}
+      <MainBody sidebar={openSidebar} className="notify">
         <HeadSection sidebar={openSidebar}>
           <h1>Notifications</h1>
           <ProfileImage sidebar={openSidebar}  className="noTopPadding">

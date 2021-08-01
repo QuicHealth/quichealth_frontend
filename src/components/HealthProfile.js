@@ -136,7 +136,7 @@ const mapStateProps = (state) => ({
 
 export default HealthProfile = connect(mapStateProps)(HealthProfile);
 
-const MainBodys = styled(MainBody)`
+export const MainBodys = styled(MainBody)`
   background-color: #fafafb;
   border-top-right-radius: 15px;
   margin-right: 0.7em;
@@ -145,12 +145,11 @@ const MainBodys = styled(MainBody)`
   //font-size: 1.1em;
 
   @media (max-width: ${850}px) {
-    padding: 2em 0;
-    // font-size: 13px;
+    padding:${({sidebar}) => (sidebar? "2em 1em": "2em 0" )};
   }
 `;
 
-const BodyHeading = styled.h2`
+export const BodyHeading = styled.h2`
   color: #070647;
   padding: 1em 0em;
   display: flex;
@@ -166,14 +165,22 @@ const BodyHeading = styled.h2`
     width: 3em;
     height: 3em;
   }
+  &.expert {
+    .MuiAvatar-colorDefault {
+    width: 4em;
+    height: 4em;
+    }
+  }
 `;
-const ProfileSection = styled.form`
+export const ProfileSection = styled.form`
   margin-top: 1em;
   border-top: 2px solid #070647;
   margin-right: 4em;
   width: 45em;
   font-size: 1.1.em;
   padding-top: 1.5em;
+  position: relative;
+  
   @media (max-width: ${1000}px) {
     width: 100%;
     font-size: 14px;
@@ -182,6 +189,14 @@ const ProfileSection = styled.form`
     width: 100%;
     font-size: 14px;
     border-top: 2px solid #070647;
+
+    &.expert {
+    right: ${({sidebar}) => (!sidebar? "1em": "0" )};
+    border-top: 0;
+    }
+  }
+  &.expert {
+    border-top: 0;
   }
 `;
 const SectionOne = styled.div`
@@ -296,14 +311,14 @@ const InputTextLeft = styled.div`
   }
 `;
 
-const InputText = styled.p`
+export const InputText = styled.p`
   font-weight: 600;
   font-size: 1.1em;
   @media (max-width: ${500}px) {
     padding-bottom: 0.7em;
   }
 `;
-const Input = styled.input`
+export const Input = styled.input`
   height: 2.5em;
   width: 17em;
   font-size: 1.1em;
@@ -314,6 +329,9 @@ const Input = styled.input`
   @media (max-width: ${500}px) {
     width: 100%;
     border: 1px solid #000000;
+  }
+  &.expert{
+    width: 100%;
   }
 
   ::placeholder {
@@ -366,5 +384,8 @@ export const SaveChanges = styled.div`
 
   &.settings {
     justify-content: flex-end;
+  }
+  &.landingPage{
+    line-height: unset;
   }
 `;

@@ -117,11 +117,11 @@ const mapDispatchToProps = (dispatch) => {
 };
 export default SideBar = connect(mapStateProps, mapDispatchToProps)(SideBar);
 
-const Container = styled.div`
+export const Container = styled.div`
   position: relative;
   transition: all 400ms ease;
 `;
-const List = styled.ul`
+export const List = styled.ul`
   list-style: none;
   display: flex;
   font-size:1.2em;
@@ -134,7 +134,7 @@ const List = styled.ul`
     transform: perspective(1200px) rotateY(0deg);
   }
 `;
-const IconBox = styled.div`
+export const IconBox = styled.div`
   position: absolute;
   left: 0;
   padding-left: 2em;
@@ -158,7 +158,7 @@ const IconBox = styled.div`
     // opacity: .6;
   }
 `;
-const StyledLink = styled(NavLink)`
+export const StyledLink = styled(NavLink)`
   width: 100%;
   margin: auto;
   display: flex;
@@ -188,7 +188,7 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
-const ListItem = styled.li`
+export const ListItem = styled.li`
   //opacity: 0.4;
   width: 100%;
   margin: auto;
@@ -214,7 +214,7 @@ const ListItem = styled.li`
     }
   }
 `;
-const BackArrow = styled.li`
+export const BackArrow = styled.li`
   opacity: 1 !important;
   text-align: right;
   padding-right: 1em;
@@ -225,7 +225,7 @@ const BackArrow = styled.li`
     opacity: 0.8;
   }
 `;
-const ListIcon = styled.span`
+export const ListIcon = styled.span`
   position: relative;
   top: 0.5em;
   padding-right: 0.5em;
@@ -246,7 +246,7 @@ const ListIcon = styled.span`
     }
   }
 `;
-const ListName = styled.span`
+export const ListName = styled.span`
   @media (max-width: ${700}px) {
     display: none;
   }

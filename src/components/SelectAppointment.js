@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import StarIcon from "@material-ui/icons/StarOutlined";
-import { InputLabel, Input } from "./RegisterBody";
+import { InputLabel, Input, InputTypeBox, Select } from "./RegisterBody";
 import { Container, MainBody, ViewProfile } from "./Appointments";
 import SideBar from "./SideBar";
 import { ProfileImage } from "./Overview";
+import { getHospitals, getLocation } from "../redux/actions";
+import { locations } from "../utils/utils";
+import useForm from "../utils/useForm";
+import { hospitalLongLat } from "./PlacesCoordinate";
 
 export const DocAppointment = ({ name, NoIcon }) => {
   return (
@@ -30,7 +34,7 @@ export const DocAppointment = ({ name, NoIcon }) => {
         </DProfile>
         <DTime>
           <Icon>
-          <i class="fas fa-calendar-alt"></i> &nbsp;
+            <i class="fas fa-calendar-alt"></i> &nbsp;
           </Icon>
           <Time> 10:45AM GMT +1 </Time>
           <Icon>
@@ -53,68 +57,178 @@ export const BookAppointment = ({ name }) => {
   );
 };
 
+ //calculate distance in KM using longitude and latitude
+ const getDistance = (origin, destination) => {
+  const [lat1, lon1] = origin;
+  const [lat2, lon2] = destination;
+  const radius = 6371; //km 25.99765215004212
+
+  const differenceOfLatitude = Math.radians(lat2 - lat1);
+  const differenceOfLongitude = Math.radians(lon2 - lon1);
+  const a =
+    Math.sin(differenceOfLatitude / 2) * Math.sin(differenceOfLatitude / 2) +
+    Math.cos(Math.radians(lat1)) *
+      Math.cos(Math.radians(lat2)) *
+      Math.sin(differenceOfLongitude / 2) *
+      Math.sin(differenceOfLongitude / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = radius * c;
+  return distance;
+};
+
+ Math.radians = (degree) => degree * Math.PI / 180;
+
+  // the appointment function
+  const AppointmentComponent = ({hospitals, sidebar, values, errors, locationAccess, setValues, handleChange}) => {
+    const longitude = localStorage.getItem("longitude");
+    const latitude = localStorage.getItem("latitude");
+    const [location, setLocation] = useState("");
+   
+    const hospitalsWithDistance = hospitals.map(hospital => {
+      return {
+        ...hospital,
+        distance: getDistance([latitude, longitude], [parseFloat(hospital.latitude), parseFloat(hospital.longitude)])
+      }
+    })
+    console.log(hospitalsWithDistance.sort((a, b) => a.distance - b.distance))
+    const [filterHospitals, setFilterHospitals] = useState([])
+    
+    // filter onSubmit
+  const getDoctor = (e) => {
+    e.preventDefault();
+    console.log(values.location, "valiues")
+     const filteredHospitals = hospitals.filter(hospital => {
+      return hospital.city == values.location || hospital.state == values.location
+    })
+    setFilterHospitals(filteredHospitals)
+}
+
+
+    return (
+      <Containa>
+        <Title>Select Appointment</Title>
+        <SelectBox sidebar={sidebar}>
+          <div>
+            <InputLabel htmlFor="Location"> Location </InputLabel>
+            <InputTypeBox className="selectAppointment">
+              <Select
+                className="selectAppointment"
+                border={errors.location && "1px solid red"}
+                name="location"
+                value={location}
+                style={location? {color: "#000000"} : {color : "#bdbdbe"}} 
+                onChange={(e) => {
+                  const selectedLocation = e.target.value;
+                  setLocation(selectedLocation);
+                  setValues({
+                    ...values,
+                    [e.target.name]: e.target.value,
+                  });
+                  
+                }}
+              >
+
+                <option value="" hidden>
+                  Location
+                </option>
+                {Object.entries(locations).map(([key, value], id) => {
+                  return (
+                    <option key={id} value={value}>
+                      {value}
+                    </option>
+                  );
+                })}
+              </Select>
+            </InputTypeBox>
+          </div>
+          <SecondInputBox>
+            <div>
+              <InputLabel htmlFor="Date"> Date </InputLabel>
+              <Input
+                type="date"
+                name="date"
+                border={errors.date && "1px solid red"}
+                value={values.date}
+                onChange={handleChange}
+                placeholder="01/01/2020"
+              />
+            </div>
+            <div>
+              <InputLabel htmlFor="Persona"> Persona </InputLabel>
+              <Input type="text" placeholder="Adult" />
+            </div>
+          </SecondInputBox>
+          <div>
+            <ViewMore className="search">
+              <Button className="search" onClick={getDoctor}>Search</Button>
+            </ViewMore>
+          </div>
+        </SelectBox>
+        <Bookings sidebar={sidebar}>
+          <Available>Available</Available>
+          <Margin></Margin>
+          {
+           locationAccess ? 
+           (hospitalsWithDistance.sort((a, b) => a.distance - b.distance).map(hospital => {
+            return hospital.doctors.map(doctor => {
+             return <BookAppointment key={hospital.id} name={doctor.name} />
+            })
+           }) 
+           )
+           : 
+           (
+            filterHospitals?.map(hospital => {
+              return hospital.doctors.map(doctor => {
+                return <BookAppointment key={hospital.id} name={doctor.name} />
+              })
+            })
+           )
+          }
+          <Margin className="booking"></Margin>
+
+          <ViewMore>
+            <Button className="nobtn">
+              View more <i class="fas fa-angle-right"></i>{" "}
+            </Button>
+          </ViewMore>
+        </Bookings>
+      </Containa>
+    );
+  };
+
 
 //The appointment component functions
-function SelectAppointments({ openSidebar }) {
+function SelectAppointments({ openSidebar, getHospitals, hospitals, locationAccess }) {
 
-// the appointment function
-const AppointmentComponent = ({sidebar}) => {
-  return (
-    <Containa>
-      <Title>Select Appointment</Title>
-      <SelectBox sidebar={openSidebar}>
-        <div>
-          <InputLabel htmlFor="Location"> Location </InputLabel>
-          <Input type="text" placeholder="e.g Lekki, Lagos" />
-        </div>
-        <SecondInputBox>
-          <div>
-            <InputLabel htmlFor="Time"> Time </InputLabel>
-            <Input type="text" placeholder="01/01/2020" />
-          </div>
-          <div>
-            <InputLabel htmlFor="Persona"> Persona </InputLabel>
-            <Input type="text" placeholder="Adult" />
-          </div>       
-        </SecondInputBox>
-        <div>
-           <ViewMore className="search"><Button className="search">Search</Button></ViewMore>
-        </div>
-      </SelectBox>
-      <Bookings sidebar={openSidebar}>
-        <Available>Available</Available>
-        <Margin></Margin>
-        <BookAppointment name="Dr Alice Walton" />
-        <Margin className="booking"></Margin>
-        <BookAppointment name="Dr Alice Walton" />
-        <Margin className="booking"></Margin>
-        <BookAppointment name="Dr Alice Walton" />
-        <Margin className="booking"></Margin>
-        <BookAppointment name="Dr Alice Walton" />
-        <Margin className="booking"></Margin>
+  const {
+    values,
+    errors,
+    setErrors,
+    setDisabledSubmit,
+    handleChange,
+    handleBlur,
+    setValues,
+    disabledSubmit,
+    setIsSubmit,
+  } = useForm("selectAppointment");
+  
 
-        <ViewMore>
-          <Button className="nobtn">
-            View more <i class="fas fa-angle-right"></i>{" "}
-          </Button>
-        </ViewMore>
-      </Bookings>
-    </Containa>
-  );
-};
+  useEffect(() => {
+    //getHospitals();
+  },[]);
 
 
   return (
     <Container sidebar={openSidebar}>
       <SideBar />
       <MainBody>
-      <ProfileImage>
+        <ProfileImage>
           <img
             src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
             alt=""
           />
         </ProfileImage>
-        <AppointmentComponent sidebar={openSidebar} />
+        <AppointmentComponent hospitals={hospitals} sidebar={openSidebar} values={values} errors={errors} locationAccess={locationAccess} setValues={setValues} handleChange={handleChange}/>
       </MainBody>
     </Container>
   );
@@ -122,16 +236,26 @@ const AppointmentComponent = ({sidebar}) => {
 
 const mapStateProps = (state) => ({
   openSidebar: state.utils.openSidebar,
+  hospitals: state.hospital.hospitals,
+  locationAccess: state.hospital.locationAccess,
 });
 
-export default SelectAppointments = connect(mapStateProps)(SelectAppointments);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getHospitals: () => dispatch(getHospitals()),
+  };
+};
+export default SelectAppointments = connect(
+  mapStateProps,
+  mapDispatchToProps
+)(SelectAppointments);
 
 export const Containa = styled.div`
   padding: 2em 0;
   //background: linear-gradient(180deg, #e7e7ed, #ffffff);
   margin: 0 auto;
   margin-right: 0.5em;
-  margin-top:5em;
+  margin-top: 5em;
   margin-left: 0.5em;
   color: #070647;
   border-radius: 15px;
@@ -158,8 +282,8 @@ const SelectBox = styled.div`
   left: -1em;
   @media (max-width: ${500}px) {
     grid-template-columns: 1fr;
-    width: ${({ sidebar}) => (sidebar? "100%": "110%")};
-    left: ${({ sidebar}) => (sidebar? "0em": "-3em")};
+    width: ${({ sidebar }) => (sidebar ? "100%" : "110%")};
+    left: ${({ sidebar }) => (sidebar ? "0em" : "-3em")};
   }
   > div {
     padding: 0;
@@ -172,7 +296,7 @@ const SelectBox = styled.div`
     input {
       border: 2px solid #2fa5a9;
       width: 100%;
-      padding: .5em;
+      padding: 0.5em;
       font-size: 1em;
       line-height: 21px;
       background-color: inherit;
@@ -186,9 +310,9 @@ const SelectBox = styled.div`
         height: unset;
       }
     }
-    >div{
-        @media (max-width: ${500}px) {
-            //justify-content:flex-s;
+    > div {
+      @media (max-width: ${500}px) {
+        //justify-content:flex-s;
       }
     }
   }
@@ -204,7 +328,7 @@ const Bookings = styled.div`
   @media (max-width: ${500}px) {
     width: 100%;
     padding: 0 0em;
-    right: ${({sidebar}) => (sidebar? "0em": "2em")};
+    right: ${({ sidebar }) => (sidebar ? "0em" : "2em")};
   }
 `;
 
@@ -221,15 +345,15 @@ export const Margin = styled.div`
   width: 100%;
   height: 1px;
   background-color: #2fa5a9;
-  @media (max-width: ${500}px){
+  @media (max-width: ${500}px) {
     margin-bottom: 2em;
-    &.notify{
-      background-color: #C4C4C4;
+    &.notify {
+      background-color: #c4c4c4;
       margin-bottom: 0;
       //margin-top: 2em;
     }
   }
-  &.booking{
+  &.booking {
     @media (max-width: ${500}px) {
       display: none;
     }
@@ -246,8 +370,8 @@ const BookingDetails = styled.div`
     background-color: #e9e9ef;
     border-radius: 16px;
     padding: 1em;
-    margin-bottom:1em;
-}
+    margin-bottom: 1em;
+  }
 `;
 const DocImg = styled.div`
   > img {
@@ -312,25 +436,24 @@ export const Icon = styled.span`
     }
   }
   &.noLeftPadding {
-      display: none;
-      @media (max-width: ${500}px) {
-        display: block;
-        padding-left:0;
-        padding-right: .5em;
-      }
+    display: none;
+    @media (max-width: ${500}px) {
+      display: block;
+      padding-left: 0;
+      padding-right: 0.5em;
     }
-  &.big{
-    font-size: 2em;
-    padding-right: .2em;
   }
-    &.noIcon{
+  &.big {
+    font-size: 2em;
+    padding-right: 0.2em;
+  }
+  &.noIcon {
     display: block;
     @media (max-width: ${500}px) {
-        display: none;
+      display: none;
 
-        > i {
-
-        }
+      > i {
+      }
     }
   }
 `;
@@ -362,10 +485,10 @@ export const Button = styled.button`
     opacity: 0.6;
     transition: all 0.5s;
   }
-  &.search{
-    padding: .6em 2.5em;
+  &.search {
+    padding: 0.6em 2.5em;
 
-    @media (max-width:${500}px) {
+    @media (max-width: ${500}px) {
       width: 50%;
       line-height: 21px;
       font-size: 1em;
@@ -383,32 +506,30 @@ export const ViewMore = styled.div`
     justify-content: center;
     //width: 100%   ;
   }
-  >button{
+  > button {
     @media (max-width: ${750}px) {
-        width: 70% ;
+      width: 70%;
     }
     @media (max-width: ${500}px) {
-        width: 100% ;
-        padding: .7em 1.5em;
+      width: 100%;
+      padding: 0.7em 1.5em;
     }
-    &.search{
-      
+    &.search {
     }
   }
-  
 `;
 
 const SecondInputBox = styled.div`
   display: flex;
   @media (max-width: ${500}px) {
-        display: grid;
-        grid-template-columns:1fr 1fr;
-        column-gap: 2em;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2em;
+  }
+  > div {
+    padding-right: 1em;
+    @media (max-width: ${500}px) {
+      padding-right: 0;
     }
-    >div{
-      padding-right: 1em;
-      @media (max-width: ${500}px) {
-        padding-right: 0;
-      }
-    }
+  }
 `;

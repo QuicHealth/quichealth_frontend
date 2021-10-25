@@ -1,12 +1,12 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import styled from "styled-components";
+
 import MenuIcon from "@material-ui/icons/Menu";
 import { IconButton } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import BackIcon from "@material-ui/icons/ArrowBack";
 import DateIcon from "@material-ui/icons/DateRange";
+import ScheduleIcon from "@material-ui/icons/Schedule";
 import Notification from "@material-ui/icons/NotificationsOutlined";
 import HistoryIcon from "@material-ui/icons/BusinessCenterOutlined";
 import UserIcon from "@material-ui/icons/PermIdentityOutlined";
@@ -76,6 +76,7 @@ function ExpertSidebar(props) {
             </ListIcon>
             <ListName>History</ListName>
           </StyledLink>
+
           <StyledLink to="/expert-healthProfile" activeClassName="active">
             <ListIcon>
               <UserIcon />
@@ -87,6 +88,12 @@ function ExpertSidebar(props) {
               <SettingsIcon />
             </ListIcon>
             <ListName>Settings</ListName>
+          </StyledLink>
+          <StyledLink to="/schedule-time" activeClassName="active">
+            <ListIcon>
+              <ScheduleIcon />
+            </ListIcon>
+            <ListName>Schedule</ListName>
           </StyledLink>
           <StyledLink to="/expert-help" activeClassName="active">
             <ListIcon>

@@ -5,7 +5,7 @@ const signinReducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
     case actionTypes.SIGNIN_SUCCESS:
-      const user = `${payload.data.data.firstname} ${payload.data.data.lastname}`
+      const user = `${payload.data.data.firstname} ${payload.data.data.lastname}`;
       localStorage.setItem("user", user);
       localStorage.setItem("firstname", payload.data.data.firstname);
       return {
@@ -26,6 +26,11 @@ const signinReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: true,
+      };
+    case actionTypes.NOT_LOADING:
+      return {
+        ...state,
+        isLoading: false,
       };
     case actionTypes.REMOVE_MESSAGE:
       return {

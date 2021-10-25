@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components";
@@ -6,7 +6,7 @@ import styled, { keyframes } from "styled-components";
 import { dates, months, years } from "../utils/utils";
 import { userAuth } from "./../Validations/UserValidation";
 import useForm from "./../utils/useForm";
-import { registerUser } from "./../redux/actions";
+import { pageUp, registerUser } from "./../redux/actions";
 import { Spin } from "../pages/Register";
 
 function RegisterBody(props) {
@@ -41,6 +41,9 @@ function RegisterBody(props) {
     }
   };
 
+  useEffect(() => {
+    pageUp()
+  })
   return (
     <Container>
       {isLoading ? <Spin /> : ""}
@@ -89,6 +92,7 @@ function RegisterBody(props) {
               <Select
                 border={errors.day && "1px solid red"}
                 name="day"
+                style={day? {color: "#000000"} : {color : "#bdbdbe"}} 
                 onChange={(e) => {
                   const selectedDay = e.target.value;
                   setDay(selectedDay);
@@ -113,6 +117,7 @@ function RegisterBody(props) {
               <Select
                 border={errors.month && "1px solid red"}
                 name="month"
+                style={month? {color: "#000000"} : {color : "#bdbdbe"}} 
                 onChange={(e) => {
                   const selectedMonth = e.target.value;
                   setMonth(selectedMonth);
@@ -136,12 +141,13 @@ function RegisterBody(props) {
               </Select>
               <Select
                 border={errors.year && "1px solid red"}
+                style={year? {color: "#000000"} : {color : "#bdbdbe"}} 
                 name="year"
                 onChange={(e) => {
                   const selectedYear = e.target.value;
                   setYear(selectedYear);
                   setDisabledSubmit(false);
-                  setValues({
+                  setValues({ 
                     ...values,
                     [e.target.name]: e.target.value,
                   });
@@ -150,8 +156,8 @@ function RegisterBody(props) {
                 <option value="" hidden>
                   year
                 </option>
-                {dates().map((date) => {
-                  return <option value={date}>{date}</option>;
+                {dates().map((date, key) => {
+                  return <option value={date} key={key}>{date}</option>;
                 })}
               </Select>
             </InputTypeBox>
@@ -163,7 +169,7 @@ function RegisterBody(props) {
             <br />
 
             <InputLabel htmlFor="gender"> Gender </InputLabel>
-            <GenderContainer >
+            <GenderContainer>
               {genders.map((gend, key) => {
                 return (
                   <>
@@ -176,12 +182,7 @@ function RegisterBody(props) {
                       onChange={handleChange}
                     />{" "}
                     &nbsp;
-                    <label
-                      htmlFor={gend}
-                    >
-                      {" "}
-                      {gend}
-                    </label>
+                    <label htmlFor={gend}> {gend}</label>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                   </>
                 );
@@ -286,6 +287,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     registerUser: (value) => dispatch(registerUser(value)),
+    pageUp: () => dispatch(pageUp()),
   };
 };
 
@@ -328,6 +330,12 @@ export const InputTypeBox = styled.div`
   @media (max-width: ${700}px) {
     column-gap: 1.5em;
   }
+  &.selectAppointment {
+    display: unset;
+  }
+  option {
+    background-color: white;
+  }
 `;
 
 export const InputNameContainer = styled.div`
@@ -340,28 +348,25 @@ export const InputNameContainer = styled.div`
     column-gap: 2em;
 
     &.settings {
-      grid-template-columns:100%;
+      grid-template-columns: 100%;
     }
-   
   }
-  &.settings{
-      margin-bottom:2rem;
+  &.settings {
+    margin-bottom: 2rem;
 
-      @media (max-width: ${700}px){
-        grid-template-columns: 100%;
-        margin-bottom: 0;
-      }
-      
+    @media (max-width: ${700}px) {
+      grid-template-columns: 100%;
+      margin-bottom: 0;
     }
-    &.update{
-      margin-bottom:0rem;
+  }
+  &.update {
+    margin-bottom: 0rem;
 
-      @media (max-width: ${700}px){
-        grid-template-columns: 100%;
-        margin-bottom: 0;
-      }
-      
+    @media (max-width: ${700}px) {
+      grid-template-columns: 100%;
+      margin-bottom: 0;
     }
+  }
 `;
 
 export const RegisterMinContainer = styled.div`
@@ -430,15 +435,15 @@ export const Input = styled.input`
 `;
 
 const GenderContainer = styled.div`
-    text-align: left;
-    
-    label{
-      position: relative;
-      bottom: 0em;
-      @media (max-width: ${500}px) {
-        bottom: 0.6em;
-      }
+  text-align: left;
+
+  label {
+    position: relative;
+    bottom: 0em;
+    @media (max-width: ${500}px) {
+      bottom: 0.6em;
     }
+  }
 `;
 
 export const Text = styled.p`
@@ -480,7 +485,7 @@ export const TermsParagraph = styled.p`
   }
 `;
 
-const Select = styled.select`
+export const Select = styled.select`
   padding: 0.6em 2em 0.6em 1em;
   border-radius: 14px;
   border: ${(props) => props.border || "1px solid #2fa5a9"};
@@ -490,6 +495,14 @@ const Select = styled.select`
     padding: 0.5em;
     font-size: 10px;
   }
-  option {
+  &.selectAppointment {
+    width: 100%;
+    font-size: 1em;
+    margin-bottom: 1em;
+    @media (max-width: ${500}px) {
+      padding: 0.7em 0.5em;
+      font-size: 1em;
+      background-color: inherit;
+    }
   }
 `;

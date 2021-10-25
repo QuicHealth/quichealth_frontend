@@ -2,33 +2,18 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import SideBar from "./SideBar";
-import { getDashboard, pageUp } from "../redux/actions";
+import { getDashboard, pageUp, getLocation, getHospitals } from "../redux/actions";
 import { FitnessCenterSharp } from "@material-ui/icons";
 import { hospitalLongLat } from "./PlacesCoordinate";
+import history from "./../history";
+//import { useHistory } from 'react-router';
+import { useHistory } from "react-router-dom";
 
-function Overview({ openSidebar, getDashboard, pageUp }) {
+function Overview({ openSidebar, getDashboard, pageUp, getLocation,  getHospitals }) {
   let firstName;
-  let lat = 0;
-  let lon = 0;
-
+  let routerHistory = useHistory();
   firstName = localStorage.getItem("firstname");
   const [userAddress, setUserAddress] = useState("");
-
-  const getLocation = () => {
-    if ("geolocation" in navigator) {
-      console.log("Available");
-      navigator.geolocation.getCurrentPosition(function (position) {
-        lon = position.coords.longitude;
-        lat = position.coords.latitude;
-        localStorage.setItem("latitude", lat);
-        localStorage.setItem("longitude", lon);
-        console.log({ lat, lon });
-      });
-      getAddressofCoordinate();
-    } else {
-      console.log("Not Available");
-    }
-  };
 
   const getAddressofCoordinate = () => {
     const longitude = localStorage.getItem("longitude");
@@ -40,46 +25,20 @@ function Overview({ openSidebar, getDashboard, pageUp }) {
       .then((data) => setUserAddress(data.results[0].formatted))
       .catch((error) => alert(error));
 
-    console.log(getClosestHospital(latitude, longitude));
+   // console.log(getClosestHospital(latitude, longitude));
   };
 
-  const getClosestHospital = (latitude, longitude) => {
-    let distanceInKm = {};
-    //get the distance of each hospital to the user location
-    for (const [key, value] of Object.entries(hospitalLongLat)) {
-      distanceInKm[key] = getDistance([latitude, longitude], value)
-    }
-    
-    //const sortByShortestDistance ;
-   const sortByShortestDistance = Object.entries(distanceInKm)
-   const result =  sortByShortestDistance.sort((a, b) => a[1] - b[1] )
-   return Object.fromEntries(result);
-  };
-
-  const getDistance = (origin, destination) => {
-    const [lat1, lon1] = origin;
-    const [lat2, lon2] = destination;
-    const radius = 6371; //km 25.99765215004212
-
-    const differenceOfLatitude = Math.radians(lat2 - lat1);
-    const differenceOfLongitude = Math.radians(lon2 - lon1);
-    const a =
-      Math.sin(differenceOfLatitude / 2) * Math.sin(differenceOfLatitude / 2) +
-      Math.cos(Math.radians(lat1)) *
-        Math.cos(Math.radians(lat2)) *
-        Math.sin(differenceOfLongitude / 2) *
-        Math.sin(differenceOfLongitude / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = radius * c;
-    return distance;
-  };
+  const bookAnAppointment = () => {
+    routerHistory.push("/select-appointment");
+  }
 
    Math.radians = (degree) => degree * Math.PI / 180;
 
   useEffect(() => {
-    //getDashboard();
-    //pageUp()
+    getDashboard();
+    pageUp()
     getLocation();
+    getHospitals()
   }, []);
 
   return (
@@ -102,7 +61,7 @@ function Overview({ openSidebar, getDashboard, pageUp }) {
           </BodyHeading>
           <BodyOption>
             <Option className="left-option">Book a physical appointment</Option>
-            <Option>Consult an expert online</Option>
+            <Option onClick={bookAnAppointment} >Consult an expert online</Option>
           </BodyOption>
         </BodySection>
       </MainBody>
@@ -112,11 +71,15 @@ function Overview({ openSidebar, getDashboard, pageUp }) {
 
 const mapStateProps = (state) => ({
   openSidebar: state.utils.openSidebar,
+  locationAccess: state.hospital.locationAccess,
+  hospitals: state.utils.hospitals,
 });
 const mapDispatchToProps = (dispatch) => {
   return {
     getDashboard: () => dispatch(getDashboard()),
     pageUp: () => dispatch(pageUp()),
+    getLocation: () => dispatch(getLocation()),
+    getHospitals: () => dispatch(getHospitals()),
   };
 };
 Overview = connect(mapStateProps, mapDispatchToProps)(Overview);

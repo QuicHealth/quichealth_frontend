@@ -40,6 +40,7 @@ import ExpertHistory from './pages/Expert/ExpertHistory';
 import ExpertSetting from './pages/Expert/ExpertSetting';
 import ExpertHelp from './pages/Expert/ExpertHelp';
 import ExpertHealthProfilePage from './pages/Expert/ExpertHealthProfilePage';
+import ScheduleTimePage from './pages/Expert/ScheduleTimePage';
 
 if (localStorage.token) {
   setAuthorizationToken(localStorage.token);
@@ -78,6 +79,7 @@ class Main extends React.Component {
             <Route exact path='/expert-settings' component={ExpertSetting}/>
             <Route exact path='/expert-help' component={ExpertHelp}/>
             <Route exact path='/expert-healthProfile' component={ExpertHealthProfilePage}/>
+            <Route exact path='/schedule-time' component={ScheduleTimePage} />
             {/* <Route exact path='/404' component={} /> */}
             <Redirect to='/404' />
           </Switch>

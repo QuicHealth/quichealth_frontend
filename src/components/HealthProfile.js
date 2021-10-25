@@ -11,8 +11,17 @@ import {
 } from "./Appointments";
 import { AnimateBtn } from "./LandingSection";
 import { ProfileImage } from "./Overview";
+import useForm from "./../utils/useForm";
+import { Text } from "./RegisterBody";
 
 function HealthProfile({ openSidebar }) {
+  const { maritalStatus, handleChange, values, errors, setValues } =
+    useForm("healthProfile");
+
+  const submitHealthProfile = (e) => {
+    e.preventDefault();
+    console.log(values, "values");
+  };
   return (
     <Container sidebar={openSidebar}>
       <SideBar />
@@ -35,14 +44,38 @@ function HealthProfile({ openSidebar }) {
             <SectionOne>
               <Left>
                 <Genotype>Blood Group</Genotype>
-                <GenotypeBox></GenotypeBox>
+                <GenotypeBox>
+                  <InputSmall
+                    type="text"
+                    border={errors.bloodGroup && "1px solid red"}
+                    value={values.bloodGroup}
+                    onChange={handleChange}
+                    name="bloodGroup"
+                    placeholder=""
+                  />
+                </GenotypeBox>
+                {errors.bloodGroup && (
+                  <Text color="red">{errors.bloodGroup}</Text>
+                )}
               </Left>
               <Right></Right>
             </SectionOne>
             <SectionTwo>
               <Left>
                 <Genotype>Genotype</Genotype>
-                <GenotypeBox></GenotypeBox>
+                <GenotypeBox>
+                  <InputSmall
+                    type="text"
+                    border={errors.genotype && "1px solid red"}
+                    value={values.genotype}
+                    onChange={handleChange}
+                    name="genotype"
+                    placeholder=""
+                  />
+                </GenotypeBox>
+                {errors.genotype && (
+                  <Text color="red">{errors.genotype}</Text>
+                )}
               </Left>
               <Right></Right>
             </SectionTwo>
@@ -51,18 +84,24 @@ function HealthProfile({ openSidebar }) {
               <FullLeft>
                 <MaritalStatus>Marital Status?</MaritalStatus>
                 <SelectBoxContainer>
-                  <SelectBox>
-                    <input type="checkbox" />
-                    <label htmlFor="single" style={{ padding: "0 .5em" }}>
-                      single
-                    </label>
-                  </SelectBox>
-                  <SelectBox className="left">
-                    <input type="checkbox" />
-                    <label htmlFor="married" style={{ padding: "0 .5em" }}>
-                      married
-                    </label>
-                  </SelectBox>
+                  {maritalStatus.map((status, key) => {
+                    return (
+                      <>
+                        <input
+                          key={key}
+                          value={status}
+                          name="maritalStatus"
+                          type="checkbox"
+                          checked={values.maritalStatus === status}
+                          onChange={handleChange}
+                        />{" "}
+                        <label htmlFor={status} style={{ padding: "0 .5em" }}>
+                          {status}
+                        </label>
+                        &nbsp;&nbsp;
+                      </>
+                    );
+                  })}
                 </SelectBoxContainer>
               </FullLeft>
               <Right></Right>
@@ -71,56 +110,136 @@ function HealthProfile({ openSidebar }) {
             <SectionFour>
               <InputTextLeft>
                 <InputText>Are you currently taking any medication?</InputText>
-                <Input type="text" placeholder="Type here..." />
+                <Input
+                  type="text"
+                  border={errors.medication && "1px solid red"}
+                  name="medication"
+                  value={values.medication}
+                  onChange={handleChange}
+                  placeholder="Type here..."
+                />
               </InputTextLeft>
+              {errors.medication && (
+                <Text color="red">{errors.medication}</Text>
+              )}
               <Right>
                 <InputTextLeft>
                   <InputText>Family Medical History</InputText>
-                  <Input type="text" placeholder="Type here..." />
+                  <Input
+                    type="text"
+                    border={errors.medicalHistory}
+                    name="medicalHistory"
+                    value={values.medicalHistory}
+                    onChange={handleChange}
+                    placeholder="Type here..."
+                  />
                 </InputTextLeft>
+                {errors.medicalHistory && (
+                  <Text color="red">{errors.medicalHistory}</Text>
+                )}
               </Right>
             </SectionFour>
 
             <SectionFour>
               <InputTextLeft>
                 <InputText>Do you have any health condition ?</InputText>
-                <Input type="text" placeholder="Type here..." />
+                <Input
+                  type="text"
+                  border={errors.healthCondition && "1px solid red"}
+                  name="healthCondition"
+                  value={values.healthCondition}
+                  onChange={handleChange}
+                  placeholder="Type here..."
+                />
               </InputTextLeft>
+              {errors.healthCondition && (
+                <Text color="red">{errors.healthCondition}</Text>
+              )}
               <Right>
                 <InputTextLeft>
                   <InputText>Peculiar cases</InputText>
-                  <Input type="text" placeholder="Type here..." />
+                  <Input
+                    type="text"
+                    border={errors.peculiarCase && "1px solid red"}
+                    name="peculiarCase"
+                    value={values.peculiarCase}
+                    onChange={handleChange}
+                    placeholder="Type here..."
+                  />
                 </InputTextLeft>
+                {errors.peculiarCase && (
+                  <Text color="red">{errors.peculiarCase}</Text>
+                )}
               </Right>
             </SectionFour>
             <SectionFour>
               <InputTextLeft>
                 <InputText>Past surgery?</InputText>
-                <Input type="text" placeholder="Type here..." />
+                <Input
+                  type="text"
+                  border={errors.pastSurgery && "1px solid red"}
+                  name="pastSurgery"
+                  value={values.pastSurgery}
+                  onChange={handleChange}
+                  placeholder="Type here..."
+                />
               </InputTextLeft>
+              {errors.pastSurgery && (
+                <Text color="red">{errors.pastSurgery}</Text>
+              )}
               <Right>
                 <InputTextLeft>
                   <InputText>Reaction to any allegies?</InputText>
-                  <Input type="text" placeholder="Type here..." />
+                  <Input
+                    type="text"
+                    name="allegies"
+                    border={errors.allegies && "1px solid red"}
+                    value={values.allegies}
+                    onChange={handleChange}
+                    placeholder="Type here..."
+                  />
                 </InputTextLeft>
+                {errors.allegies && <Text color="red">{errors.allegies}</Text>}
               </Right>
             </SectionFour>
             <SectionFour>
               <InputTextLeft>
                 <InputText>Occupation</InputText>
-                <Input type="text" placeholder="Type here..." />
+                <Input
+                  type="text"
+                  name="occupation"
+                  border={errors.occupation && "1px solid red"}
+                  value={values.occupation}
+                  onChange={handleChange}
+                  placeholder="Type here..."
+                />
               </InputTextLeft>
+              {errors.occupation && (
+                <Text color="red">{errors.occupation}</Text>
+              )}
               <Right>
                 <InputTextLeft>
                   <InputText>Post medical history</InputText>
-                  <Input type="text" placeholder="Type here..." />
+                  <Input
+                    type="text"
+                    name="postMedicalHistory"
+                    border={errors.postMedicalHistory}
+                    value={values.postMedicalHistory}
+                    onChange={handleChange}
+                    placeholder="Type here..."
+                  />
                 </InputTextLeft>
+                {errors.postMedicalHistory && (
+                  <Text color="red">{errors.postMedicalHistory}</Text>
+                )}
               </Right>
             </SectionFour>
 
             <SectionFive>
               <Right className="button">
-                <SaveChanges>Save changes</SaveChanges>
+                <SaveChanges onClick={submitHealthProfile}>
+                  Save changes
+                </SaveChanges>
               </Right>
             </SectionFive>
           </ProfileSection>
@@ -145,7 +264,7 @@ export const MainBodys = styled(MainBody)`
   //font-size: 1.1em;
 
   @media (max-width: ${850}px) {
-    padding:${({sidebar}) => (sidebar? "2em 1em": "2em 0" )};
+    padding: ${({ sidebar }) => (sidebar ? "2em 1em" : "2em 0")};
   }
 `;
 
@@ -167,8 +286,8 @@ export const BodyHeading = styled.h2`
   }
   &.expert {
     .MuiAvatar-colorDefault {
-    width: 4em;
-    height: 4em;
+      width: 4em;
+      height: 4em;
     }
   }
 `;
@@ -180,7 +299,7 @@ export const ProfileSection = styled.form`
   font-size: 1.1.em;
   padding-top: 1.5em;
   position: relative;
-  
+
   @media (max-width: ${1000}px) {
     width: 100%;
     font-size: 14px;
@@ -191,8 +310,8 @@ export const ProfileSection = styled.form`
     border-top: 2px solid #070647;
 
     &.expert {
-    right: ${({sidebar}) => (!sidebar? "1em": "0" )};
-    border-top: 0;
+      right: ${({ sidebar }) => (!sidebar ? "1em" : "0")};
+      border-top: 0;
     }
   }
   &.expert {
@@ -330,7 +449,7 @@ export const Input = styled.input`
     width: 100%;
     border: 1px solid #000000;
   }
-  &.expert{
+  &.expert {
     width: 100%;
   }
 
@@ -370,7 +489,7 @@ export const SaveChanges = styled.div`
   border-radius: 12px;
   text-align: center;
   width: 14em;
-  padding: .7em 0.5em;
+  padding: 0.7em 0.5em;
   line-height: 21px;
   font-weight: 600;
   animation: ${AnimateBtn} 2s 2s ease backwards;
@@ -385,7 +504,16 @@ export const SaveChanges = styled.div`
   &.settings {
     justify-content: flex-end;
   }
-  &.landingPage{
+  &.landingPage {
     line-height: unset;
   }
+`;
+
+const InputSmall = styled.input`
+  outline: none;
+  border-radius: 0;
+  background-color: inherit;
+  width: 100%;
+  height: 100%;
+  border: ${(props) => props.border || "1px solid #2fa5a9"};
 `;

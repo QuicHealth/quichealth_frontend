@@ -35,7 +35,7 @@ function SideBar(props) {
         }
       >
         <IconButton>
-          {!openSidebar ? <MenuIcon onClick={() => showSidebar()} /> : ""}
+          {!openSidebar ? <MenuIcon onClick={showSidebar} /> : ""}
         </IconButton>
       </IconBox>
       <List
@@ -45,7 +45,7 @@ function SideBar(props) {
       >
         <BackArrow>
           <IconButton>
-            {openSidebar ? <BackIcon onClick={() => notShowSidebar()} /> : ""}
+            {openSidebar ? <BackIcon onClick={notShowSidebar} /> : ""}
           </IconButton>
         </BackArrow>
         <StyledLink to="dashboard-overview" activeClassName="active">

@@ -9,12 +9,23 @@ const resetPasswordReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         successMessage: payload.data.message,
-        link: payload.data.link
+        link: payload.data.link,
+      };
+    case actionTypes.IS_LOADING:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case actionTypes.NOT_LOADING:
+      return {
+        ...state,
+        isLoading: false,
       };
     case actionTypes.PASSWORD_RESET_FAIL:
       return {
         ...state,
         isLoading: false,
+
         //errorMessage: payload
       };
     default:

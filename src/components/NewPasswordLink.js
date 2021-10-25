@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -8,7 +8,7 @@ import { Slidein, Text, InputContainer } from "./RegisterBody";
 import { userAuth } from "./../Validations/UserValidation";
 import useForm from "./../utils/useForm";
 import { Spin } from "../pages/Register";
-import { passwordReset } from "../redux/actions";
+import { pageUp, passwordReset } from "../redux/actions";
 import {
   Container,
   RegisterMinContainer,
@@ -42,6 +42,9 @@ function NewPasswordLink(props) {
       passwordReset(values);
     }
   };
+  useEffect(() => {
+    pageUp()
+  })
   return (
     <Container>
       {isLoading ? <Spin /> : ""}
@@ -80,11 +83,12 @@ function NewPasswordLink(props) {
 }
 
 const mapStateToProps = (state) => ({
-    isLoading: state.signup.isLoading,
+    isLoading: state.resetPassword.isLoading,
   });
   const mapDispatchToProps = (dispatch) => {
     return {
       passwordReset: (value) => dispatch(passwordReset(value)),
+      pageUp: () => dispatch(pageUp()),
     };
   };
   

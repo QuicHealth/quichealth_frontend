@@ -13,13 +13,26 @@ import {
   InputLabel,
   Input,
   InputTypeBox,
+  Text,
+  Select,
 } from "./RegisterBody";
 import { SectionFive, SaveChanges, Right } from "./HealthProfile";
 import { Avatar } from "@material-ui/core";
 import { ProfileImage } from "./Overview";
 import ExpertSidebar from "./Expert/ExpertSidebar";
+import useForm from "./../utils/useForm";
+import { genders } from "../utils/utils";
 
-const AccountSection = () => {
+const AccountSection = ({ useForm }) => {
+  const { handleChange, handleBlur, values, errors, setValues } =
+    useForm("setting");
+  const [gender, setGender] = useState("");
+
+  const submitAccount = (e) => {
+    e.preventDefault();
+    console.log(values, "errors");
+  };
+
   return (
     <>
       <SettingsTitle>
@@ -36,24 +49,117 @@ const AccountSection = () => {
         </SettingsImage>
         <div>
           <InputNameContainer className="settings">
-            <SettingInput type="text" placeholder="Email" />
-            <SettingInput type="text" placeholder="Patient Phone number" />
+            <div style={{ width: "100%" }}>
+              <SettingInput
+                type="text"
+                border={errors.email && "1px solid red"}
+                value={values.email}
+                name="email"
+                onChange={handleChange}
+                placeholder="Email"
+              />
+              {errors.email && <Text color="red">{errors.email}</Text>}
+            </div>
+
+            <div style={{ width: "100%" }}>
+              <SettingInput
+                type="text"
+                name="phoneNumber"
+                border={errors.phoneNumber && "1px solid red"}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.phoneNumber}
+                placeholder="Patient Phone number"
+              />
+              {errors.phoneNumber && (
+                <Text color="red">{errors.phoneNumber}</Text>
+              )}
+            </div>
           </InputNameContainer>
 
           <InputNameContainer className="settings">
-            <SettingInput type="text" placeholder="Address" />
-            <SettingInput type="text" placeholder="Date of Birth" />
+            <div style={{ width: "100%" }}>
+              <SettingInput
+                name="address"
+                border={errors.address && "1px solid red"}
+                onChange={handleChange}
+                value={values.address}
+                type="text"
+                placeholder="Address"
+              />
+              {errors.address && <Text color="red">{errors.address}</Text>}
+            </div>
+            <div style={{ width: "100%" }}>
+              <SettingInput
+                name="dob"
+                border={errors.dob && "1px solid red"}
+                onChange={handleChange}
+                value={values.dob}
+                type="date"
+                placeholder="Date of Birth"
+              />
+              {errors.dob && <Text color="red">{errors.dob}</Text>}
+            </div>
           </InputNameContainer>
 
           <SettingInputBox>
-            <Input type="text" placeholder="City" />
-            <Input type="text" placeholder="Gender" />
-            <Input type="text" placeholder="Emergency contact number" />
+            <div>
+              <Input
+                type="text"
+                name="city"
+                border={errors.city && "1px solid red"}
+                value={values.city}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="City"
+              />
+              {errors.city && <Text color="red">{errors.city}</Text>}
+            </div>
+            <div>
+              <select
+                border={errors.gender && "1px solid red"}
+                style={gender ? { color: "#000000" } : { color: "#bdbdbe" }}
+                name="gender"
+                onChange={(e) => {
+                  const selectedGender = e.target.value;
+                  setGender(selectedGender);
+                  setValues({
+                    ...values,
+                    [e.target.name]: e.target.value,
+                  });
+                }}
+              >
+                <option value="" hidden>
+                  Gender
+                </option>
+                {Object.entries(genders).map(([key, value], id) => {
+                  return (
+                    <option key={key} value={value}>
+                      {value}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div>
+              <Input
+                border={errors.emergencyNumber && "1px solid red"}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                name="emergencyNumber"
+                value={values.emergencyNumber}
+                type="text"
+                placeholder="Emergency contact number"
+              />
+              {errors.emergencyNumber && (
+                <Text color="red">{errors.emergencyNumber}</Text>
+              )}
+            </div>
           </SettingInputBox>
 
           <SectionFive className="settings">
             <Right className="settings">
-              <SaveChanges>Save changes</SaveChanges>
+              <SaveChanges onClick={submitAccount}>Save changes</SaveChanges>
             </Right>
           </SectionFive>
         </div>
@@ -62,20 +168,49 @@ const AccountSection = () => {
   );
 };
 
-const UpdateLoginSection = () => {
+const UpdateLogin = ({ useForm }) => {
+  const { handleChange, handleBlur, values, errors, setValues } =
+    useForm("updateProfile");
+    
+    const updateProfile = (e) => {
+      e.preventDefault();
+      console.log(values, "values")
+    }
   return (
     <>
       <SettingsForm className="update">
         <div>
           <InputLabel htmlFor="">Input Username</InputLabel>
           <InputNameContainer className="update">
-            <SettingInput type="text" placeholder="First Name" />
-            <div></div>
+            <InputContainer>
+              <SettingInput
+                type="text"
+                name="firstName"
+                border={errors.firstName && "1px solid red"}
+                value={values.firstName}
+                onChange={handleChange}
+                placeholder="First Name"
+              />
+              {errors.firstName && <Text color="red">{errors.firstName}</Text>}
+            </InputContainer>
+
+            <InputContainer></InputContainer>
           </InputNameContainer>
           <br />
           <InputNameContainer className="update">
-            <SettingInput type="text" placeholder="Last Name" />
-            <div></div>
+            <InputContainer>
+              <SettingInput
+                type="text"
+                name="lastName"
+                border={errors.lastName && "1px solid red"}
+                value={values.lastName}
+                onChange={handleChange}
+                placeholder="Last Name"
+              />
+              {errors.lastName && <Text color="red">{errors.lastName}</Text>}
+            </InputContainer>
+
+            <InputContainer></InputContainer>
           </InputNameContainer>
           <br />
           <br />
@@ -83,24 +218,52 @@ const UpdateLoginSection = () => {
         <div>
           <InputLabel htmlFor="">Change Password</InputLabel>
           <InputNameContainer className="update">
-            <SettingInput type="text" placeholder="Current Password" />
-            <div></div>
+            <InputContainer>
+              <SettingInput
+                name="currentPassword"
+                border={errors.currentPassword && "1px solid red"}
+                value={values.currentPassword}
+                onChange={handleChange}
+                type="text"
+                placeholder="Current Password"
+              />
+            </InputContainer>
+            <InputContainer></InputContainer>
           </InputNameContainer>
           <br />
           <InputNameContainer className="update">
-            <SettingInput type="text" placeholder="New Password" />
-            <div></div>
+            <InputContainer>
+              <SettingInput
+                name="newPassword"
+                border={errors.newPassword && "1px solid red"}
+                value={values.newPassword}
+                onChange={handleChange}
+                type="text"
+                placeholder="New Password"
+              />
+            </InputContainer>
+            <InputContainer></InputContainer>
           </InputNameContainer>
           <br />
           <InputNameContainer className="update">
-            <SettingInput type="text" placeholder="Confirm new password" />
-            <div></div>
+            <InputContainer>
+              <SettingInput
+                name="passwordConfirmation"
+                border={errors.passwordConfirmation && "1px solid red"}
+                value={values.passwordConfirmation}
+                onChange={handleChange}
+                type="text"
+                placeholder="Confirm new password"
+              />
+            </InputContainer>
+
+            <InputContainer></InputContainer>
           </InputNameContainer>
           <br />
           <SectionFive className="update">
             <div>
               {" "}
-              <SaveChanges className="update">Save changes</SaveChanges>
+              <SaveChanges onClick={updateProfile} className="update">Save changes</SaveChanges>
             </div>
             <div></div>
           </SectionFive>
@@ -115,7 +278,7 @@ function Settings({ expert, openSidebar }) {
 
   return (
     <Container sidebar={openSidebar}>
-      {expert ? <ExpertSidebar />:<SideBar /> }
+      {expert ? <ExpertSidebar /> : <SideBar />}
       <MainBody sidebar={openSidebar}>
         <HeadSection sidebar={openSidebar}>
           <h1>Setting</h1>
@@ -151,7 +314,11 @@ function Settings({ expert, openSidebar }) {
                 </>
               )}
             </SettingsTab>
-            {!isPassiveTab ? <AccountSection /> : <UpdateLoginSection />}
+            {!isPassiveTab ? (
+              <AccountSection useForm={useForm} />
+            ) : (
+              <UpdateLogin useForm={useForm} />
+            )}
           </SettingsContainer>
         </AppointmentContainerWrapper>
       </MainBody>
@@ -188,18 +355,18 @@ const SettingsTab = styled.div`
   }
 `;
 const Tab = styled.span`
-  padding: 0.5em 0;
+  padding: 0.5em 1em;
   font-weight: 600;
   font-size: 1.2em;
   &.passive-tab {
     background-color: #fafafb;
     color: #87878a8c;
-    padding: 0.1em 1.3em;
+    //padding: 0.1em 1.3em;
     @media (max-width: ${500}px) {
       padding: 0.5em 0;
       //text-align: center;
       background-color: unset;
-      font-size: 18px;
+      font-size: 17px;
       border: 0;
     }
   }
@@ -209,6 +376,7 @@ const Tab = styled.span`
   }
   @media (max-width: ${500}px) {
     font-size: 18px;
+    padding: 0.5em 0;
     border-bottom: 2px solid #070647;
     height: 2.2em;
   }
@@ -236,9 +404,9 @@ const SettingsForm = styled.form`
     box-shadow: none;
   }
 
-  &.update{
+  &.update {
     margin-top: 1em;
-    @media (max-width: ${500}px){
+    @media (max-width: ${500}px) {
       margin-top: 5em;
     }
   }
@@ -296,10 +464,10 @@ const Btn = styled.span`
 `;
 
 const SettingInput = styled(Input)`
-  width: 47%;
+  width: 90%;
   font-size: 1.1em;
   line-height: 21px;
-  border: 2px solid #2FA5A9;
+  border: 2px solid #2fa5a9;
   background-color: transparent;
   border-radius: 10px;
   margin-bottom: 0;
@@ -318,18 +486,39 @@ const SettingInput = styled(Input)`
 const SettingInputBox = styled(InputTypeBox)`
   grid-template-columns: 30% 32% auto;
   column-gap: 1em;
-  > input {
+  > div > input {
     font-size: 1.1em;
-    border: 2px solid #2FA5A9;
+    border: 2px solid #2fa5a9;
     background-color: transparent;
     border-radius: 10px;
     @media (max-width: ${500}px) {
       font-size: 14px;
       margin-bottom: 2em;
       border: 1px solid #000;
+      width: 100%;
+    }
+  }
+  > div > select {
+    font-size: 1.1em;
+    border: 2px solid #2fa5a9;
+    background-color: transparent;
+    border-radius: 10px;
+    color: #bdbdbe;
+    height: 2.5em;
+    padding: 0.5em;
+    width: 97%;
+    @media (max-width: ${500}px) {
+      font-size: 14px;
+      margin-bottom: 2em;
+      border: 1px solid #000;
+      width: 100%;
     }
   }
   @media (max-width: ${500}px) {
     grid-template-columns: 100%;
   }
 `;
+
+const InputContainer = styled.div`
+  width: 100%;
+`

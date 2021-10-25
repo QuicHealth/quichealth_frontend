@@ -10,7 +10,9 @@ const initialState = {
     isLoggedIn: false,
     link:"",
     resetToken: localStorage.getItem('resetToken'),
-    data: {}
+    hospitals: [],
+    locationAccess: false,
+    days: null
 }
 
 export default initialState;

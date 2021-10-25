@@ -15,17 +15,32 @@ const utilsReducer = (state = initialState, action) => {
         ...state,
         openSidebar: false,
       };
-      case actionTypes.SET_CURRENT_USER:
-        return {
-          ...state,
-          isAuthenticated: true,
-          user
-        }
-        case actionTypes.NOT_LOADING:
-          return {
-            ...state,
-            isLoading: false,
-          }
+    case actionTypes.SET_CURRENT_USER:
+      return {
+        ...state,
+        isAuthenticated: true,
+        user,
+      };
+    case actionTypes.NOT_LOADING:
+      return {
+        ...state,
+        isLoading: false,
+      };
+    case actionTypes.GET_ALL_HOSPITALS:
+      return {
+        ...state,
+        hospitals: payload.hospitals,
+      };
+    case actionTypes.ALLOW_LOCATION_ACCESS:
+      return {
+        ...state,
+        locationAccess: true,
+      };
+    case actionTypes.DISALLOW_LOCATION_ACCESS:
+      return {
+        ...state,
+        locationAccess: false,
+      };
     default:
       return state;
   }

@@ -42,7 +42,7 @@ function Notification({ expert, openSidebar }) {
             <RightSide>
               <Search>
                 <NotificationSearchIcon />
-                <SearchInput placeholder="Search in chats" />
+                <SearchInput placeholder="Type here to search..." />
               </Search>
             </RightSide>
           </NotificationSearch>

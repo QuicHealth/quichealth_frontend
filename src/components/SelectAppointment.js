@@ -9,7 +9,7 @@ import { ProfileImage } from "./Overview";
 import { getHospitals, getLocation } from "../redux/actions";
 import { locations } from "../utils/utils";
 import useForm from "../utils/useForm";
-import { hospitalLongLat } from "./PlacesCoordinate";
+import { useHistory } from "react-router-dom";
 
 export const DocAppointment = ({ name, NoIcon }) => {
   return (
@@ -47,11 +47,15 @@ export const DocAppointment = ({ name, NoIcon }) => {
 };
 
 export const BookAppointment = ({ name }) => {
+  let routerHistory = useHistory();
+  const pricing = () => {
+    routerHistory.push("/pricings")
+}
   return (
     <BookingDetails>
       <DocAppointment name={name} />
       <BookBtn>
-        <Button>Book</Button>
+        <Button onClick={pricing}>Book</Button>
       </BookBtn>
     </BookingDetails>
   );
@@ -83,6 +87,7 @@ export const BookAppointment = ({ name }) => {
     const longitude = localStorage.getItem("longitude");
     const latitude = localStorage.getItem("latitude");
     const [location, setLocation] = useState("");
+    console.log(hospitals, "here");
    
     const hospitalsWithDistance = hospitals.map(hospital => {
       return {
@@ -90,19 +95,19 @@ export const BookAppointment = ({ name }) => {
         distance: getDistance([latitude, longitude], [parseFloat(hospital.latitude), parseFloat(hospital.longitude)])
       }
     })
-    console.log(hospitalsWithDistance.sort((a, b) => a.distance - b.distance))
+   // console.log(hospitalsWithDistance.sort((a, b) => a.distance - b.distance), "distance")
     const [filterHospitals, setFilterHospitals] = useState([])
     
+
     // filter onSubmit
   const getDoctor = (e) => {
     e.preventDefault();
-    console.log(values.location, "valiues")
+   // console.log(values.location, "valiues")
      const filteredHospitals = hospitals.filter(hospital => {
       return hospital.city == values.location || hospital.state == values.location
     })
     setFilterHospitals(filteredHospitals)
 }
-
 
     return (
       <Containa>
@@ -259,6 +264,9 @@ export const Containa = styled.div`
   margin-left: 0.5em;
   color: #070647;
   border-radius: 15px;
+  &.pricing{
+    margin-top: 0em;
+  }
 `;
 
 export const IconBox = styled.div`
@@ -271,6 +279,10 @@ export const Title = styled.h2`
   width: 100%;
   font-size: 2.5em;
   text-align: center;
+
+  &.pricing{
+    margin-bottom: 4em;
+  }
 `;
 const SelectBox = styled.div`
   display: grid;

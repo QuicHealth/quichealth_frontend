@@ -148,6 +148,8 @@ const MobileList = styled.ul`
     list-style: none;
     position: absolute;
     margin-top: 5em;
+    z-index: 19;
+    height: 20em;
     padding: 0;
     background-color: #f3f3f6;
     transform: scaleY(0);

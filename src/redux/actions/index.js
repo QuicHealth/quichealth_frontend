@@ -88,15 +88,24 @@ export const signIn = (value) => async (dispatch) => {
     token = response.data.token;
     setAuthorizationToken(token);
     localStorage.setItem("token", token);
-    toast.success(response.data.message);
-    setTimeout(() => {
-      history.push("/dashboard-overview");
-      window.location.reload();
-    }, 2000);
-    dispatch({
-      type: actionTypes.SIGNIN_SUCCESS,
-      payload: response,
-    });
+    if (response.data.status === true){
+      toast.success(response.data.message);
+      setTimeout(() => {
+        history.push("/dashboard-overview");
+        window.location.reload();
+      }, 2000);
+      dispatch({
+        type: actionTypes.SIGNIN_SUCCESS,
+        payload: response,
+      });
+    } else {
+      toast.error(response.data.message);
+      dispatch({
+        type: actionTypes.SIGNIN_FAIL,
+        payload: response.data.message,
+      });
+    }
+
   } catch (error) {
     //console.log(response.data.status);
     if (!error.response) {
@@ -277,8 +286,11 @@ export const getHospitals = () => async (dispatch) => {
         Authorization: `Bearer ${localStorage.token}`,
       },
     });
-    console.log(response, 
-      "hospital");
+    //console.log(response.data.hospitals, "hospital");
+      dispatch({
+        type: actionTypes.GET_ALL_HOSPITALS,
+        payload: response.data.hospitals,
+      });
   } catch (error) {
     console.log(error.message);
     if (!error.response) {
@@ -295,7 +307,10 @@ export const getLocation = () => async (dispatch) => {
 
   const geoError = function (error) {
     console.log("Error occurred. Error code: " + error.code);
-    if (!error.code) {
+    console.log(error, "error")
+  
+    
+    if (error.code === "") {
       dispatch({
         type: actionTypes.ALLOW_LOCATION_ACCESS,
       });

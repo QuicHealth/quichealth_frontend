@@ -3,10 +3,6 @@ import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import SideBar from "./SideBar";
 import { getDashboard, pageUp, getLocation, getHospitals } from "../redux/actions";
-import { FitnessCenterSharp } from "@material-ui/icons";
-import { hospitalLongLat } from "./PlacesCoordinate";
-import history from "./../history";
-//import { useHistory } from 'react-router';
 import { useHistory } from "react-router-dom";
 
 function Overview({ openSidebar, getDashboard, pageUp, getLocation,  getHospitals }) {

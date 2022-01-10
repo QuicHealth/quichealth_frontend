@@ -11,7 +11,7 @@ const initialState = {
     link:"",
     resetToken: localStorage.getItem('resetToken'),
     hospitals: [],
-    locationAccess: false,
+    locationAccess: true,
     days: null
 }
 

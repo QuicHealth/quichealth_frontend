@@ -7,7 +7,7 @@ const hospitalReducer = (state = initialState, action) => {
     case actionTypes.GET_ALL_HOSPITALS:
       return {
         ...state,
-        hospitals: payload.hospitals,
+        hospitals: payload,
       };
     case actionTypes.ALLOW_LOCATION_ACCESS:
       return {

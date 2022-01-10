@@ -25,27 +25,27 @@ const PricePlan = ({ type, amount, session, select }) => {
 
 const PriceComponent = () => {
   return (
-    <Containa>
-      <Title>Choose your plan</Title>
+    <Containa className="pricing">
+      <Title className="pricing">Choose your preferred price plan</Title>
       <PlanBox>
         <div>
           {" "}
           <PricePlan type={"Into"} amount={1000} session={2} />
         </div>
         <div>
-          <PricePlan type={"Into"} amount={1000} session={2} />
+          <PricePlan type={"Basic"} amount={2000} session={4} />
         </div>
         <div>
           <PricePlan
-            type={"Into"}
-            amount={1000}
-            session={2}
+            type={"Standard"}
+            amount={4000}
+            session={4}
             select={"select"}
           />
         </div>
         <div>
           {" "}
-          <PricePlan type={"Into"} amount={1000} session={2} />
+          <PricePlan type={"Premium"} amount={5500} session={12} />
         </div>
       </PlanBox>
     </Containa>
@@ -57,7 +57,7 @@ function Pricings({ openSidebar }) {
     <Container sidebar={openSidebar}>
       <SideBar />
       <MainBody>
-      <ProfileImage>
+        <ProfileImage>
           <img
             src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
             alt=""
@@ -84,8 +84,8 @@ const PlanBox = styled.div`
   align-items: center;
 
   @media (max-width: ${500}px) {
-       grid-template-columns: 100%
-    }
+    grid-template-columns: 100%;
+  }
 `;
 
 export const Plan = styled.div`
@@ -115,30 +115,52 @@ export const Plan = styled.div`
     }
   }
   @media (max-width: ${500}px) {
-       margin-bottom: 1.3em;
+    margin-bottom: 1.3em;
+    width: 19em;
+    &:hover {
+      width: 19.5em;
     }
+  }
 `;
 
 const PlanType = styled.h4`
   margin-bottom: 1em;
+  @media (max-width: ${500}px) {
+    font-size: 13px;
+  }
 `;
-const Price = styled.h1``;
+const Price = styled.h1`
+  @media (max-width: ${500}px) {
+    font-size: 3.5em;
+  }
+`;
 const Valid = styled.h6`
-  margin-bottom: 3em;
+  margin-bottom: 1em;
   color: #949494ab;
   margin-top: -0.8em;
+  @media (max-width: ${500}px) {
+    font-size: 12px;
+    //margin-top: 0;
+  }
 `;
 const Breaker = styled(Margin)`
   background-color: #949494ab;
 `;
 
 const Session = styled.h5`
-  margin-top: 2em;
+  margin-top: 1em;
+  @media (max-width: ${500}px) {
+    font-size: 12px;
+  }
 `;
 const Duration = styled.h6`
   font-size: 0.6em;
   margin-bottom: 4em;
   color: #949494ab;
+  @media (max-width: ${500}px) {
+    font-size: 12px;
+    margin-bottom: 2em;
+  }
 `;
 const SelectPlan = styled.div`
   font-size: 12px;
@@ -149,8 +171,9 @@ const SelectPlan = styled.div`
     color: #070647;
     border: 1px solid #070647;
     @media (max-width: ${500}px) {
-       padding: 0.5em .5em;
-       font-size: 10px;
+      //padding:  .5em;
+      font-size: 12px;
+      width: 100%;
     }
     &.select {
       background-color: #2fa5a9;

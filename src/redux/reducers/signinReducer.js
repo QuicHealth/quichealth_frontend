@@ -6,14 +6,29 @@ const signinReducer = (state = initialState, action) => {
   switch (type) {
     case actionTypes.SIGNIN_SUCCESS:
       const user = `${payload.data.data.firstname} ${payload.data.data.lastname}`;
-      localStorage.setItem("user", user);
-      localStorage.setItem("firstname", payload.data.data.firstname);
+      //localStorage.setItem("user", user);
+      //localStorage.setItem("name", payload.data.data.name);
       return {
         ...state,
         //isLoading: false,
         isLoggedIn: true,
         successMessage: payload.data.message,
         user,
+        isAuthenticated: true,
+      };
+    case actionTypes.EXPERT_SIGNIN_SUCCESS:
+      const doctor = payload.user.name;
+      const doctorId = payload.user.id
+      
+      //localStorage.setItem("user", user);
+      //localStorage.setItem("name", payload.data.data.name);
+      return {
+        ...state,
+        //isLoading: false,
+        isLoggedIn: true,
+        //successMessage: payload.data.message,
+        doctor: doctor,
+        doctorId: doctorId,
         isAuthenticated: true,
       };
     case actionTypes.LOAD_USER:

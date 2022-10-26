@@ -11,7 +11,7 @@ import {
   Image,
   Time,
   Minutes,
-  Date,
+  Dates,
   HeadSection,
   AppointmentContainerWrapper,
 } from "./Appointments";
@@ -48,12 +48,12 @@ function History({expert, openSidebar }) {
               <ViewProfile>view profile</ViewProfile>
             </Details>
             <DateContainer>
-              <Date>
+              <Dates>
                 <Icon className="noLeftPadding">
                   <i class="fas fa-calendar-alt"></i>
                 </Icon>
                 <span>07/10/2021</span>
-              </Date>
+              </Dates>
               <Time>10:45AM</Time>
               <Minutes>
                 {" "}
@@ -77,12 +77,12 @@ function History({expert, openSidebar }) {
               <ViewProfile>view profile</ViewProfile>
             </Details>
             <DateContainer>
-              <Date>
+              <Dates>
                 <Icon className="noLeftPadding">
                   <i class="fas fa-calendar-alt"></i>
                 </Icon>
                 <span>07/10/2021</span>
-              </Date>
+              </Dates>
               <Time>10:45AM</Time>
               <Minutes>
                 {" "}
@@ -106,12 +106,12 @@ function History({expert, openSidebar }) {
               <ViewProfile>view profile</ViewProfile>
             </Details>
             <DateContainer>
-              <Date>
+              <Dates>
                 <Icon className="noLeftPadding">
                   <i class="fas fa-calendar-alt"></i>
                 </Icon>
                 <span>07/10/2021</span>
-              </Date>
+              </Dates>
               <Time>10:45AM</Time>
               <Minutes>
                 {" "}

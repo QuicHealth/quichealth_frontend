@@ -1,15 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import SideBar from "./SideBar";
-import { ProfileImage } from "./Overview";
+import { decrement, increment, PageLimtier, ProfileImage } from "./Overview";
 import { Icon } from "./SelectAppointment";
 import ExpertSidebar from "./Expert/ExpertSidebar";
+import {
+  createMeeting,
+  getAllPaidAppointments,
+  getPatientZoomMeeting,
+} from "../redux/actions";
+import { useHistory } from "react-router-dom";
 
-function Appointments({expert, openSidebar }) {
+function Appointments({
+  expert,
+  openSidebar,
+  getAllPaidAppointments,
+  allPaidApp,
+  createMeeting,
+}) {
+  console.log(allPaidApp, "äppointmemnt");
+  let history = useHistory();
+
+  let current = new Date();
+  let currentTime = current.toLocaleTimeString();
+  console.log(
+    currentTime.slice(0, 5) === convertTimeToTwelveHrs("06:26"),
+    currentTime.slice(0, 5),
+    "time"
+  );
+
+  function convertTimeToTwelveHrs(time) {
+    let newTime;
+    // return time.slice(0, 2)
+    if (time.slice(0, 2) < 9) {
+      newTime = parseInt(time.slice(0, 2)) + 12;
+      newTime = newTime + time.substr(2);
+      return newTime;
+    }
+    return time;
+  }
+
+  const [limit, setLimit] = useState(3);
+  const [count, setCount] = useState(0);
+  let appointments = allPaidApp?.slice(count, count + limit);
+
+  const [appoint, setAppointment] = useState(appointments);
+
+  useEffect(() => {
+    setAppointment(appointments);
+  }, [count]);
+
+  console.log(appoint, count, appointments, "limit");
+
+  useEffect(() => {
+    getAllPaidAppointments();
+  }, []);
   return (
     <Container sidebar={openSidebar}>
-      {expert ? <ExpertSidebar />: <SideBar />}
+      {expert ? <ExpertSidebar /> : <SideBar />}
       <MainBody sidebar={openSidebar}>
         <HeadSection sidebar={openSidebar}>
           <h1>Appointments</h1>
@@ -20,101 +69,77 @@ function Appointments({expert, openSidebar }) {
             />
           </ProfileImage>
         </HeadSection>
+
         <AppointmentContainerWrapper sidebar={openSidebar}>
-          <AppointmentContainer>
-            <CheckBox className="active"></CheckBox>
-            <Image>
-              <img
-                src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-                alt=""
-              />
-            </Image>
-            <Details>
-              <div>
-                <Name>Dr. Alice Walton</Name>
-                <ViewProfile>view profile</ViewProfile>
-              </div>
-              <Date>
-                <Icon className="noLeftPadding">
-                  <i class="fas fa-calendar-alt"></i>
-                </Icon>
-                <span>07/10/2021</span>
-              </Date>
-              <Time>10:45AM</Time>
-              <Minutes>
-                {" "}
-                <Icon className="noLeftPadding">
-                  <i class="far fa-clock"></i>
-                </Icon>
-                <span>30 Minutes</span>
-              </Minutes>
-            </Details>
-            <Meeting className="active">Join Meeting</Meeting>
-          </AppointmentContainer>
-          <AppointmentContainer>
-            <CheckBox></CheckBox>
-            <Image>
-              <img
-                src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-                alt=""
-              />
-            </Image>
-            <Details>
-              <div>
-                <Name>Dr. Alice Walton</Name>
-                <ViewProfile>view profile</ViewProfile>
-              </div>
-              <Date>
-                <Icon className="noLeftPadding">
-                  <i class="fas fa-calendar-alt"></i>
-                </Icon>
-                <span>07/10/2021</span>
-              </Date>
-              <Time>10:45AM</Time>
-              <Minutes>
-                {" "}
-                <Icon className="noLeftPadding">
-                  <i class="far fa-clock"></i>
-                </Icon>
-                <span>30 Minutes</span>
-              </Minutes>
-            </Details>
-            <Meeting>
-              <i class="fas fa-ellipsis-h"></i>
-            </Meeting>
-          </AppointmentContainer>
-          <AppointmentContainer>
-            <CheckBox></CheckBox>
-            <Image>
-              <img
-                src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-                alt=""
-              />
-            </Image>
-            <Details>
-              <div>
-                <Name>Dr. Alice Walton</Name>
-                <ViewProfile>view profile</ViewProfile>
-              </div>
-              <Date>
-                <Icon className="noLeftPadding">
-                  <i class="fas fa-calendar-alt"></i>
-                </Icon>
-                <span>07/10/2021</span>
-              </Date>
-              <Time>10:45AM</Time>
-              <Minutes>
-                {" "}
-                <Icon className="noLeftPadding">
-                  <i class="far fa-clock"></i>
-                </Icon>
-                <span>30 Minutes</span>
-              </Minutes>
-            </Details>
-            <Meeting>
-              <i class="fas fa-ellipsis-h"></i>
-            </Meeting>
-          </AppointmentContainer>
+          {appointments?.map((appointment, id) => {
+            return (
+              <AppointmentContainer>
+                <CheckBox className="active"></CheckBox>
+                <Image>
+                  <img
+                    src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+                    alt=""
+                  />
+                </Image>
+                <Details>
+                  <div>
+                    <Name>{appointment?.doctor?.name}</Name>
+                    <ViewProfile>view profile</ViewProfile>
+                  </div>
+                  <Dates>
+                    <Icon className="noLeftPadding">
+                      <i class="fas fa-calendar-alt"></i>
+                    </Icon>
+                    <span>{appointment.date}</span>
+                  </Dates>
+                  <Time>
+                    {appointment.start}{" "}
+                    {parseInt(appointment.start) > 9 &&
+                    parseInt(appointment.start) <= 12
+                      ? "AM"
+                      : "PM"}{" "}
+                  </Time>
+                 
+                  <Minutes>
+                    {" "}
+                    <Icon className="noLeftPadding">
+                      <i class="far fa-clock"></i>
+                    </Icon>
+                    <span>30 Minutes</span>
+                  </Minutes>
+                </Details>
+                {appointment?.id === allPaidApp[0]?.id? (
+                  <Meeting
+                    // disabled={
+                    //   currentTime.slice(0, 5) !==
+                    //   convertTimeToTwelveHrs(appointment.start)
+                    // }
+                    className="active"
+                    onClick={() => {
+                      //createMeeting(value);
+                      setTimeout(() => {
+                        history.push("/meeting");
+                      }, 2000);
+                    }}
+                  >
+                    Join Meeting
+                  </Meeting>
+                ) : (
+                  <Dot>...</Dot>
+                )}
+              </AppointmentContainer>
+            );
+          })}
+          <PageLimtier
+            RowCount={4}
+            TotalCount={1024}
+            increment={increment}
+            decrement={decrement}
+            setCount={setCount}
+            count={count}
+            limit={limit}
+            array={allPaidApp}
+          />
         </AppointmentContainerWrapper>
       </MainBody>
     </Container>
@@ -123,9 +148,21 @@ function Appointments({expert, openSidebar }) {
 
 const mapStateProps = (state) => ({
   openSidebar: state.utils.openSidebar,
+  allPaidApp: state.patient.allPaidApp,
 });
 
-export default Appointments = connect(mapStateProps)(Appointments);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAllPaidAppointments: () => dispatch(getAllPaidAppointments()),
+    getPatientZoomMeeting: () => dispatch(getPatientZoomMeeting()),
+    createMeeting: (value) => dispatch(createMeeting(value)),
+  };
+};
+
+export default Appointments = connect(
+  mapStateProps,
+  mapDispatchToProps
+)(Appointments);
 
 export const Container = styled.div`
   display: grid;
@@ -145,7 +182,7 @@ export const Container = styled.div`
 export const MainBody = styled.div`
   background: linear-gradient(180deg, #e7e7ed, #ffffff);
   border-top-right-radius: 15px;
-  padding: ${({sidebar}) => (sidebar? "3em 2em;": "5em 7em 0em 0em;")};
+  padding: ${({ sidebar }) => (sidebar ? "3em 2em;" : "5em 7em 0em 0em;")};
   margin-right: 0.7em;
   font-size: 1em;
 
@@ -161,12 +198,10 @@ export const MainBody = styled.div`
     font-size: 9px;
     padding: 1.5em 1em 3em 1em;
 
-    &.notify{
+    &.notify {
       padding: 1.5em 0 1.5em 0;
-
     }
   }
-
 `;
 export const AppointmentContainer = styled.div`
   display: grid;
@@ -179,6 +214,7 @@ export const AppointmentContainer = styled.div`
   border-bottom-left-radius: 5px;
   align-items: center;
   font-weight: 600;
+  font-family: "Poppins", sans-serif;
 
   @media (max-width: ${800}px) {
     font-size: 17px;
@@ -230,15 +266,15 @@ export const Image = styled.div`
       width: 4em;
       height: 4em;
 
-      &.notify{
+      &.notify {
         width: 2.5em;
         height: 2.5em;
       }
     }
-    &.history{
+    &.history {
       width: 3em;
       height: 4em;
-      padding: .5em 0;
+      padding: 0.5em 0;
     }
   }
 `;
@@ -250,7 +286,7 @@ export const Details = styled.div`
   @media (max-width: ${500}px) {
     grid-template-columns: 100%;
   }
-  &.history{
+  &.history {
     grid-template-columns: 100%;
   }
 `;
@@ -279,7 +315,7 @@ export const ViewProfile = styled.span`
     cursor: pointer;
   }
 `;
-export const Date = styled.div`
+export const Dates = styled.div`
   @media (max-width: ${750}px) {
     font-size: 10px;
   }
@@ -314,11 +350,17 @@ export const Minutes = styled.div`
     font-weight: 300;
   }
 `;
-export const Meeting = styled.div`
+export const Meeting = styled.button`
   text-align: center;
-  width: 8em;
   padding: 0.5em;
   line-height: 16px;
+  width: 10em;
+  font-size: 16px;
+  font-weight: bold;
+
+  :disabled {
+    opacity: 0.5;
+  }
 
   @media (max-width: ${750}px) {
     font-size: 10px;
@@ -344,7 +386,8 @@ export const AppointmentContainerWrapper = styled.div`
     width: 100%;
     /* padding: 0 0em; */
     right: ${({ sidebar }) => (sidebar ? "0" : "1.5em")};
-    padding: ${({sidebar}) => sidebar? "7em 1em 0em 1em": "7em 0em 0 0em"};
+    padding: ${({ sidebar }) =>
+      sidebar ? "7em 1em 0em 1em" : "7em 0em 0 0em"};
   }
 `;
 
@@ -367,4 +410,8 @@ export const HeadSection = styled.div`
       top: ${({ sidebar }) => (sidebar ? "0em" : "0.3em")};
     }
   }
+`;
+
+const Dot = styled.span`
+  text-align: center;
 `;

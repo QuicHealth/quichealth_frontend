@@ -1,12 +1,13 @@
 import React from 'react'
 import DashboardNav from '../../components/DashboardNav';
-import Appointments from '../../components/Appointments';
+import ExpertAppointment from '../../components/Expert/ExpertAppointment';
 
 function ExpertAppointmentPage() {
     return (
         <div>
             <DashboardNav />
-            <Appointments expert={true}/> 
+           {/* // <Appointments expert={true}/>  */}
+           <ExpertAppointment />
         </div>
     )
 }

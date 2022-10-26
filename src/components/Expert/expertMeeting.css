@@ -1,0 +1,99 @@
+.emr_container {
+    background-color: #fff;
+    position: absolute;
+    height: 93.5%;
+    width: 400px;
+    z-index: 101;
+    right: 0em;
+    top: 0.1em;
+    padding: 1.5em;
+    font-family: "Inter", sans-serif !important;
+      display: none; 
+}
+
+#emr_head {
+    margin-top: 3em;
+    display: flex;
+    align-items: center;
+}
+
+#emr_head > h3 {
+    color: #000000;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    margin-left: 5em;
+}
+
+.icon {
+    cursor: pointer;
+}
+
+.icon:hover {
+    opacity: 0.6;
+}
+
+#emr_form {
+    margin-top: 3em;
+}
+
+#emr_form > div {
+    margin-bottom: 2em;
+}
+#emr_form > div > h4 {
+    font-size: 14px;
+    margin-bottom: 1em;
+    font-weight: bold;
+}
+
+#emr_form > div > textarea {
+    height: 13em;
+    width: 100%;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    border: 0;
+    font-size: 14px;
+    font-family: "Poppins", sans-serif !important;
+    border: none;
+    overflow: auto;
+    outline: none;
+    resize: none;
+}
+
+#emr_submit {
+    margin-top: 3em;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.emrbuttonwrapper {
+    display: grid;
+    justify-items: center;
+    position: absolute;
+    left: 33%;
+    bottom: 0.6em;
+    cursor:pointer;
+}
+
+.emrbuttonwrapper > img {
+    height: 20px;
+}
+
+.emrbuttonwrapper > span { 
+    margin-top: 0.5em;
+    font-size: 12px
+}
+
+#emrbutton {
+    color: white;
+    background-color: #2fa5a9;
+    border-radius: 7px;
+    padding: 0.7em 2em;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#emr_button:hover {
+    opacity: 0.6;
+}

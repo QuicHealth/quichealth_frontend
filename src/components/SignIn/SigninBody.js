@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
-import { signIn, pageUp } from "./../redux/actions";
+import {signIn , pageUp } from "./../../redux/actions";
 import {
   TermsParagraph,
   AlreadyHaveAccount,
@@ -12,14 +13,15 @@ import {
   FormContainer,
   InputContainer,
   Text,
-} from "./RegisterBody";
-import { Slidein } from "./RegisterBody";
+} from "./../RegisterBody";
+import { Slidein } from "./../RegisterBody";
 
-import { userAuth } from "./../Validations/UserValidation";
-import useForm from "./../utils/useForm";
-import { Spin } from "../pages/Register";
+import { userAuth } from "./../../Validations/UserValidation";
+import useForm from "./../../utils/useForm";
+import { Spin } from "../../pages/Register";
 
 function SigninBody(props) {
+  let history = useHistory();
   const {
     values,
     errors,
@@ -32,9 +34,9 @@ function SigninBody(props) {
     setIsSubmit,
   } = useForm("login");
 
-  const { isLoading, signIn } = props;
+  const { isLoading, signIn, expert } = props;
 
-  const signin = (e) => {
+  const signin = async (e) => {
     e.preventDefault();
     const formError = userAuth(values);
     setErrors(formError);
@@ -42,7 +44,15 @@ function SigninBody(props) {
     setIsSubmit(true);
     const noErrors = Object.keys(formError).length === 0;
     if (noErrors) {
-      signIn(values);
+      let response = expert
+        ? await signIn(values, expert)
+        : await signIn(values);
+       // console.log(response);
+      if (response?.data?.route?.includes("doctor")) { 
+        setTimeout(() => {
+          return history.push("/expert-overview");
+        }, 2000);
+      } 
     }
   };
 
@@ -103,7 +113,7 @@ function SigninBody(props) {
                   </AlreadyHaveAccount>
                   <AlreadyHaveAccount style={{ padding: 0 }}>
                     Dont have an account?{" "}
-                    <StyledLink to="/signin">
+                    <StyledLink to="/register">
                       <b>CreateAccount</b>
                     </StyledLink>{" "}
                   </AlreadyHaveAccount>
@@ -144,8 +154,8 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => {
   return {
-    signIn: (value) => dispatch(signIn(value)),
-    pageUp: () => dispatch(pageUp())
+    signIn: (value, expert) => dispatch(signIn(value, expert)),
+    pageUp: () => dispatch(pageUp()),
   };
 };
 

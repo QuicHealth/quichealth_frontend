@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import MenuIcon from "@material-ui/icons/Menu";
 import { connect } from "react-redux";
@@ -6,8 +6,46 @@ import { Containa, IconBox, Title, Margin, Button } from "./SelectAppointment";
 import { Container, MainBody } from "./Appointments";
 import SideBar from "./SideBar";
 import { ProfileImage } from "./Overview";
+import { useHistory } from "react-router-dom";
 
-const PricePlan = ({ type, amount, session, select }) => {
+const payPlans = [
+  {
+    type: "Intro",
+    amount: 1000,
+    session: 2,
+    select: "",
+  },
+  {
+    type: "Basic",
+    amount: 2000,
+    session: 4,
+    select: "",
+  },
+  {
+    type: "Standard",
+    amount: 4000,
+    session: 8,
+    select: "",
+  },
+  {
+    type: "Premuim",
+    amount: 5500,
+    session: 12,
+    select: "",
+  },
+];
+
+const PricePlan = ({
+  type,
+  amount,
+  session,
+  select,
+  getSelectedPlan,
+  plans,
+  setPlans,
+  id,
+  plan,
+}) => {
   return (
     <Plan className={select ? select : ""}>
       <PlanType>{type}</PlanType>
@@ -17,42 +55,60 @@ const PricePlan = ({ type, amount, session, select }) => {
       <Session>{session} Sessions</Session>
       <Duration>30 minutes each</Duration>
       <SelectPlan>
-        <Button className={select ? select : ""}>Select Plan</Button>
+        <Button
+          className={select ? select : ""}
+          onClick={() => getSelectedPlan(plans, setPlans, plan, id)}
+        >
+          Select Plan
+        </Button>
       </SelectPlan>
     </Plan>
   );
 };
 
-const PriceComponent = () => {
+const PriceComponent = ({ getSelectedPlan, payPlans }) => {
+  const [plans, setPlans] = useState(payPlans);
   return (
     <Containa className="pricing">
       <Title className="pricing">Choose your preferred price plan</Title>
       <PlanBox>
-        <div>
-          {" "}
-          <PricePlan type={"Into"} amount={1000} session={2} />
-        </div>
-        <div>
-          <PricePlan type={"Basic"} amount={2000} session={4} />
-        </div>
-        <div>
-          <PricePlan
-            type={"Standard"}
-            amount={4000}
-            session={4}
-            select={"select"}
-          />
-        </div>
-        <div>
-          {" "}
-          <PricePlan type={"Premium"} amount={5500} session={12} />
-        </div>
+        {plans.map((plan, id) => (
+          <div
+            key={id}
+            //onClick={() => getSelectedPlan(plans, setPlans, plan, id)}
+          >
+            <PricePlan
+              id={id}
+              type={plan.type}
+              amount={plan.amount}
+              session={plan.session}
+              select={plan.select}
+              getSelectedPlan={getSelectedPlan}
+              setPlans={setPlans}
+              plans={plans}
+              plan={plan}
+            />
+          </div>
+        ))}
       </PlanBox>
     </Containa>
   );
 };
 
 function Pricings({ openSidebar }) {
+  let routerHistory = useHistory();
+  const getSelectedPlan = (array, setArray, object, index) => {
+    const newArray = array.map((item, id) => {
+      return { ...item, select: "" };
+    });
+    const selectedObject = { ...object, select: "select" };
+
+    newArray[index] = selectedObject;
+    setArray(newArray);
+    console.log(selectedObject);
+
+    routerHistory.push("/select-appointment");
+  };
   return (
     <Container sidebar={openSidebar}>
       <SideBar />
@@ -63,7 +119,7 @@ function Pricings({ openSidebar }) {
             alt=""
           />
         </ProfileImage>
-        <PriceComponent />
+        <PriceComponent getSelectedPlan={getSelectedPlan} payPlans={payPlans} />
       </MainBody>
     </Container>
   );

@@ -20,11 +20,11 @@ import ExpertSidebar from "./Expert/ExpertSidebar";
 function Notification({ expert, openSidebar }) {
   return (
     <Container sidebar={openSidebar}>
-      {expert ? <ExpertSidebar /> :<SideBar />}
+      {expert ? <ExpertSidebar /> : <SideBar />}
       <MainBody sidebar={openSidebar} className="notify">
         <HeadSection sidebar={openSidebar}>
           <h1>Notifications</h1>
-          <ProfileImage sidebar={openSidebar}  className="noTopPadding">
+          <ProfileImage sidebar={openSidebar} className="noTopPadding">
             <img
               src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
               alt=""
@@ -50,7 +50,7 @@ function Notification({ expert, openSidebar }) {
           <Margin className="notify" />
           <AppointmentContainers>
             <CheckBox className="active"></CheckBox>
-            <Image >
+            <Image>
               <img
                 src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
                 alt=""
@@ -140,7 +140,7 @@ export const AppointmentContainers = styled(AppointmentContainer)`
   @media (max-width: ${500}px) {
     font-size: 11px;
     line-height: 16px;
-    padding: .5em .5em;
+    padding: 0.5em 0.5em;
     margin: 0.5em 0;
     background-color: transparent;
     border-radius: 0;
@@ -148,8 +148,8 @@ export const AppointmentContainers = styled(AppointmentContainer)`
 `;
 
 const Details = styled.div`
-  overflow: hidden; 
-  text-overflow: ellipsis; 
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 `;
 const Time = styled.div`
@@ -211,7 +211,6 @@ export const Search = styled.div`
     @media (max-width: ${500}px) {
       padding: 0;
     }
-
   }
 `;
 

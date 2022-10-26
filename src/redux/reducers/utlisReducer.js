@@ -19,7 +19,9 @@ const utilsReducer = (state = initialState, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        user,
+        user: user,
+
+        isLoggedIn: true,
       };
     case actionTypes.NOT_LOADING:
       return {

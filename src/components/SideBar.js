@@ -23,7 +23,11 @@ function SideBar(props) {
     <Container
       style={
         !openSidebar
-          ? { background: "linear-gradient(180deg, #e7e7ed, #ffffff)", marginLeft:".7em", borderTopLeftRadius: "15px" }
+          ? {
+              background: "linear-gradient(180deg, #e7e7ed, #ffffff)",
+              marginLeft: ".7em",
+              borderTopLeftRadius: "15px",
+            }
           : { backgroundColor: " #fff" }
       }
     >
@@ -95,9 +99,9 @@ function SideBar(props) {
         </StyledLink>
         <ListItem>
           <ListIcon>
-            <LogoutIcon onClick={()=> logout()} />
+            <LogoutIcon onClick={() => logout()} />
           </ListIcon>
-          <ListName onClick={()=> logout()}>Signout</ListName>
+          <ListName onClick={() => logout()}>Signout</ListName>
         </ListItem>
       </List>
     </Container>
@@ -124,7 +128,7 @@ export const Container = styled.div`
 export const List = styled.ul`
   list-style: none;
   display: flex;
-  font-size:1.2em;
+  font-size: 1.2em;
   flex-direction: column;
   padding-left: 0;
   transform-origin: left;
@@ -219,6 +223,10 @@ export const BackArrow = styled.li`
   text-align: right;
   padding-right: 1em;
   width: 100%;
+  height: 4em;
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
 
   &:hover {
     cursor: pointer;
@@ -236,7 +244,7 @@ export const ListIcon = styled.span`
   }
 
   @media (max-width: ${500}px) {
-    padding-left: .5em;
+    padding-left: 0.5em;
   }
 
   .MuiSvgIcon-root {

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import NavBar from '../components/NavBar';
-import SigninBody from '../components/SigninBody';
+import SigninBody from '../components/SignIn/SigninBody';
 
 function Signin() {
     return (

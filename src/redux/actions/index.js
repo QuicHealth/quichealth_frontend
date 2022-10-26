@@ -7,7 +7,8 @@ import { setToken, setAuthorizationToken } from "./../setToken";
 let token, resetToken;
 
 const api = axios.create({
-  baseURL: `https://dashboard.quichealth.com.ng`,
+  //baseURL: `https://dashboard.quichealth.com.ng`,
+  baseURL: `https://quichealthapi.herokuapp.com`,
   headers: {
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Origin": "*",
@@ -42,7 +43,6 @@ export const registerUser = (value) => async (dispatch) => {
   });
   try {
     let response = await api.post("api/v1/register", value);
-    console.log(response);
     dispatch({
       type: actionTypes.SIGNUP_SUCCESS,
       payload: response.data,
@@ -65,12 +65,9 @@ export const registerUser = (value) => async (dispatch) => {
     }
     dispatch({
       type: actionTypes.SIGNUP_FAIL,
-      payload:
-        error.response.data.errors[Object.keys(error.response.data.errors)][0],
+      payload: Object.values(error.response.data.data)[0][0],
     });
-    toast.error(
-      error.response.data.errors[Object.keys(error.response.data.errors)][0]
-    );
+    toast.error(Object.values(error.response.data.data)[0][0]);
     return dispatch({
       type: actionTypes.NOT_LOADING,
     });
@@ -78,36 +75,65 @@ export const registerUser = (value) => async (dispatch) => {
 };
 
 //Login or Signin a user
-export const signIn = (value) => async (dispatch) => {
+export const signIn = (value, expert) => async (dispatch) => {
   dispatch({
     type: actionTypes.IS_LOADING,
   });
   try {
-    let response = await api.post("api/v1/login", value);
-    console.log(response);
-    token = response.data.token;
-    setAuthorizationToken(token);
-    localStorage.setItem("token", token);
-    if (response.data.status === true){
-      toast.success(response.data.message);
-      setTimeout(() => {
-        history.push("/dashboard-overview");
-        window.location.reload();
-      }, 2000);
-      dispatch({
-        type: actionTypes.SIGNIN_SUCCESS,
-        payload: response,
-      });
+    let response;
+    if (expert) {
+      response = await api.post("api/v1/doctor/doctor-login", value);
+      console.log(response, "response");
+      if (response.data.status === true) {
+        token = response.data.token;
+        setAuthorizationToken(token);
+        localStorage.setItem("token", token);
+        toast.success(response.data.message);
+        let res = await dispatch(getDashboard(expert));
+        // console.log(res, "res");
+        dispatch({
+          type: actionTypes.EXPERT_SIGNIN_SUCCESS,
+          payload: response.data,
+        });
+        localStorage.setItem("doctorid", response.data.user.id);
+        localStorage.setItem("doctorName", response.data.user.name);
+        // setTimeout(() => {
+        //   history.push("/expert-overview");
+        //   //window.location.reload();
+        // }, 2000);
+        response.data.route = "doctor";
+        return response;
+      } else {
+        toast.error(response.data.message);
+        dispatch({
+          type: actionTypes.SIGNIN_FAIL,
+          payload: response.data.message,
+        });
+      }
     } else {
-      toast.error(response.data.message);
-      dispatch({
-        type: actionTypes.SIGNIN_FAIL,
-        payload: response.data.message,
-      });
-    }
+      response = await api.post("api/v1/login", value);
+      console.log(response, "response");
+      if (response.data.status === true) {
+        token = response.data.data.token.original.access_token;
+        setAuthorizationToken(token);
+        localStorage.setItem("token", token);
+        toast.success(response.data.message);
+        getDashboard();
+        setTimeout(() => {
+          history.push("/dashboard-overview");
+          window.location.reload();
+        }, 2000);
 
+        return response;
+      } else {
+        toast.error(response.data.message);
+        dispatch({
+          type: actionTypes.SIGNIN_FAIL,
+          payload: response.data.message,
+        });
+      }
+    }
   } catch (error) {
-    //console.log(response.data.status);
     if (!error.response) {
       console.log(error);
       toast.error(error.message);
@@ -119,7 +145,7 @@ export const signIn = (value) => async (dispatch) => {
         type: actionTypes.NOT_LOADING,
       });
     }
-    console.log(error);
+    console.log(error.message, "error");
     dispatch({
       type: actionTypes.SIGNIN_FAIL,
       payload: error.response.data.message,
@@ -261,22 +287,46 @@ export const changePassword = (value) => async (dispatch) => {
 };
 
 //Get Dashboard
-export const getDashboard = () => async (dispatch) => {
+export const getDashboard = (expert) => async (dispatch) => {
   try {
-    let response = await api.get("api/v1/get-dashboard", {
-      headers: {
-        Authorization: `Bearer ${localStorage.token}`,
-      },
-    });
-    //getHospitals();
-    console.log(response, "dashboard");
+    let response;
+    if (expert) {
+      response = await api.get("api/v1/doctor/get-dashboard", {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
+      });
+
+      console.log(response, "dashboard-doc");
+      // localStorage.setItem("doctorid", response.data.doctor.id);
+      // localStorage.setItem("doctorName", response.data.doctor.name);
+      return response;
+    } else {
+      response = await api.get("api/v1/get-dashboard", {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
+      });
+      //getHospitals();
+      console.log(response, "dashboard");
+      dispatch({
+        type: actionTypes.SET_USER_DETAILS,
+        payload: response.data.data.user,
+      });
+
+      localStorage.setItem("firstname", response.data.data.user.firstname);
+      localStorage.setItem("lastname", response.data.data.user.lastname);
+    }
   } catch (error) {
+    console.log(error);
     if (!error.response) {
       return toast.error(error.msg);
     }
     toast.error(error.response.data.msg);
   }
 };
+
+//g
 
 //Get Hospitals
 export const getHospitals = () => async (dispatch) => {
@@ -286,11 +336,12 @@ export const getHospitals = () => async (dispatch) => {
         Authorization: `Bearer ${localStorage.token}`,
       },
     });
-    //console.log(response.data.hospitals, "hospital");
-      dispatch({
-        type: actionTypes.GET_ALL_HOSPITALS,
-        payload: response.data.hospitals,
-      });
+    console.log(response, "hospital");
+    dispatch({
+      type: actionTypes.GET_ALL_HOSPITALS,
+      payload: response.data.hospital,
+    });
+    return response;
   } catch (error) {
     console.log(error.message);
     if (!error.response) {
@@ -300,51 +351,373 @@ export const getHospitals = () => async (dispatch) => {
   }
 };
 
-//Get location
-export const getLocation = () => async (dispatch) => {
-  let lat = 0;
-  let lon = 0;
-
-  const geoError = function (error) {
-    console.log("Error occurred. Error code: " + error.code);
-    console.log(error, "error")
-  
-    
-    if (error.code === "") {
-      dispatch({
-        type: actionTypes.ALLOW_LOCATION_ACCESS,
-      });
-    } else {
-      return dispatch({
-        type: actionTypes.DISALLOW_LOCATION_ACCESS,
-      });
+//getAllPaidAppointments
+export const getAllPaidAppointments = () => async (dispatch) => {
+  try {
+    let response = await api.get("api/v1/appointment-by-payment-status", {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+    console.log(response, "appointment");
+    dispatch({
+      type: actionTypes.GET_PAID_APPOINTMENT_DETAILS,
+      payload: response.data.Appointments,
+    });
+    dispatch({
+      type: actionTypes.GET_ALL_PAID_APPOINTMENT_DETAILS,
+      payload: response.data.Appointments,
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
     }
-    // error.code can be:
-    //   0: unknown error
-    //   1: permission denied
-    //   2: position unavailable (error response from location provider)
-    //   3: timed out
+    toast.error(error.response.data.msg);
+  }
+};
+
+//get all doctor paid apposintment
+export const getAllDoctorPaidAppointments = () => async (dispatch) => {
+  try {
+    let response = await api.get(
+      "api/v1/doctor/appointment-by-payment-status",
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
+      }
+    );
+    console.log(response, "dappointment");
+    dispatch({
+      type: actionTypes.GET_PAID_DOCTOR_APPOINTMENT_DETAILS,
+      payload: response.data.Appointments,
+    });
+    dispatch({
+      type: actionTypes.GET_ALL_DOCTOR_PAID_APPOINTMENT_DETAILS,
+      payload: response.data.Appointments,
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
+
+//getall zoom meeting by doctor
+//doctor/get-zoom-meetings
+export const getAllDoctorZoomMeeting = () => async (dispatch) => {
+  try {
+    let response = await api.get(`api/v1/doctor/get-zoom-meetings`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+    console.log(response.data.data[response.data.data.length - 1], "meetingDo");
+    dispatch({
+      type: actionTypes.GET_DOCTOR_MEETING_DETAILS,
+      payload: response.data.data[response.data.data.length - 1],
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
+
+//Get Doctors by ID
+export const getDoctorById = (id) => async (dispatch) => {
+  try {
+    let response = await api.get(`api/v1/get-doctor/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+    console.log(response, "doctor");
+    dispatch({
+      type: actionTypes.GET_DOCTOR_BY_ID,
+      payload: response.data.doctor,
+    });
+    dispatch({
+      type: actionTypes.GET_HOSPITAL_UNIQUE_ID,
+      payload: response.data.doctor,
+    });
+    const uniqueId = response.data.doctor.hospital.unique_id;
+    dispatch(getHospitalByUniqueId(uniqueId));
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
+
+//create zoom meeting
+export const createMeeting = (value) => async (dispatch) => {
+  try {
+    let response = await api.post("/api/v1/create-zoom-meeting", value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
+
+//refresh Oauth zoom token
+export const refreshOauthToken = (value) => async (dispatch) => {
+  try {
+    let response = await api.post("/api/v1/refresh-token", {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+    dispatch(createMeeting(value));
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
+
+//get zoom meeting details
+export const getPatientZoomMeeting = () => async (dispatch) => {
+  try {
+    let response = await api.get("api/v1/get-zoom-meetings", {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+    console.log(
+      response.data.data[response.data.data.length - 1].start_url.length,
+      response.data.data[response.data.data.length - 1].start_url.slice(
+        42,
+        428
+      ),
+      "response"
+    );
+    dispatch({
+      type: actionTypes.GET_PATIENT_MEETING_DETAILS,
+      payload: response.data.data[response.data.data.length - 1],
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
+
+//get zoom meeting details
+export const getDoctorZoomMeeting = () => async (dispatch) => {
+  try {
+    let response = await api.get("api/v1/doctor/get-zoom-meetings", {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+    console.log(
+      response.data.data[response.data.data.length - 1].start_url.length,
+      response.data.data[response.data.data.length - 1].start_url.slice(
+        42,
+        428
+      ),
+      "response"
+    );
+    dispatch({
+      type: actionTypes.GET_DOCTOR_MEETING_DETAILS,
+      payload: response.data.data[response.data.data.length - 1],
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
+
+//get hospital by unique ID
+export const getHospitalByUniqueId = (uniqueId) => async (dispatch) => {
+  try {
+    let response = await api.get(`api/v1/get-hospital/${uniqueId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+    console.log(response, "uniqhospital");
+    dispatch({
+      type: actionTypes.GET_HOSPITAL,
+      payload: response.data,
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
+
+// create patient appointment
+export const createPatientAppointment = (value) => async (dispatch) => {
+  try {
+    let response = await api.post("api/v1/create-appointment", value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+    toast.success(response.data.message);
+    dispatch({
+      type: actionTypes.SET_APPOINTMENT_ID,
+      payload: response.data,
+    });
+    console.log(response, "appoint");
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
+
+// create appointment details
+export const addAppointmentDetails =
+  (value, paymentValue) => async (dispatch) => {
+    //console.log(paymentValue, value)
+    try {
+      let response = await api.post("/api/v1/appointment/details", value, {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
+      });
+      toast.success(response.data.message);
+      console.log(response, "apaDetails");
+      dispatch(addPayment(paymentValue));
+    } catch (error) {
+      console.log(error.message);
+      if (!error.response) {
+        return toast.error(error.msg);
+      }
+      toast.error(error.response.data.msg);
+    }
   };
 
-  if ("geolocation" in navigator) {
-    console.log("Available");
+//Create Payment details
+export const addPayment = (value) => async (dispatch) => {
+  try {
+    let response = await api.post("api/v1/payment", value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
 
-    navigator.geolocation.getCurrentPosition(function (position) {
-      lon = position.coords.longitude;
-      lat = position.coords.latitude;
-      localStorage.setItem("latitude", lat);
-      localStorage.setItem("longitude", lon);
-    }, geoError);
-  } else {
-    console.log("Not Available");
+    console.log(response, "payment");
+    //history.push(response.data.data.link);
+    window.location.assign(response.data.data.link);
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
   }
+};
+export const setPatientBookValues = (value) => (dispatch) => {
+  return dispatch({
+    type: actionTypes.SET_PATIENT_BOOK_VALUES,
+    payload: value,
+  });
+};
+
+/**********Location fweature */
+
+const geoSettings = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0,
+};
+
+//set the long and lat of users
+function revealPosition(pos) {
+  const crd = pos.coords;
+  localStorage.setItem("latitude", crd.latitude);
+  localStorage.setItem("longitude", crd.longitude);
+  // console.log("Your current position is:");
+  // console.log(`Latitude : ${crd.latitude}`);
+  // console.log(`Longitude: ${crd.longitude}`);
+  // console.log(`More or less ${crd.accuracy} meters.`);
+}
+
+function positionDenied(err) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+//Get location
+export const getLocation = () => async (dispatch) => {
+
+  if (navigator.geolocation) {
+    console.log("geoLocation feature is available");
+    navigator.permissions.query({ name: "geolocation" }).then((result) => {
+      if (result.state === "granted") {
+        //console.log(result.state);
+        navigator.geolocation.getCurrentPosition(revealPosition);
+        dispatch({
+          type: actionTypes.ALLOW_LOCATION_ACCESS,
+        });
+        // geoBtn.style.display = "none";
+      } else if (result.state === "prompt") {
+        //console.log(result.state);
+        // geoBtn.style.display = "none";
+        navigator.geolocation.getCurrentPosition(geoSettings);
+      } else if (result.state === "denied") {
+        //console.log(result.state);
+        navigator.geolocation.getCurrentPosition(positionDenied);
+        return dispatch({
+          type: actionTypes.DISALLOW_LOCATION_ACCESS,
+        });
+      }
+      result.addEventListener("change", () => {
+        console.log(result.state);
+      });
+    });
+  } else {
+    console.log("geoLocation feature Not Available");
+  }
+
+  // if ("geolocation" in navigator) {
+  //   console.log("Available");
+
+  //   navigator.geolocation.getCurrentPosition(function (position) {
+  //     lon = position.coords.longitude;
+  //     lat = position.coords.latitude;
+  //     localStorage.setItem("latitude", lat);
+  //     localStorage.setItem("longitude", lon);
+  //   }, geoError);
+  // } else {
+  //   console.log("Not Available");
+  // }
 };
 
 //Logout
 export const logout = () => (dispatch) => {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
-  localStorage.removeItem("firstnane");
+  localStorage.removeItem("firstname");
+  localStorage.removeItem("lastname");
   setAuthorizationToken(false);
   dispatch(setCurrentUser({}));
   history.push("/signin");
@@ -366,8 +739,8 @@ export const getDays = () => async (dispatch) => {
     });
     dispatch({
       type: actionTypes.GET_ALL_DAYS,
-      payload: response.data.data
-    })
+      payload: response.data.data,
+    });
     console.log(response.data.data, "geyDays");
   } catch (error) {
     console.log(error.message);
@@ -376,22 +749,32 @@ export const getDays = () => async (dispatch) => {
     }
     toast.error(error.response.data.msg);
   }
-}
+};
 
 export const addSchedule = (value) => async (dispatch) => {
   dispatch({
     type: actionTypes.IS_LOADING,
   });
   try {
-    let response = await api.post("api/v1/doctor/save-schedule", value)
-    console.log(response, "add schedutle")
-    toast.success(response.data.msg);
+    console.log(value);
+    let response = await api.post("api/v1/doctor/save-schedule", value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+    console.log(response, "add schedutle");
+    toast.success(response.data.message);
     setTimeout(() => {
-      history.push("/schedule-time");
-      window.location.reload();
+      //history.push("/schedule-time");
+      // window.location.reload();
     }, 2000);
-
   } catch (error) {
-      console.log(error.message, error);
+    console.log(error);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
   }
-}
+};
+
+//SetAppointment Action

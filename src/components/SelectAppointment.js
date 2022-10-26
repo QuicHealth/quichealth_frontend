@@ -2,18 +2,74 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import StarIcon from "@material-ui/icons/StarOutlined";
+import ScheduleIcon from "./../Image/schedule.svg";
+import DividerIcon from "./../Image/divider.png";
+import TimeIcon from "./../Image/time.svg";
 import { InputLabel, Input, InputTypeBox, Select } from "./RegisterBody";
 import { Container, MainBody, ViewProfile } from "./Appointments";
 import SideBar from "./SideBar";
 import { ProfileImage } from "./Overview";
-import { getHospitals, getLocation } from "../redux/actions";
+import {
+  setPatientBookValues,
+  getDoctorById,
+  getHospitals,
+  getLocation,
+  createPatientAppointment,
+} from "../redux/actions";
 import { locations } from "../utils/utils";
 import useForm from "../utils/useForm";
 import { useHistory } from "react-router-dom";
+import GenericCalender from "./GenericCalender";
+import { PatientCalenderModal, ConfirmationModal } from "./Modal";
+import dayjs from "dayjs";
+import LocalizedFormat from "dayjs/plugin/localizedFormat";
 
-export const DocAppointment = ({ name, NoIcon }) => {
+export const DocAppointment = ({
+  name,
+  Hname,
+  time,
+  NoIcon,
+  setArrayId,
+  id,
+  arrayId,
+  select,
+  getDoctorById,
+  doctorDetails,
+  uniqueId,
+  daySelected,
+  setDaySelected,
+  slotSelected,
+  setSlotSelected,
+}) => {
+  const setIdTrue = (arry, setArry, id) => {
+    arry = new Array(arry?.length).fill(false);
+    if (!arry[id]) {
+      arry[id] = true;
+      setArry(arry);
+      console.log(arry);
+    }
+  };
+
+  const removeClass = (arry, setArry) => {
+    arry = new Array(arry?.length).fill(false);
+    setArry(arry);
+  };
+
+  const [modal, setModal] = useState(false);
+  const [allSlots, setAllSlots] = useState("");
+
+  //Get all slots
+  const getClass = (arr, inst, id) => {
+    if (arr[id] === inst) {
+      return "setSlot";
+    }
+    return "";
+  };
+
+  dayjs.extend(LocalizedFormat);
+
   return (
-    <DocDesc>
+    <DocDesc className="booked">
       <DocImg>
         <img
           src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
@@ -22,47 +78,181 @@ export const DocAppointment = ({ name, NoIcon }) => {
       </DocImg>
       <DocDetails>
         <DName>{name}</DName>
-        <DRating>
-          <StarIcon />
-          <StarIcon />
-          <StarIcon />
-          <StarIcon />
-          <StarIcon className="nostar" />
-        </DRating>
+        <DHName>{Hname}</DHName>
+        {time ? (
+          <>
+            <DRating className="booked">
+              <StarIcon />
+              <StarIcon />
+              <StarIcon />
+              <StarIcon />
+              <StarIcon className="nostar" />
+            </DRating>
+          </>
+        ) : (
+          ""
+        )}
+
         <DProfile>
           <ViewProfile>View profile</ViewProfile>
         </DProfile>
-        <DTime>
-          <Icon>
-            <i class="fas fa-calendar-alt"></i> &nbsp;
-          </Icon>
-          <Time> 10:45AM GMT +1 </Time>
-          <Icon>
-            {NoIcon ? "" : <i className="fas fa-chevron-down down"></i>}
-          </Icon>
+
+        <DTime
+          className={select ? "setSchedule" : ""}
+          onClick={() => {
+            setIdTrue(arrayId, setArrayId, id);
+            setModal(true);
+            getDoctorById(uniqueId);
+          }}
+        >
+          {!daySelected ? (
+            <>
+              {time ? (
+                <>
+                  {" "}
+                  <Icon>
+                    <img src={TimeIcon} alt="schedule" />
+                  </Icon>
+                  <Time className="booked">
+                    {" "}
+                    {time} {parseInt(time.slice[(0, 2)]) > 12 ? "PM " : "AM "}
+                    GMT +1{" "}
+                  </Time>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Time> View schedule </Time>
+                </>
+              )}
+              <Icon>
+                {" "}
+                {time ? "" : <img src={ScheduleIcon} alt="schedule" />}
+              </Icon>
+              <Icon>
+                {NoIcon ? "" : <i className="fas fa-chevron-down down"></i>}
+              </Icon>
+            </>
+          ) : (
+            <>
+              <DTime>
+                <Icon>
+                  <img src={ScheduleIcon} alt="schedule" />
+                </Icon>
+                <Time>
+                  {daySelected &&
+                    daySelected
+                      ?.format("LL")
+                      .slice(0, daySelected?.format("LL").length - 6)}{" "}
+                </Time>
+                <Icon>
+                  <img src={DividerIcon} alt="schedule" />
+                </Icon>
+                <Icon>
+                  <img src={TimeIcon} alt="schedule" />
+                </Icon>
+                <Time>{slotSelected.value}</Time>
+              </DTime>
+            </>
+          )}
         </DTime>
       </DocDetails>
+      {modal ? (
+        <PatientCalenderModal
+          patient="patient"
+          daySelected={daySelected}
+          setDaySelected={setDaySelected}
+          setModal={setModal}
+          setSlotSelected={setSlotSelected}
+          slotSelected={slotSelected}
+          getClass={getClass}
+          removeClass={removeClass}
+          arry={arrayId}
+          setArry={setArrayId}
+          doctorDetails={doctorDetails}
+          id={id}
+          allSlots={allSlots}
+          setAllSlots={setAllSlots}
+        />
+      ) : (
+        ""
+      )}
     </DocDesc>
   );
 };
 
-export const BookAppointment = ({ name }) => {
+export const BookAppointment = ({
+  name,
+  Hname,
+  uniqueId,
+  setArrayId,
+  id,
+  arrayId,
+  select,
+  getDoctorById,
+  doctorDetails,
+  doctorId,
+  setPatientBookValues,
+  createPatientAppointment,
+}) => {
+  const [modal, setModal] = useState(false);
+  const [daySelected, setDaySelected] = useState("");
+  const [slotSelected, setSlotSelected] = useState("");
   let routerHistory = useHistory();
   const pricing = () => {
-    routerHistory.push("/pricings")
-}
+    routerHistory.push("/pricings");
+  };
+  const [value, setValues] = useState({});
   return (
     <BookingDetails>
-      <DocAppointment name={name} />
+      <DocAppointment
+        name={name}
+        Hname={Hname}
+        setArrayId={setArrayId}
+        id={id}
+        arrayId={arrayId}
+        select={select}
+        getDoctorById={getDoctorById}
+        doctorDetails={doctorDetails}
+        uniqueId={uniqueId}
+        daySelected={daySelected}
+        setDaySelected={setDaySelected}
+        slotSelected={slotSelected}
+        setSlotSelected={setSlotSelected}
+      />
       <BookBtn>
-        <Button onClick={pricing}>Book</Button>
+        <Button
+          onClick={() => {
+            setModal(true);
+            setValues({
+              ...value,
+              doctor_id: doctorId,
+              date: daySelected.format("DD-MM-YYYY"),
+              time_slots: slotSelected,
+            });
+            //console.log(value);
+            //setPatientBookValues(value)
+          }}
+        >
+          Book
+        </Button>
       </BookBtn>
+      {modal ? (
+        <ConfirmationModal
+          value={value}
+          setPatientBookValues={setPatientBookValues}
+          setModal={setModal}
+          createPatientAppointment={createPatientAppointment}
+        />
+      ) : (
+        ""
+      )}
     </BookingDetails>
   );
 };
 
- //calculate distance in KM using longitude and latitude
- const getDistance = (origin, destination) => {
+//calculate distance in KM using longitude and latitude
+const getDistance = (origin, destination) => {
   const [lat1, lon1] = origin;
   const [lat2, lon2] = destination;
   const radius = 6371; //km 25.99765215004212
@@ -80,131 +270,227 @@ export const BookAppointment = ({ name }) => {
   return distance;
 };
 
- Math.radians = (degree) => degree * Math.PI / 180;
+Math.radians = (degree) => (degree * Math.PI) / 180;
 
-  // the appointment function
-  const AppointmentComponent = ({hospitals, sidebar, values, errors, locationAccess, setValues, handleChange}) => {
-    const longitude = localStorage.getItem("longitude");
-    const latitude = localStorage.getItem("latitude");
-    const [location, setLocation] = useState("");
-    console.log(hospitals, "here");
-   
-    const hospitalsWithDistance = hospitals.map(hospital => {
-      return {
-        ...hospital,
-        distance: getDistance([latitude, longitude], [parseFloat(hospital.latitude), parseFloat(hospital.longitude)])
+//Get Selected Appointment
+const getSelectedAppointment = (array, setArray, object, index) => {
+  let newArray = array.map((item, id) => {
+    return item.doctors.map((ite, idx) => {
+      return { ...ite, select: "" };
+    });
+  });
+  const selectedObject = { ...object, select: "selected" };
+
+  newArray = array.map((item, id) => {
+    return item.doctors.map((ite, idx) => {
+      if (idx === index) {
+        ite = selectedObject;
       }
-    })
-   // console.log(hospitalsWithDistance.sort((a, b) => a.distance - b.distance), "distance")
-    const [filterHospitals, setFilterHospitals] = useState([])
-    
+      return ite;
+    });
+  });
 
-    // filter onSubmit
+  let newArra = array.map((item, id) => {
+    return (item["doctors"] = newArray);
+  });
+
+  console.log(newArray, "newGere");
+  console.log(newArra, "hhihi");
+};
+
+// the appointment function
+const AppointmentComponent = ({
+  hospitals,
+  sidebar,
+  values,
+  errors,
+  locationAccess,
+  setValues,
+  handleChange,
+  getSelectedAppointment,
+  id,
+  getDoctorById,
+  doctorDetails,
+  setPatientBookValues,
+  createPatientAppointment,
+}) => {
+  const longitude = localStorage.getItem("longitude");
+  const latitude = localStorage.getItem("latitude");
+  const [location, setLocation] = useState("");
+  console.log(hospitals, "here");
+
+  let hospitalsWithDistance;
+
+  hospitalsWithDistance = hospitals?.map((hospital) => {
+    return {
+      ...hospital,
+      distance: getDistance(
+        [latitude, longitude],
+        [parseFloat(hospital.latitude), parseFloat(hospital.longitude)]
+      ),
+    };
+  });
+
+  useEffect(() => {
+    setFilterHospitals(hospitalsWithDistance);
+  }, [hospitals]);
+
+  const [filterHospitals, setFilterHospitals] = useState([]);
+
+  //console.log(allHospital, "jbjdd");
+  // console.log(hospitalsWithDistance.sort((a, b) => a.distance - b.distance), "distance")
+
   const getDoctor = (e) => {
     e.preventDefault();
-   // console.log(values.location, "valiues")
-     const filteredHospitals = hospitals.filter(hospital => {
-      return hospital.city == values.location || hospital.state == values.location
-    })
-    setFilterHospitals(filteredHospitals)
-}
+    //console.log(values.location, "valiues")
+    const filteredHospitals = hospitals?.filter((hospital) => {
+      return hospital.city == values.location;
+    });
+    setFilterHospitals(filteredHospitals);
+  };
+  let a;
+  let b = new Array(1).fill(false);
+  console.log(b, "b");
+  const [arrayId, setArrayId] = useState([false]);
 
-    return (
-      <Containa>
-        <Title>Select Appointment</Title>
-        <SelectBox sidebar={sidebar}>
+  return (
+    <Containa sidebar={sidebar}>
+      <Title>Select Appointment</Title>
+      <SelectBox sidebar={sidebar}>
+        <div>
+          <InputLabel htmlFor="Location"> Location </InputLabel>
+          <InputTypeBox className="selectAppointment">
+            <Select
+              className="selectAppointment"
+              border={errors.location && "1px solid red"}
+              name="location"
+              value={location}
+              style={location ? { color: "#000000" } : { color: "#bdbdbe" }}
+              onChange={(e) => {
+                const selectedLocation = e.target.value;
+                setLocation(selectedLocation);
+                setValues({
+                  ...values,
+                  [e.target.name]: e.target.value,
+                });
+              }}
+            >
+              <option value="" hidden>
+                Location
+              </option>
+              {Object.entries(locations).map(([key, value], id) => {
+                return (
+                  <option key={id} value={value}>
+                    {value}
+                  </option>
+                );
+              })}
+            </Select>
+          </InputTypeBox>
+          {console.log(filterHospitals, "filte")}
+        </div>
+        <SecondInputBox>
           <div>
-            <InputLabel htmlFor="Location"> Location </InputLabel>
-            <InputTypeBox className="selectAppointment">
-              <Select
-                className="selectAppointment"
-                border={errors.location && "1px solid red"}
-                name="location"
-                value={location}
-                style={location? {color: "#000000"} : {color : "#bdbdbe"}} 
-                onChange={(e) => {
-                  const selectedLocation = e.target.value;
-                  setLocation(selectedLocation);
-                  setValues({
-                    ...values,
-                    [e.target.name]: e.target.value,
-                  });
-                  
-                }}
-              >
-
-                <option value="" hidden>
-                  Location
-                </option>
-                {Object.entries(locations).map(([key, value], id) => {
-                  return (
-                    <option key={id} value={value}>
-                      {value}
-                    </option>
-                  );
-                })}
-              </Select>
-            </InputTypeBox>
+            <InputLabel htmlFor="Date"> Date </InputLabel>
+            <Input
+              type="date"
+              name="date"
+              border={errors.date && "1px solid red"}
+              value={values.date}
+              onChange={handleChange}
+              placeholder="01/01/2020"
+              className="select"
+            />
           </div>
-          <SecondInputBox>
-            <div>
-              <InputLabel htmlFor="Date"> Date </InputLabel>
-              <Input
-                type="date"
-                name="date"
-                border={errors.date && "1px solid red"}
-                value={values.date}
-                onChange={handleChange}
-                placeholder="01/01/2020"
-              />
-            </div>
-            <div>
-              <InputLabel htmlFor="Persona"> Persona </InputLabel>
-              <Input type="text" placeholder="Adult" />
-            </div>
-          </SecondInputBox>
           <div>
-            <ViewMore className="search">
-              <Button className="search" onClick={getDoctor}>Search</Button>
-            </ViewMore>
+            <InputLabel htmlFor="Persona"> Persona </InputLabel>
+            <Input type="text" placeholder="Adult" className="select" />
           </div>
-        </SelectBox>
-        <Bookings sidebar={sidebar}>
-          <Available>Available</Available>
-          <Margin></Margin>
-          {
-           locationAccess ? 
-           (hospitalsWithDistance.sort((a, b) => a.distance - b.distance).map(hospital => {
-            return hospital.doctors.map(doctor => {
-             return <BookAppointment key={hospital.id} name={doctor.name} />
-            })
-           }) 
-           )
-           : 
-           (
-            filterHospitals?.map(hospital => {
-              return hospital.doctors.map(doctor => {
-                return <BookAppointment key={hospital.id} name={doctor.name} />
-              })
-            })
-           )
-          }
-          <Margin className="booking"></Margin>
-
-          <ViewMore>
-            <Button className="nobtn">
-              View more <i class="fas fa-angle-right"></i>{" "}
+        </SecondInputBox>
+        <div>
+          <ViewMore className="search">
+            <Button className="search" onClick={getDoctor}>
+              Search
             </Button>
           </ViewMore>
-        </Bookings>
-      </Containa>
-    );
-  };
+        </div>
+      </SelectBox>
 
+      <Bookings sidebar={sidebar}>
+        <Available>Available</Available>
+        <Margin></Margin>
+        {locationAccess
+          ? filterHospitals
+              .sort((a, b) => a.distance - b.distance)
+              .map((hospital) => {
+                a = new Array(hospital.doctors.length).fill(false);
+                // console.log(doctor.unique_id, "unigdfhgj");
+                return hospital?.doctors?.map((doctor, idx) => {
+                  doctor.select = arrayId[idx];
+                  return (
+                    <>
+                      <BookAppointment
+                        key={idx}
+                        Hname={hospital?.name}
+                        name={doctor?.name}
+                        t={doctor?.name}
+                        uniqueId={doctor?.unique_id}
+                        setArrayId={setArrayId}
+                        id={idx}
+                        arrayId={arrayId}
+                        select={doctor?.select}
+                        getDoctorById={getDoctorById}
+                        doctorDetails={doctorDetails}
+                        doctorId={doctor?.id}
+                        setPatientBookValues={setPatientBookValues}
+                        createPatientAppointment={createPatientAppointment}
+                      />
+                    </>
+                  );
+                });
+              })
+          : filterHospitals?.map((hospital) => {
+              return hospital.doctors?.map((doctor, idx) => {
+                return (
+                  <BookAppointment
+                    key={idx}
+                    Hname={hospital.name}
+                    name={doctor.name}
+                    getSelectedAppointment={getSelectedAppointment}
+                    hospitalz={filterHospitals}
+                    id={id}
+                    doctor={doctor}
+                    select={doctor.select}
+                  />
+                );
+              });
+            })}
+        <Margin className="booking"></Margin>
+
+        <ViewMore>
+          <Button className="nobtn">
+            View more <i className="fas fa-angle-right"></i>{" "}
+          </Button>
+        </ViewMore>
+      </Bookings>
+    </Containa>
+  );
+};
 
 //The appointment component functions
-function SelectAppointments({ openSidebar, getHospitals, hospitals, locationAccess }) {
-
+function SelectAppointments({
+  openSidebar,
+  getHospitals,
+  hospitals,
+  locationAccess,
+  getLocation,
+  getDoctorById,
+  doctor,
+  setPatientBookValues,
+  createPatientAppointment,
+  time,
+  NoIcon,
+}) {
   const {
     values,
     errors,
@@ -216,12 +502,78 @@ function SelectAppointments({ openSidebar, getHospitals, hospitals, locationAcce
     disabledSubmit,
     setIsSubmit,
   } = useForm("selectAppointment");
-  
+
+  const longitude = localStorage.getItem("longitude");
+  const latitude = localStorage.getItem("latitude");
+  const [location, setLocation] = useState("");
+
+  let hospitalsWithDistance;
+
+  hospitalsWithDistance = hospitals?.map((hospital) => {
+    return {
+      ...hospital,
+      distance: getDistance(
+        [latitude, longitude],
+        [parseFloat(hospital.latitude), parseFloat(hospital.longitude)]
+      ),
+    };
+  });
 
   useEffect(() => {
-    //getHospitals();
-  },[]);
+    getLocation();
+    getHospitals();
+  }, []);
 
+  useEffect(() => {
+    setFilterHospitals(hospitalsWithDistance);
+  }, [hospitals]);
+
+  const [filterHospitals, setFilterHospitals] = useState([]);
+
+  const getDoctor = (e) => {
+    e.preventDefault();
+    //console.log(values.location, "valiues")
+    const filteredHospitals = hospitals?.filter((hospital) => {
+      return hospital.city == values.location;
+    });
+    setFilterHospitals(filteredHospitals);
+  };
+
+  let a;
+  //let b = new Array(1).fill(false);
+  //console.log(b, "b");
+  const [arrayId, setArrayId] = useState([false]);
+  const [modal, setModal] = useState(false);
+  const [daySelected, setDaySelected] = useState("");
+  const [slotSelected, setSlotSelected] = useState("");
+  const [value, setValuess] = useState({});
+
+  //appointment details
+  const setIdTrue = (arry, setArry, id) => {
+    arry = new Array(arry?.length).fill(false);
+    if (!arry[id]) {
+      arry[id] = true;
+      setArry(arry);
+      console.log(arry);
+    }
+  };
+
+  const removeClass = (arry, setArry) => {
+    arry = new Array(arry?.length).fill(false);
+    setArry(arry);
+  };
+
+  //const [modal, setModal] = useState(false);
+  const [allSlots, setAllSlots] = useState("");
+
+  const getClass = (arr, inst, id) => {
+    if (arr[id] === inst) {
+      return "setSlot";
+    }
+    return "";
+  };
+
+  dayjs.extend(LocalizedFormat);
 
   return (
     <Container sidebar={openSidebar}>
@@ -233,7 +585,266 @@ function SelectAppointments({ openSidebar, getHospitals, hospitals, locationAcce
             alt=""
           />
         </ProfileImage>
-        <AppointmentComponent hospitals={hospitals} sidebar={openSidebar} values={values} errors={errors} locationAccess={locationAccess} setValues={setValues} handleChange={handleChange}/>
+
+        <AppointmentComponent
+          hospitals={hospitals}
+          sidebar={openSidebar}
+          values={values}
+          errors={errors}
+          locationAccess={locationAccess}
+          setValues={setValues}
+          handleChange={handleChange}
+          getSelectedAppointment={getSelectedAppointment}
+          getDoctorById={getDoctorById}
+          doctorDetails={doctor}
+          setPatientBookValues={setPatientBookValues}
+          createPatientAppointment={createPatientAppointment}
+        />
+        {/* <Containa sidebar={openSidebar}>
+          <Title>Select Appointment</Title>
+          <SelectBox sidebar={openSidebar}>
+            <div>
+              <InputLabel htmlFor="Location"> Location </InputLabel>
+              <InputTypeBox className="selectAppointment">
+                <Select
+                  className="selectAppointment"
+                  border={errors.location && "1px solid red"}
+                  name="location"
+                  value={location}
+                  style={location ? { color: "#000000" } : { color: "#bdbdbe" }}
+                  onChange={(e) => {
+                    const selectedLocation = e.target.value;
+                    setLocation(selectedLocation);
+                    setValues({
+                      ...values,
+                      [e.target.name]: e.target.value,
+                    });
+                  }}
+                >
+                  <option value="" hidden>
+                    Location
+                  </option>
+                  {Object.entries(locations).map(([key, value], id) => {
+                    return (
+                      <option key={id} value={value}>
+                        {value}
+                      </option>
+                    );
+                  })}
+                </Select>
+              </InputTypeBox>
+              {console.log(filterHospitals, "filte")}
+            </div>
+            <SecondInputBox>
+              <div>
+                <InputLabel htmlFor="Date"> Date </InputLabel>
+                <Input
+                  type="date"
+                  name="date"
+                  border={errors.date && "1px solid red"}
+                  value={values.date}
+                  onChange={handleChange}
+                  placeholder="01/01/2020"
+                  className="select"
+                />
+              </div>
+              <div>
+                <InputLabel htmlFor="Persona"> Persona </InputLabel>
+                <Input type="text" placeholder="Adult" className="select" />
+              </div>
+            </SecondInputBox>
+            <div>
+              <ViewMore className="search">
+                <Button className="search" onClick={getDoctor}>
+                  Search
+                </Button>
+              </ViewMore>
+            </div>
+          </SelectBox>
+                */}
+          {/* List doctors and select the bookings */}
+       {/*   <Bookings sidebar={openSidebar}>
+            <Available>Available</Available>
+            <Margin></Margin>
+            {console.log(filterHospitals, locationAccess, "yess0")}
+            {locationAccess
+              ? filterHospitals
+                  .sort((a, b) => a.distance - b.distance)
+                  .map((hospital) => {
+                    a = new Array(hospital.doctors.length).fill(false);
+                    // console.log(doctor.unique_id, "unigdfhgj");
+                    return hospital?.doctors?.map((doctor, idx) => {
+                      doctor.select = arrayId[idx];
+                      return (
+                        <>
+                          <BookingDetails>
+                            <DocDesc className="booked">
+                              <DocImg>
+                                <img
+                                  src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+                                  alt=""
+                                />
+                              </DocImg>
+                              <DocDetails>
+                                <DName>{doctor.name}</DName>
+                                <DHName>{hospital.name}</DHName>
+
+                                <DProfile>
+                                  <ViewProfile>View profile</ViewProfile>
+                                </DProfile>
+
+                                <DTime
+                                  className={
+                                    doctor?.select ? "setSchedule" : ""
+                                  }
+                                  onClick={() => {
+                                    //setIdTrue(arrayId, setArrayId, id);
+                                    setModal(true);
+                                    getDoctorById(doctor.unique_id);
+                                  }}
+                                >
+                                  {!daySelected ? (
+                                    <>
+                                      {time ? (
+                                        <>
+                                          {" "}
+                                          <Icon>
+                                            <img
+                                              src={TimeIcon}
+                                              alt="schedule"
+                                            />
+                                          </Icon>
+                                          <Time className="booked">
+                                            {" "}
+                                            {time}{" "}
+                                            {parseInt(time.slice[(0, 2)]) > 12
+                                              ? "PM "
+                                              : "AM "}
+                                            GMT +1{" "}
+                                          </Time>
+                                        </>
+                                      ) : (
+                                        <>
+                                          {" "}
+                                          <Time> View schedule </Time>
+                                        </>
+                                      )}
+                                      <Icon>
+                                        {" "}
+                                        {time ? (
+                                          ""
+                                        ) : (
+                                          <img
+                                            src={ScheduleIcon}
+                                            alt="schedule"
+                                          />
+                                        )}
+                                      </Icon>
+                                      <Icon>
+                                        {NoIcon ? (
+                                          ""
+                                        ) : (
+                                          <i className="fas fa-chevron-down down"></i>
+                                        )}
+                                      </Icon>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <DTime>
+                                        <Icon>
+                                          <img
+                                            src={ScheduleIcon}
+                                            alt="schedule"
+                                          />
+                                        </Icon>
+                                        <Time>
+                                          {daySelected &&
+                                            daySelected
+                                              ?.format("LL")
+                                              .slice(
+                                                0,
+                                                daySelected?.format("LL")
+                                                  .length - 6
+                                              )}{" "}
+                                        </Time>
+                                        <Icon>
+                                          <img
+                                            src={DividerIcon}
+                                            alt="schedule"
+                                          />
+                                        </Icon>
+                                        <Icon>
+                                          <img src={TimeIcon} alt="schedule" />
+                                        </Icon>
+                                        <Time>{slotSelected.value}</Time>
+                                      </DTime>
+                                    </>
+                                  )}
+                                </DTime>
+                              </DocDetails>
+                              {modal ? (
+                                <PatientCalenderModal
+                                  patient="patient"
+                                  daySelected={daySelected}
+                                  setDaySelected={setDaySelected}
+                                  setModal={setModal}
+                                  setSlotSelected={setSlotSelected}
+                                  slotSelected={slotSelected}
+                                  getClass={getClass}
+                                  removeClass={removeClass}
+                                  arry={arrayId}
+                                  setArry={setArrayId}
+                                  doctorDetails={doctor}
+                                  id={idx}
+                                  allSlots={allSlots}
+                                  setAllSlots={setAllSlots}
+                                />
+                              ) : (
+                                ""
+                              )}
+                            </DocDesc>
+
+                            <BookBtn>
+                              <Button
+                                onClick={() => {
+                                  setModal(true);
+                                  setValues({
+                                    ...value,
+                                    doctor_id: doctor?.id,
+                                    date: daySelected.format("DD-MM-YYYY"),
+                                    time_slots: slotSelected,
+                                  });
+                                  //console.log(value);
+                                  //setPatientBookValues(value)
+                                }}
+                              >
+                                Book
+                              </Button>
+                            </BookBtn>
+                            {modal ? (
+                              <ConfirmationModal
+                                value={value}
+                                setPatientBookValues={setPatientBookValues}
+                                setModal={setModal}
+                                createPatientAppointment={
+                                  createPatientAppointment
+                                }
+                              />
+                            ) : (
+                              ""
+                            )}
+                          </BookingDetails>
+                        </>
+                      );
+                    });
+                  })
+              : filterHospitals?.map((hospital) => {
+                  return hospital.doctors?.map((doctor, idx) => {
+                    return <></>;
+                  });
+                })}
+          </Bookings>
+        </Containa> */}
       </MainBody>
     </Container>
   );
@@ -243,11 +854,17 @@ const mapStateProps = (state) => ({
   openSidebar: state.utils.openSidebar,
   hospitals: state.hospital.hospitals,
   locationAccess: state.hospital.locationAccess,
+  doctor: state.hospital.doctor,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getHospitals: () => dispatch(getHospitals()),
+    getDoctorById: (id) => dispatch(getDoctorById(id)),
+    getLocation: () => dispatch(getLocation()),
+    setPatientBookValues: (value) => dispatch(setPatientBookValues(value)),
+    createPatientAppointment: (value) =>
+      dispatch(createPatientAppointment(value)),
   };
 };
 export default SelectAppointments = connect(
@@ -257,15 +874,22 @@ export default SelectAppointments = connect(
 
 export const Containa = styled.div`
   padding: 2em 0;
+  position: relative;
+  //left: 3.5em;
+  left: ${({ sidebar }) => (sidebar ? "3.5em" : "0em")};
+  width: 100%;
   //background: linear-gradient(180deg, #e7e7ed, #ffffff);
   margin: 0 auto;
   margin-right: 0.5em;
-  margin-top: 5em;
+  //margin-top: 5em;
   margin-left: 0.5em;
   color: #070647;
   border-radius: 15px;
-  &.pricing{
+  &.pricing {
     margin-top: 0em;
+  }
+  @media (max-width: ${500}px) {
+    left: 0;
   }
 `;
 
@@ -280,7 +904,7 @@ export const Title = styled.h2`
   font-size: 2.5em;
   text-align: center;
 
-  &.pricing{
+  &.pricing {
     margin-bottom: 4em;
   }
 `;
@@ -387,16 +1011,17 @@ const BookingDetails = styled.div`
 `;
 const DocImg = styled.div`
   > img {
-    height: 4em;
-    width: 4em;
+    height: 6.5em;
+    width: 6em;
     border-radius: 50%;
   }
 `;
 
 const DocDesc = styled.div`
   display: flex;
-  justify-content: space-between;
-  width: 16em;
+  align-items: center;
+  //width: 19em;
+  gap: 1em;
 
   @media (max-width: ${500}px) {
     width: unset;
@@ -409,9 +1034,17 @@ const DocDetails = styled.div`
 `;
 
 const DName = styled.h3`
-  padding-left: 0.5em;
-  font-size: 1em;
+  //padding-left: 0.5em;
+  //padding: 0.2em 0;
+  font-size: 1.5em;
 `;
+
+const DHName = styled.p`
+  font-size: 14px;
+  color: #7b7b7b;
+  padding: 0.2em 0;
+`;
+
 const DRating = styled.div`
   display: flex;
   padding-left: 0.7em;
@@ -423,23 +1056,43 @@ const DRating = styled.div`
       fill: #bdbdbe;
     }
   }
+  &.booked {
+    padding-left: 0.7em;
+    position: relative;
+    left: -1em;
+  }
 `;
 const DProfile = styled.div`
-  padding-left: 0.5em;
+  //padding-left: 0.5em;
+  padding: 0.2em 0;
   > span {
-    font-size: 11px;
+    font-size: 15px !important;
     font-weight: 600;
+    color: #3c6be4 !important;
   }
 `;
 const DTime = styled.div`
   display: flex;
   font-size: 0.9em;
+  gap: 0.4em;
   color: green;
   width: 100%;
-  justify-content: space-evenly;
+  //justify-content: space-between;
+  padding: 0.2em 0;
+  cursor: pointer;
+
+  &.setSchedule {
+    background: #efefef;
+    padding: 0.5em 0.5em;
+    border-radius: 10px;
+  }
+
+  :hover {
+    opacity: 0.8;
+  }
 `;
 export const Icon = styled.span`
-  padding-left: 0.5em;
+  //padding-left: 0.5em;
   > i {
     color: #8d82828f;
     font-weight: 500;
@@ -469,7 +1122,16 @@ export const Icon = styled.span`
     }
   }
 `;
-const Time = styled.span``;
+const Time = styled.p`
+  color: #7b7b7b;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+
+  &.booked {
+    color: #32820c;
+  }
+`;
 
 const BookBtn = styled.div``;
 
@@ -498,7 +1160,9 @@ export const Button = styled.button`
     transition: all 0.5s;
   }
   &.search {
-    padding: 0.6em 2.5em;
+    padding: 0.45em 2.5em;
+    font-size: 0.9em;
+    border-radius: 40px;
 
     @media (max-width: ${500}px) {
       width: 50%;
@@ -513,6 +1177,10 @@ export const ViewMore = styled.div`
   margin: 1.4em auto;
   display: flex;
   justify-content: space-around;
+  &.search {
+    margin: 1em auto;
+    margin-top: 1.7em;
+  }
 
   @media (max-width: ${500}px) {
     justify-content: center;
@@ -525,8 +1193,6 @@ export const ViewMore = styled.div`
     @media (max-width: ${500}px) {
       width: 100%;
       padding: 0.7em 1.5em;
-    }
-    &.search {
     }
   }
 `;
@@ -545,3 +1211,11 @@ const SecondInputBox = styled.div`
     }
   }
 `;
+
+const PatientCalenderContainer = styled.div``;
+
+const CalenderSection = styled.div``;
+
+const SlotSection = styled.div``;
+
+const Slots = styled.form``;

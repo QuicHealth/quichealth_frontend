@@ -12,7 +12,7 @@ function BookedPage() {
     )
 }
 
-export default BookedPage
+export default BookedPage 
 
 const Container = styled.div`
   

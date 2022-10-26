@@ -42,10 +42,10 @@ function RegisterBody(props) {
   };
 
   useEffect(() => {
-    pageUp()
-  })
+    pageUp();
+  });
   return (
-    <Container>
+    <Container className="register">
       {isLoading ? <Spin /> : ""}
       <RegisterMinContainer>
         <h1>Create Profile</h1>
@@ -65,7 +65,9 @@ function RegisterBody(props) {
                   placeholder="First Name"
                 />
                 {errors.firstname && (
-                  <Text color="red">{errors.firstname}</Text>
+                  <Text className="name" color="red">
+                    {errors.firstname}
+                  </Text>
                 )}
               </div>
 
@@ -81,7 +83,11 @@ function RegisterBody(props) {
                   //onChange={handleChange}
                   placeholder="Last Name"
                 />
-                {errors.lastname && <Text color="red">{errors.lastname}</Text>}
+                {errors.lastname && (
+                  <Text className="name" color="red">
+                    {errors.lastname}
+                  </Text>
+                )}
               </div>
             </InputNameContainer>
             <br />
@@ -92,7 +98,7 @@ function RegisterBody(props) {
               <Select
                 border={errors.day && "1px solid red"}
                 name="day"
-                style={day? {color: "#000000"} : {color : "#bdbdbe"}} 
+                style={day ? { color: "#000000" } : { color: "#bdbdbe" }}
                 onChange={(e) => {
                   const selectedDay = e.target.value;
                   setDay(selectedDay);
@@ -117,7 +123,7 @@ function RegisterBody(props) {
               <Select
                 border={errors.month && "1px solid red"}
                 name="month"
-                style={month? {color: "#000000"} : {color : "#bdbdbe"}} 
+                style={month ? { color: "#000000" } : { color: "#bdbdbe" }}
                 onChange={(e) => {
                   const selectedMonth = e.target.value;
                   setMonth(selectedMonth);
@@ -141,13 +147,13 @@ function RegisterBody(props) {
               </Select>
               <Select
                 border={errors.year && "1px solid red"}
-                style={year? {color: "#000000"} : {color : "#bdbdbe"}} 
+                style={year ? { color: "#000000" } : { color: "#bdbdbe" }}
                 name="year"
                 onChange={(e) => {
                   const selectedYear = e.target.value;
                   setYear(selectedYear);
                   setDisabledSubmit(false);
-                  setValues({ 
+                  setValues({
                     ...values,
                     [e.target.name]: e.target.value,
                   });
@@ -157,7 +163,11 @@ function RegisterBody(props) {
                   year
                 </option>
                 {dates().map((date, key) => {
-                  return <option value={date} key={key}>{date}</option>;
+                  return (
+                    <option value={date} key={key}>
+                      {date}
+                    </option>
+                  );
                 })}
               </Select>
             </InputTypeBox>
@@ -188,7 +198,7 @@ function RegisterBody(props) {
                 );
               })}
               {errors.gender && (
-                <Text color="red" style={{ top: "-1em" }}>
+                <Text color="red" className="gender">
                   {errors.gender}
                 </Text>
               )}
@@ -268,8 +278,8 @@ function RegisterBody(props) {
 
       <TermsParagraph>
         {" "}
-        By Clicking <StyledLink to="/signin">"Continue"</StyledLink>, you are
-        agreeing to the QuicHealth Terms of
+        By Clicking <StyledLink to="">"Continue"</StyledLink>, you are agreeing
+        to the QuicHealth Terms of
       </TermsParagraph>
       <TermsParagraph>
         {" "}
@@ -316,6 +326,9 @@ export const Container = styled.div`
   font-size: 1.1em;
   transform-origin: right;
   animation: ${Slidein} 500ms 0s ease-in-out;
+  &.register {
+    height: unset;
+  }
 
   @media (max-width: ${700}px) {
     font-size: 13px;
@@ -423,6 +436,14 @@ export const Input = styled.input`
   border-radius: 14px;
   border: ${(props) => props.border || "1px solid #2fa5a9"};
   outline: none;
+
+  &.select {
+    padding: 0.3em .5em 0.3em .5em;
+    font-size: .9em;
+    ::placeholder {
+      color: #bdbdbe;
+    }
+  }
   @media (max-width: ${500}px) {
     padding: 0.5em;
     font-size: 10px;
@@ -450,8 +471,17 @@ export const Text = styled.p`
   color: ${(props) => props.color || "#4d4d4d"};
   text-align: left;
   position: relative;
-  left: 1em;
+  left: 0.5em;
   top: 0.5em;
+  font-size: 0.9em;
+
+  &.name {
+    left: 0.5em;
+  }
+  &.gender {
+    top: -0.1em;
+    left: 0.5em;
+  }
   @media (max-width: ${500}px) {
     font-size: 9px;
   }
@@ -497,11 +527,15 @@ export const Select = styled.select`
   }
   &.selectAppointment {
     width: 100%;
-    font-size: 1em;
+    padding: 0.3em 2em 0.3em 1em;
+    font-size: 0.8em;
+    border: 2px solid #2fa5a9;
     margin-bottom: 1em;
+    background-color: inherit;
     @media (max-width: ${500}px) {
       padding: 0.7em 0.5em;
       font-size: 1em;
+      border: 1px solid #2fa5a9;
       background-color: inherit;
     }
   }

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import MenuIcon from "@material-ui/icons/Menu";
+import StarIcon from "@material-ui/icons/StarOutlined";
 import { connect } from "react-redux";
 import LockIcon from "@material-ui/icons/LockOutlined";
 import { Plan } from "./Pricings";
@@ -30,21 +31,21 @@ export const PaymentDetail = ({ bold, left, right }) => {
   );
 };
 
-export const PaySys = ({ name, amount, total }) => {
+export const PaySys = ({ name, time, amount, total }) => {
   return (
-    <Pay>
-      <DocAppointment name={name} NoIcon={true} />
+    <Pay className={time ? "booked" : ""}>
+      <DocAppointment name={name} NoIcon={true} time={time} />
       <br />
-      {amount && total? 
-        <> 
+      {amount && total ? (
+        <>
           <Margin />
           <PaymentDetail left={"Service fee"} right={amount} />
           <Margin />
           <PaymentDetail bold="bold" left="Total" right={total} />
-        </> 
-        :
+        </>
+      ) : (
         ""
-      }
+      )}
     </Pay>
   );
 };
@@ -103,7 +104,7 @@ const PaymentComponent = () => {
 
 function Payment({ openSidebar }) {
   return (
-    <Container sidebar={openSidebar}>
+    <Container sidebar={false}>
       <SideBar />
       <MainBody>
         <PaymentComponent />
@@ -140,19 +141,29 @@ const Pay = styled(Plan)`
   text-align: left;
   background-color: #fefeff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  >div>div> img {
+  > div > div > img {
     width: 5em;
     height: 5.5em;
     margin-right: 1em;
   }
+  &.booked {
+    width: 25em;
+    height: 15em;
+    display: grid;
+    justify-content: center;
+    &:hover {
+      width: unset;
+      height: unset;
+    }
+  }
   @media (max-width: ${500}px) {
     //padding: 0em;
     width: 100%;
-    height : unset;
+    height: unset;
     padding: 2em;
     height: unset;
     box-shadow: none;
-    background-color:#e9e9ef;
+    background-color: #e9e9ef;
     margin-top: 8em;
   }
   &:hover {
@@ -209,7 +220,7 @@ const Form = styled.form`
     background-color: inherit;
   }
   > label {
-    font-size: .7em;
+    font-size: 0.7em;
     color: #a4a4a4;
     margin-bottom: -0.2em;
     font-weight: 200;

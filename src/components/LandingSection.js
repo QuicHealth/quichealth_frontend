@@ -23,7 +23,6 @@ export const GetStarted = ({ firsth1, secondh1, body, buttonName }) => {
 
 function LandingSection() {
   const [show, setNotShow] = useState(false);
-
   //CHatBot Section
   const BotComponent = () => {
     return (

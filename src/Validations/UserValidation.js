@@ -1,30 +1,3 @@
-//import * as yup from "yup";
-
-// export const userSchema = yup.object().shape({
-//   firstname: yup
-//     .string()
-//     .max(25, "Must be 25 characters or less")
-//     .required("First Name is required"),
-//   lastname: yup
-//     .string()
-//     .max(25, "Must be 25 characters or less")
-//     .required("Last Name is required"),
-//   email: yup.string().email("Email is invalid").required("Email is required"),
-//   mobileNo: yup
-//     .string()
-//     .max(25, "Must be 25 characters or less")
-//     .required("Mobile Number is required"),
-//   password: yup
-//     .string()
-//     .min(6, "Password must be at least 6 characters")
-//     .required("Password is required"),
-//   confirmPassword: yup
-//     .string()
-//     .oneOf([yup.ref("password"), null], "Password must match")
-//     .required("Confirm Password is required"),
-//   gender: yup.string().required("gender is required"),
-//   dob: yup.string().required("Dob is required"),
-// });
 
 export const userAuth = (values) => {
   let errors = {};
@@ -117,5 +90,23 @@ export const userAuth = (values) => {
     }
   }
 
+  if (
+    values.hasOwnProperty("length") ||
+    values.hasOwnProperty("treatments") ||
+    values.hasOwnProperty("others") ||values.hasOwnProperty("purpose")
+  ) {
+    if (!values.length) {
+      errors.length = "This field is required";
+    }
+    if (!values.treatments) {
+      errors.treatments = "This field is required";
+    }
+    if (!values.others) {
+      errors.others = "This field is required";
+    }
+    if (!values.purpose) {
+      errors.purpose = "This field is required";
+    }
+  }
   return errors;
 };

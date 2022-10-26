@@ -7,12 +7,26 @@ const initialState = {
     errorMessage: "",
     isAuthenticated: "",
     user: "",
+    userDetails:{},
+    doctor:"",
+    doctorId:"",
+    hospitalId: "",
     isLoggedIn: false,
     link:"",
     resetToken: localStorage.getItem('resetToken'),
     hospitals: [],
+    hospital: null,
     locationAccess: true,
-    days: null
+    days: null,
+    patientAppointmentValues: {},
+    appointmentId: "",
+    paidAppDetails:null,
+    allPaidApp: null,
+    patientMeetingDetails: null,
+    doctorMeetingDetails: null,
+    pMeetingId: "",
+    dMeetingId: "",
+    pwd:""
 }
 
 export default initialState;

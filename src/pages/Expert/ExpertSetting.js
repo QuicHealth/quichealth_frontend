@@ -5,7 +5,7 @@ import Settings from '../../components/Setting';
 function ExpertSetting() {
     return (
         <div>
-            <DashboardNav />
+            <DashboardNav expert={true} />
             <Settings expert={true}/>
         </div>
     )

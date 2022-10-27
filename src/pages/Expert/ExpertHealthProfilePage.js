@@ -5,7 +5,7 @@ import ExpertHealthProfile from '../../components/Expert/ExpertHealthProfile';
 function ExpertHealthProfilePage() {
     return (
         <div>
-            <DashboardNav />
+            <DashboardNav expert={true} />
             <ExpertHealthProfile />
         </div>
     )

@@ -5,7 +5,7 @@ import Help from '../../components/Help';
 function ExpertHelp() {
     return (
         <div>
-            <DashboardNav />
+            <DashboardNav expert={true} />
             <Help expert={true}/>
         </div>
     )

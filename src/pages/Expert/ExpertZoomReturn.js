@@ -6,7 +6,7 @@ import ExpertZoomReturnPage from '../../components/Expert/ExpertZoomReturnPage';
 function ExpertZoomReturn() {
   return (
     <Container>
-        <DashboardNav />
+        <DashboardNav expert={true} />
         <ExpertZoomReturnPage />
 
     </Container>

@@ -5,7 +5,7 @@ import ExpertAppointment from '../../components/Expert/ExpertAppointment';
 function ExpertAppointmentPage() {
     return (
         <div>
-            <DashboardNav />
+            <DashboardNav expert={true}/>
            {/* // <Appointments expert={true}/>  */}
            <ExpertAppointment />
         </div>

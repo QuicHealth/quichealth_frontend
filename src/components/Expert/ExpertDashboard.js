@@ -19,9 +19,9 @@ import { TimeSelections } from "../../utils/utils";
 import useForm from "../../utils/useForm";
 import GenericCalender from "../GenericCalender";
 import {Modal} from "../Modal";
-import { addSchedule } from "../../redux/actions";
+import { addSchedule, getDoctorNotifications } from "../../redux/actions";
 
-function ExpertDashboard({ openSidebar, addSchedule }) {
+function ExpertDashboard({ openSidebar, addSchedule, getDoctorNotifications, doctorNotifications }) {
   const { values, isSubmit, setIsSubmit } = useForm("time");
   const doctorId = localStorage.getItem("doctorid");
 
@@ -85,6 +85,10 @@ function ExpertDashboard({ openSidebar, addSchedule }) {
       addSchedule(values)
     }
   };
+
+  useEffect(() => {
+    getDoctorNotifications();
+  }, [])
 
   useEffect(() => {
     if (selectedTimeCheck === true) {
@@ -283,6 +287,7 @@ const mapStateProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     addSchedule: (values) => dispatch(addSchedule(values)),
+    getDoctorNotifications: () => dispatch(getDoctorNotifications()),
   };
 };
 

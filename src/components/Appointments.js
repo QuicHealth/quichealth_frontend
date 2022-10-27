@@ -12,6 +12,17 @@ import {
 } from "../redux/actions";
 import { useHistory } from "react-router-dom";
 
+export function convertTimeToTwelveHrs(time) {
+  let newTime;
+  // return time.slice(0, 2)
+  if (time.slice(0, 2) < 9) {
+    newTime = parseInt(time.slice(0, 2)) + 12;
+    newTime = newTime + time.substr(2);
+    return newTime;
+  }
+  return time;
+}
+
 function Appointments({
   expert,
   openSidebar,
@@ -30,16 +41,6 @@ function Appointments({
     "time"
   );
 
-  function convertTimeToTwelveHrs(time) {
-    let newTime;
-    // return time.slice(0, 2)
-    if (time.slice(0, 2) < 9) {
-      newTime = parseInt(time.slice(0, 2)) + 12;
-      newTime = newTime + time.substr(2);
-      return newTime;
-    }
-    return time;
-  }
 
   const [limit, setLimit] = useState(3);
   const [count, setCount] = useState(0);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import SideBar from "./SideBar";
@@ -10,14 +10,56 @@ import {
   HeadSection,
   AppointmentContainer,
   AppointmentContainerWrapper,
+  convertTimeToTwelveHrs,
 } from "./Appointments";
 import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 import SearchIcon from "@material-ui/icons/Search";
 import { ProfileImage } from "./Overview";
 import { Margin } from "./SelectAppointment";
 import ExpertSidebar from "./Expert/ExpertSidebar";
+import { getDoctorNotifications, getNotifications } from "../redux/actions";
 
-function Notification({ expert, openSidebar }) {
+function Notification({
+  expert,
+  openSidebar,
+  notifications,
+  getAllNotifications,
+  getDoctorNotifications,
+  doctorNotifications,
+}) {
+  const GenericAppointmentContainer = ({ notification, key }) => {
+    return (
+      <>
+        <AppointmentContainers key={key}>
+          <CheckBox
+            className={notification.read_reciept ? "" : "active"}
+          ></CheckBox>
+          <Image>
+            <img
+              src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+              alt=""
+              className="notify"
+            />
+          </Image>
+          <Details>{`${notification?.message.slice(0, 81)}...`}</Details>
+          <Time>
+            {convertTimeToTwelveHrs(notification?.created_at.slice(11, 16))}{" "}
+            {parseInt(notification?.created_at.slice(11, 16).slice(0, 2)) > 12
+              ? "PM "
+              : "AM "}
+          </Time>
+        </AppointmentContainers>
+        <Margin className="notify" />
+      </>
+    );
+  };
+
+  let apiCall = expert ? getDoctorNotifications : getAllNotifications;
+  
+  useEffect(() => {
+    apiCall();
+  }, []);
+
   return (
     <Container sidebar={openSidebar}>
       {expert ? <ExpertSidebar /> : <SideBar />}
@@ -48,88 +90,53 @@ function Notification({ expert, openSidebar }) {
           </NotificationSearch>
 
           <Margin className="notify" />
-          <AppointmentContainers>
-            <CheckBox className="active"></CheckBox>
-            <Image>
-              <img
-                src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-                alt=""
-                className="notify"
-              />
-            </Image>
-            <Details>
-              Tobi, you've got 3 minutes left to your appointment,try not to
-              keep the doctor waiting...
-            </Details>
-            <Time>10:45AM</Time>
-          </AppointmentContainers>
-
-          <Margin className="notify" />
-          <AppointmentContainers>
-            <CheckBox className="active"></CheckBox>
-            <Image>
-              <img
-                src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-                alt=""
-                className="notify"
-              />
-            </Image>
-            <Details>
-              Tobi, you've got 3 minutes left to your appointment,try not to
-              keep the doctor waiting...
-            </Details>
-            <Time>10:45AM</Time>
-          </AppointmentContainers>
-
-          <Margin className="notify" />
-          <AppointmentContainers>
-            <CheckBox></CheckBox>
-            <Image>
-              <img
-                src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-                alt=""
-                className="notify"
-              />
-            </Image>
-            <Details>
-              Tobi, you've got 3 minutes left to your appointment,try not to
-              keep the doctor waiting...
-            </Details>
-            <Time>10:45AM</Time>
-          </AppointmentContainers>
-
-          <Margin className="notify" />
-          <AppointmentContainers>
-            <CheckBox></CheckBox>
-            <Image>
-              <img
-                src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-                alt=""
-                className="notify"
-              />
-            </Image>
-            <Details>
-              Tobi, you've got 3 minutes left to your appointment,try not to
-              keep the doctor waiting...
-            </Details>
-            <Time>10:45AM</Time>
-          </AppointmentContainers>
-          <Margin className="notify" />
+          {/* Renders doctor's notification if expert is true or render patients notification  */}
+          {expert
+            ? doctorNotifications && doctorNotifications?.map((notification, key) => {
+                return (
+                  <GenericAppointmentContainer
+                    key={key}
+                    notification={notification}
+                  />
+                );
+             })
+            : notifications?.map((notification, key) => {
+                return (
+                  <GenericAppointmentContainer
+                    key={key}
+                    notification={notification}
+                  />
+                );
+              })}
         </AppointmentContainerWrapper>
       </MainBody>
     </Container>
   );
 }
 
-const mapStateProps = (state) => ({
+const mapStateToProps = (state) => ({
   openSidebar: state.utils.openSidebar,
+  notifications: state.patient.notifications,
+  doctorNotifications: state.hospital.doctorNotifications,
 });
 
-export default Notification = connect(mapStateProps)(Notification);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAllNotifications: () => dispatch(getNotifications()),
+    getDoctorNotifications: () => dispatch(getDoctorNotifications()),
+  };
+};
+
+export default Notification = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Notification);
 
 export const AppointmentContainers = styled(AppointmentContainer)`
   display: grid;
   grid-template-columns: 5% 10% 75% 10%;
+  cursor: pointer;
+  transition: all 0.5s ease-in;
   @media (max-width: ${800}px) {
     font-size: 15px;
   }
@@ -145,11 +152,15 @@ export const AppointmentContainers = styled(AppointmentContainer)`
     background-color: transparent;
     border-radius: 0;
   }
+
+  :hover {
+    opacity: 0.6;
+  }
 `;
 
 const Details = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* overflow: hidden;
+  text-overflow: ellipsis; */
   white-space: nowrap;
 `;
 const Time = styled.div`

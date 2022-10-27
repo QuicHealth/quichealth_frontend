@@ -5,7 +5,7 @@ import History from '../../components/History';
 function ExpertHistory() {
     return (
         <div>
-            <DashboardNav />
+            <DashboardNav expert={true}/>
             <History expert={true}/>
         </div>
     )

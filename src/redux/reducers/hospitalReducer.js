@@ -66,6 +66,12 @@ const hospitalReducer = (state = initialState, action) => {
         pwd: payload.password,
         dMeetingId: payload.meeting_id,
       };
+    case actionTypes.DOCTOR_NOTIFICATIONS:
+      return {
+        ...state,
+        doctorNotifications: payload.notifications,
+        doctorNotificationAlert: payload.notification_alert,
+      };
     default:
       return state;
   }

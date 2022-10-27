@@ -326,7 +326,50 @@ export const getDashboard = (expert) => async (dispatch) => {
   }
 };
 
-//g
+//Notification call
+export const getNotifications = () => async (dispatch) => {
+  try {
+    let response = await api.get("api/v1/notifications", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+
+    dispatch({
+      type: actionTypes.NOTIFICATIONS,
+      payload: response.data.data,
+    });
+  } catch (error) {
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
+
+export const getDoctorNotifications = () => async (dispatch) => {
+  try {
+    let response = await api.get("api/v1/doctor/notifications", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+
+    console.log(response);
+
+    dispatch({
+      type: actionTypes.DOCTOR_NOTIFICATIONS,
+      payload: response.data.data,
+    });
+  } catch (error) {
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+  }
+};
 
 //Get Hospitals
 export const getHospitals = () => async (dispatch) => {
@@ -668,7 +711,6 @@ function positionDenied(err) {
 }
 //Get location
 export const getLocation = () => async (dispatch) => {
-
   if (navigator.geolocation) {
     console.log("geoLocation feature is available");
     navigator.permissions.query({ name: "geolocation" }).then((result) => {

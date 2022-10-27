@@ -8,6 +8,7 @@ import {
   pageUp,
   getLocation,
   getHospitals,
+  getNotifications,
 } from "../redux/actions";
 import { useHistory } from "react-router-dom";
 
@@ -114,6 +115,7 @@ function Overview({
   pageUp,
   getLocation,
   getHospitals,
+  getAllNotifications
 }) {
   let firstName;
   let routerHistory = useHistory();
@@ -157,6 +159,7 @@ function Overview({
     pageUp();
     getLocation();
     getHospitals();
+    getAllNotifications();
   }, []);
 
   return (
@@ -385,6 +388,7 @@ const mapDispatchToProps = (dispatch) => {
     pageUp: () => dispatch(pageUp()),
     getLocation: () => dispatch(getLocation()),
     getHospitals: () => dispatch(getHospitals()),
+    getAllNotifications: () => dispatch(getNotifications()),
   };
 };
 Overview = connect(mapStateProps, mapDispatchToProps)(Overview);

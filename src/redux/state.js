@@ -26,7 +26,13 @@ const initialState = {
     doctorMeetingDetails: null,
     pMeetingId: "",
     dMeetingId: "",
-    pwd:""
+    pwd:"",
+    patientNotifications:"",
+    patientNotification:"",
+    patientNotificationAlert:"",
+    doctorNotifications:"",
+    doctorNotification:"",
+    doctorNotificationAlert:"",
 }
 
 export default initialState;

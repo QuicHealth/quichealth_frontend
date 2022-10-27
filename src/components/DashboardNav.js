@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import SearchIcon from "@material-ui/icons/Search";
+import { connect } from "react-redux";
 
-function DashboardNav() {
+function DashboardNav({ notifications, doctorNotifications, expert }) {
   let user, firstName, lastName, name;
   firstName = localStorage.getItem("firstname");
   lastName = localStorage.getItem("lastname");
@@ -16,8 +17,10 @@ function DashboardNav() {
       <UserDetails>
         <TopIcon>
           <SearchIcon />
-          <div style={{display: "flex"}}>
-            <Circle></Circle>
+          <div style={{ display: "flex" }}>
+            <Circle
+              notifications={expert ? doctorNotifications : notifications}
+            ></Circle>
             <svg
               width="14"
               height="16"
@@ -59,7 +62,12 @@ function DashboardNav() {
   );
 }
 
-export default DashboardNav;
+const mapStateToProps = (state) => ({
+  notifications: state.patient.patientNotificationAlert,
+  doctorNotifications: state.hospital.doctorNotifications,
+});
+
+export default DashboardNav = connect(mapStateToProps)(DashboardNav);
 
 const Container = styled.div`
   display: flex;
@@ -157,9 +165,11 @@ const TopIcon = styled.div`
 const Circle = styled.div`
   height: 0.5em;
   width: 0.5em;
-  background-color: #3751ff;
+  background-color: ${({ notifications }) =>
+    notifications > 0 ? "#3751ff" : "unset"};
   border-radius: 50%;
   position: relative;
   right: -1em;
-  border: 1px solid #fffbfb;
+  border: ${({ notifications }) =>
+    notifications > 0 ? "1px solid #fffbfb" : "0"};
 `;

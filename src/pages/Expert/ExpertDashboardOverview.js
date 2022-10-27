@@ -6,7 +6,7 @@ import ExpertDashboard from '../../components/Expert/ExpertDashboard';
 function ExpertDashboardOverview() {
     return (
         <Container>
-            <DashboardNav />
+            <DashboardNav expert={true} />
             <ExpertDashboard /> 
         </Container>
     )

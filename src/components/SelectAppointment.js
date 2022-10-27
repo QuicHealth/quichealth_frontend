@@ -540,38 +540,38 @@ function SelectAppointments({
   };
 
   let a;
-  //let b = new Array(1).fill(false);
-  //console.log(b, "b");
-  const [arrayId, setArrayId] = useState([false]);
-  const [modal, setModal] = useState(false);
-  const [daySelected, setDaySelected] = useState("");
-  const [slotSelected, setSlotSelected] = useState("");
-  const [value, setValuess] = useState({});
+  // //let b = new Array(1).fill(false);
+  // //console.log(b, "b");
+  // const [arrayId, setArrayId] = useState([false]);
+  // const [modal, setModal] = useState(false);
+  // const [daySelected, setDaySelected] = useState("");
+  // const [slotSelected, setSlotSelected] = useState("");
+  // const [value, setValuess] = useState({});
 
   //appointment details
-  const setIdTrue = (arry, setArry, id) => {
-    arry = new Array(arry?.length).fill(false);
-    if (!arry[id]) {
-      arry[id] = true;
-      setArry(arry);
-      console.log(arry);
-    }
-  };
+  // const setIdTrue = (arry, setArry, id) => {
+  //   arry = new Array(arry?.length).fill(false);
+  //   if (!arry[id]) {
+  //     arry[id] = true;
+  //     setArry(arry);
+  //     console.log(arry);
+  //   }
+  // };
 
-  const removeClass = (arry, setArry) => {
-    arry = new Array(arry?.length).fill(false);
-    setArry(arry);
-  };
+  // const removeClass = (arry, setArry) => {
+  //   arry = new Array(arry?.length).fill(false);
+  //   setArry(arry);
+  // };
 
   //const [modal, setModal] = useState(false);
-  const [allSlots, setAllSlots] = useState("");
+  // const [allSlots, setAllSlots] = useState("");
 
-  const getClass = (arr, inst, id) => {
-    if (arr[id] === inst) {
-      return "setSlot";
-    }
-    return "";
-  };
+  // const getClass = (arr, inst, id) => {
+  //   if (arr[id] === inst) {
+  //     return "setSlot";
+  //   }
+  //   return "";
+  // };
 
   dayjs.extend(LocalizedFormat);
 
@@ -600,251 +600,6 @@ function SelectAppointments({
           setPatientBookValues={setPatientBookValues}
           createPatientAppointment={createPatientAppointment}
         />
-        {/* <Containa sidebar={openSidebar}>
-          <Title>Select Appointment</Title>
-          <SelectBox sidebar={openSidebar}>
-            <div>
-              <InputLabel htmlFor="Location"> Location </InputLabel>
-              <InputTypeBox className="selectAppointment">
-                <Select
-                  className="selectAppointment"
-                  border={errors.location && "1px solid red"}
-                  name="location"
-                  value={location}
-                  style={location ? { color: "#000000" } : { color: "#bdbdbe" }}
-                  onChange={(e) => {
-                    const selectedLocation = e.target.value;
-                    setLocation(selectedLocation);
-                    setValues({
-                      ...values,
-                      [e.target.name]: e.target.value,
-                    });
-                  }}
-                >
-                  <option value="" hidden>
-                    Location
-                  </option>
-                  {Object.entries(locations).map(([key, value], id) => {
-                    return (
-                      <option key={id} value={value}>
-                        {value}
-                      </option>
-                    );
-                  })}
-                </Select>
-              </InputTypeBox>
-              {console.log(filterHospitals, "filte")}
-            </div>
-            <SecondInputBox>
-              <div>
-                <InputLabel htmlFor="Date"> Date </InputLabel>
-                <Input
-                  type="date"
-                  name="date"
-                  border={errors.date && "1px solid red"}
-                  value={values.date}
-                  onChange={handleChange}
-                  placeholder="01/01/2020"
-                  className="select"
-                />
-              </div>
-              <div>
-                <InputLabel htmlFor="Persona"> Persona </InputLabel>
-                <Input type="text" placeholder="Adult" className="select" />
-              </div>
-            </SecondInputBox>
-            <div>
-              <ViewMore className="search">
-                <Button className="search" onClick={getDoctor}>
-                  Search
-                </Button>
-              </ViewMore>
-            </div>
-          </SelectBox>
-                */}
-          {/* List doctors and select the bookings */}
-       {/*   <Bookings sidebar={openSidebar}>
-            <Available>Available</Available>
-            <Margin></Margin>
-            {console.log(filterHospitals, locationAccess, "yess0")}
-            {locationAccess
-              ? filterHospitals
-                  .sort((a, b) => a.distance - b.distance)
-                  .map((hospital) => {
-                    a = new Array(hospital.doctors.length).fill(false);
-                    // console.log(doctor.unique_id, "unigdfhgj");
-                    return hospital?.doctors?.map((doctor, idx) => {
-                      doctor.select = arrayId[idx];
-                      return (
-                        <>
-                          <BookingDetails>
-                            <DocDesc className="booked">
-                              <DocImg>
-                                <img
-                                  src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-                                  alt=""
-                                />
-                              </DocImg>
-                              <DocDetails>
-                                <DName>{doctor.name}</DName>
-                                <DHName>{hospital.name}</DHName>
-
-                                <DProfile>
-                                  <ViewProfile>View profile</ViewProfile>
-                                </DProfile>
-
-                                <DTime
-                                  className={
-                                    doctor?.select ? "setSchedule" : ""
-                                  }
-                                  onClick={() => {
-                                    //setIdTrue(arrayId, setArrayId, id);
-                                    setModal(true);
-                                    getDoctorById(doctor.unique_id);
-                                  }}
-                                >
-                                  {!daySelected ? (
-                                    <>
-                                      {time ? (
-                                        <>
-                                          {" "}
-                                          <Icon>
-                                            <img
-                                              src={TimeIcon}
-                                              alt="schedule"
-                                            />
-                                          </Icon>
-                                          <Time className="booked">
-                                            {" "}
-                                            {time}{" "}
-                                            {parseInt(time.slice[(0, 2)]) > 12
-                                              ? "PM "
-                                              : "AM "}
-                                            GMT +1{" "}
-                                          </Time>
-                                        </>
-                                      ) : (
-                                        <>
-                                          {" "}
-                                          <Time> View schedule </Time>
-                                        </>
-                                      )}
-                                      <Icon>
-                                        {" "}
-                                        {time ? (
-                                          ""
-                                        ) : (
-                                          <img
-                                            src={ScheduleIcon}
-                                            alt="schedule"
-                                          />
-                                        )}
-                                      </Icon>
-                                      <Icon>
-                                        {NoIcon ? (
-                                          ""
-                                        ) : (
-                                          <i className="fas fa-chevron-down down"></i>
-                                        )}
-                                      </Icon>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <DTime>
-                                        <Icon>
-                                          <img
-                                            src={ScheduleIcon}
-                                            alt="schedule"
-                                          />
-                                        </Icon>
-                                        <Time>
-                                          {daySelected &&
-                                            daySelected
-                                              ?.format("LL")
-                                              .slice(
-                                                0,
-                                                daySelected?.format("LL")
-                                                  .length - 6
-                                              )}{" "}
-                                        </Time>
-                                        <Icon>
-                                          <img
-                                            src={DividerIcon}
-                                            alt="schedule"
-                                          />
-                                        </Icon>
-                                        <Icon>
-                                          <img src={TimeIcon} alt="schedule" />
-                                        </Icon>
-                                        <Time>{slotSelected.value}</Time>
-                                      </DTime>
-                                    </>
-                                  )}
-                                </DTime>
-                              </DocDetails>
-                              {modal ? (
-                                <PatientCalenderModal
-                                  patient="patient"
-                                  daySelected={daySelected}
-                                  setDaySelected={setDaySelected}
-                                  setModal={setModal}
-                                  setSlotSelected={setSlotSelected}
-                                  slotSelected={slotSelected}
-                                  getClass={getClass}
-                                  removeClass={removeClass}
-                                  arry={arrayId}
-                                  setArry={setArrayId}
-                                  doctorDetails={doctor}
-                                  id={idx}
-                                  allSlots={allSlots}
-                                  setAllSlots={setAllSlots}
-                                />
-                              ) : (
-                                ""
-                              )}
-                            </DocDesc>
-
-                            <BookBtn>
-                              <Button
-                                onClick={() => {
-                                  setModal(true);
-                                  setValues({
-                                    ...value,
-                                    doctor_id: doctor?.id,
-                                    date: daySelected.format("DD-MM-YYYY"),
-                                    time_slots: slotSelected,
-                                  });
-                                  //console.log(value);
-                                  //setPatientBookValues(value)
-                                }}
-                              >
-                                Book
-                              </Button>
-                            </BookBtn>
-                            {modal ? (
-                              <ConfirmationModal
-                                value={value}
-                                setPatientBookValues={setPatientBookValues}
-                                setModal={setModal}
-                                createPatientAppointment={
-                                  createPatientAppointment
-                                }
-                              />
-                            ) : (
-                              ""
-                            )}
-                          </BookingDetails>
-                        </>
-                      );
-                    });
-                  })
-              : filterHospitals?.map((hospital) => {
-                  return hospital.doctors?.map((doctor, idx) => {
-                    return <></>;
-                  });
-                })}
-          </Bookings>
-        </Containa> */}
       </MainBody>
     </Container>
   );

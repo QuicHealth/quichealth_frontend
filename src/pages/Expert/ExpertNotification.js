@@ -5,7 +5,7 @@ import Notification from '../../components/Notification';
 function ExpertNotification() {
     return (
         <div>
-            <DashboardNav />
+            <DashboardNav expert={true}/>
             <Notification expert={true} />
         </div>
     )

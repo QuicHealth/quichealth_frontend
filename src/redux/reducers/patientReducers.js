@@ -31,13 +31,20 @@ const patientReducers = (state = initialState, action) => {
         allPaidApp: payload.reverse(),
       };
     case actionTypes.GET_PATIENT_MEETING_DETAILS:
-        return {
-            ...state,
-            patientMeetingDetails: payload,
-            pwd: payload.password,
-            pMeetingId: payload.meeting_id,
-            zak: payload.start_url.slice(42, 428)
-        }
+      return {
+        ...state,
+        patientMeetingDetails: payload,
+        pwd: payload.password,
+        pMeetingId: payload.meeting_id,
+        zak: payload.start_url.slice(42, 428),
+      };
+    case actionTypes.NOTIFICATIONS:
+      return {
+        ...state,
+        notifications: payload.notifications,
+        patientNotificationAlert: payload.new_notifications
+
+      };
 
     default:
       return state;

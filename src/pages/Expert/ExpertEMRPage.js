@@ -5,7 +5,7 @@ import ExpertEMR from '../../components/Expert/ExpertEMR'
 function ExpertEMRPage() {
   return (
     <div>
-    <DashboardNav />
+    <DashboardNav expert={true} />
     <ExpertEMR />
 </div>
   )

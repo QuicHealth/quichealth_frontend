@@ -6,7 +6,7 @@ import ExpertMeeting from '../../components/Expert/ExpertMeeting';
 function Meeting() {
     return (
         <Container>
-            <DashboardNav />
+            <DashboardNav expert={true} />
             <ExpertMeeting />
         </Container>
     )

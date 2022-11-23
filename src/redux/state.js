@@ -33,6 +33,8 @@ const initialState = {
     doctorNotifications:"",
     doctorNotification:"",
     doctorNotificationAlert:"",
+    patientSettings:"",
+    patientHealthProfile: ""
 }
 
 export default initialState;

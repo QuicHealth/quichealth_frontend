@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
+import Add from "@material-ui/icons/AddOutlined";
 import { connect } from "react-redux";
-import SideBar from "./SideBar";
+import SideBar from "../SideBar";
 import {
   AppointmentContainerWrapper,
   Container,
   HeadSection,
   MainBody,
-} from "./Appointments";
+} from "../Appointments";
 import {
   InputNameContainer,
   InputLabel,
@@ -15,22 +16,79 @@ import {
   InputTypeBox,
   Text,
   Select,
-} from "./RegisterBody";
-import { SectionFive, SaveChanges, Right } from "./HealthProfile";
+} from "../RegisterBody";
+import { SectionFive, SaveChanges, Right } from "../HealthProfile";
 import { Avatar } from "@material-ui/core";
-import { ProfileImage } from "./Overview";
-import ExpertSidebar from "./Expert/ExpertSidebar";
-import useForm from "./../utils/useForm";
-import { genders } from "../utils/utils";
+import { ProfileImage } from "../Overview";
+import ExpertSidebar from "../Expert/ExpertSidebar";
+import useForm from "../../utils/useForm";
+import { convertTime, genders } from "../../utils/utils";
+import {
+  getSettings,
+  removeImage,
+  updatePassword,
+  updateSettings,
+  uploadImage,
+} from "../../redux/actions";
+import { Spin } from "../../pages/Register";
+import UpdateLogin from "./UpdateLogin";
 
-const AccountSection = ({ useForm }) => {
-  const { handleChange, handleBlur, values, errors, setValues } =
-    useForm("setting");
-  const [gender, setGender] = useState("");
+function AccountSection({
+  settings,
+  useForm,
+  updateSettings,
+  uploadImage,
+  removeImage,
+}) {
+  const { handleChange, handleBlur, values, setValues, errors } = useForm(
+    "setting",
+    settings
+  );
+  const [imageValue, setImageValue] = useState({});
+  const imageUploadRef = useRef();
+  const [imageUpload, setImageUpload] = useState({});
+
+  useEffect(() => {
+    setValues(settings);
+  }, [settings]);
 
   const submitAccount = (e) => {
     e.preventDefault();
-    console.log(values, "errors");
+    let settingsValue = {
+      ...values,
+      dob: convertTime(values.dob, true),
+    };
+
+    console.log(errors, settingsValue);
+    updateSettings(values);
+  };
+
+  const handleUpload = (e) => {
+    setImageUpload(e.target.files[0]);
+    // setImageUpload(URL.createObjectURL(e.target.files[0]));
+    setImageValue(URL.createObjectURL(e.target.files[0]));
+  };
+
+  const Upload = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    formData.append("image", imageUpload);
+
+    if (imageUpload?.name) {
+      uploadImage(formData);
+    }
+  };
+
+  const Remove = (e) => {
+    e.preventDefault();
+
+    const value = {
+      ...values,
+      image: "",
+    };
+    removeImage(value);
+    console.log(value, "hjsd");
   };
 
   return (
@@ -41,10 +99,28 @@ const AccountSection = ({ useForm }) => {
       </SettingsTitle>
       <SettingsForm>
         <SettingsImage>
-          <Avatar />
+          <Avatar>
+            <input
+              type="file"
+              onChange={handleUpload}
+              style={{ display: "none" }}
+              ref={imageUploadRef}
+            />
+            <AddButton onClick={() => imageUploadRef.current?.click()}>
+              <Add />
+            </AddButton>
+            {!!values.image || imageValue?.length > 1 ? (
+              <Image src={values.image || imageValue} />
+            ) : (
+              ""
+            )}
+          </Avatar>
+
           <ImageButton>
-            <Btn> Upload</Btn>
-            <Btn className="remove">Remove</Btn>
+            <Btn onClick={Upload}> Upload</Btn>
+            <Btn className="remove" onClick={Remove}>
+              Remove
+            </Btn>
           </ImageButton>
         </SettingsImage>
         <div>
@@ -53,7 +129,7 @@ const AccountSection = ({ useForm }) => {
               <SettingInput
                 type="text"
                 border={errors.email && "1px solid red"}
-                value={values.email}
+                value={values?.email}
                 name="email"
                 onChange={handleChange}
                 placeholder="Email"
@@ -64,16 +140,14 @@ const AccountSection = ({ useForm }) => {
             <div style={{ width: "100%" }}>
               <SettingInput
                 type="text"
-                name="phoneNumber"
-                border={errors.phoneNumber && "1px solid red"}
+                name="phone"
+                border={errors.phone && "1px solid red"}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.phoneNumber}
+                value={values?.phone}
                 placeholder="Patient Phone number"
               />
-              {errors.phoneNumber && (
-                <Text color="red">{errors.phoneNumber}</Text>
-              )}
+              {errors.phone && <Text color="red">{errors.phone}</Text>}
             </div>
           </InputNameContainer>
 
@@ -83,7 +157,7 @@ const AccountSection = ({ useForm }) => {
                 name="address"
                 border={errors.address && "1px solid red"}
                 onChange={handleChange}
-                value={values.address}
+                value={values?.address}
                 type="text"
                 placeholder="Address"
               />
@@ -94,7 +168,7 @@ const AccountSection = ({ useForm }) => {
                 name="dob"
                 border={errors.dob && "1px solid red"}
                 onChange={handleChange}
-                value={values.dob}
+                value={convertTime(values.dob)}
                 type="date"
                 placeholder="Date of Birth"
               />
@@ -108,7 +182,7 @@ const AccountSection = ({ useForm }) => {
                 type="text"
                 name="city"
                 border={errors.city && "1px solid red"}
-                value={values.city}
+                value={values?.city}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 placeholder="City"
@@ -118,19 +192,20 @@ const AccountSection = ({ useForm }) => {
             <div>
               <select
                 border={errors.gender && "1px solid red"}
-                style={gender ? { color: "#000000" } : { color: "#bdbdbe" }}
+                style={
+                  values.gender ? { color: "#000000" } : { color: "#bdbdbe" }
+                }
                 name="gender"
                 onChange={(e) => {
                   const selectedGender = e.target.value;
-                  setGender(selectedGender);
                   setValues({
                     ...values,
-                    [e.target.name]: e.target.value,
+                    [e.target.name]: selectedGender,
                   });
                 }}
               >
                 <option value="" hidden>
-                  Gender
+                  {settings?.gender}
                 </option>
                 {Object.entries(genders).map(([key, value], id) => {
                   return (
@@ -146,13 +221,13 @@ const AccountSection = ({ useForm }) => {
                 border={errors.emergencyNumber && "1px solid red"}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                name="emergencyNumber"
-                value={values.emergencyNumber}
+                name="emergency_number"
+                value={values?.emergency_number}
                 type="text"
-                placeholder="Emergency contact number"
+                placeholder="Emergency number"
               />
-              {errors.emergencyNumber && (
-                <Text color="red">{errors.emergencyNumber}</Text>
+              {errors.emergency_number && (
+                <Text color="red">{errors.emergency_number}</Text>
               )}
             </div>
           </SettingInputBox>
@@ -166,16 +241,17 @@ const AccountSection = ({ useForm }) => {
       </SettingsForm>
     </>
   );
-};
+}
 
-const UpdateLogin = ({ useForm }) => {
+const UpdateLogi = ({ useForm, updatePassword }) => {
   const { handleChange, handleBlur, values, errors, setValues } =
     useForm("updateProfile");
-    
-    const updateProfile = (e) => {
-      e.preventDefault();
-      console.log(values, "values")
-    }
+
+  console.log(errors, "dfd");
+  const updateProfile = (e) => {
+    e.preventDefault();
+    console.log(values, "values");
+  };
   return (
     <>
       <SettingsForm className="update">
@@ -224,9 +300,13 @@ const UpdateLogin = ({ useForm }) => {
                 border={errors.currentPassword && "1px solid red"}
                 value={values.currentPassword}
                 onChange={handleChange}
-                type="text"
+                onBlur={handleBlur}
+                type="password"
                 placeholder="Current Password"
               />
+              {errors.currentPassword && (
+                <Text color="red">{errors.currentPassword}</Text>
+              )}
             </InputContainer>
             <InputContainer></InputContainer>
           </InputNameContainer>
@@ -234,13 +314,15 @@ const UpdateLogin = ({ useForm }) => {
           <InputNameContainer className="update">
             <InputContainer>
               <SettingInput
-                name="newPassword"
-                border={errors.newPassword && "1px solid red"}
-                value={values.newPassword}
+                name="password"
+                border={errors.password && "1px solid red"}
+                value={values.password}
                 onChange={handleChange}
-                type="text"
+                onBlur={handleBlur}
+                type="password"
                 placeholder="New Password"
               />
+              {errors.password && <Text color="red">{errors.password}</Text>}
             </InputContainer>
             <InputContainer></InputContainer>
           </InputNameContainer>
@@ -248,13 +330,17 @@ const UpdateLogin = ({ useForm }) => {
           <InputNameContainer className="update">
             <InputContainer>
               <SettingInput
-                name="passwordConfirmation"
-                border={errors.passwordConfirmation && "1px solid red"}
-                value={values.passwordConfirmation}
+                name="password_confirmation"
+                border={errors.password_confirmation && "1px solid red"}
+                value={values.password_confirmation}
                 onChange={handleChange}
-                type="text"
+                onBlur={handleBlur}
+                type="password"
                 placeholder="Confirm new password"
               />
+              {errors.password_confirmation && (
+                <Text color="red">{errors.password_confirmation}</Text>
+              )}
             </InputContainer>
 
             <InputContainer></InputContainer>
@@ -263,7 +349,9 @@ const UpdateLogin = ({ useForm }) => {
           <SectionFive className="update">
             <div>
               {" "}
-              <SaveChanges onClick={updateProfile} className="update">Save changes</SaveChanges>
+              <SaveChanges onClick={updateProfile} className="update">
+                Save changes
+              </SaveChanges>
             </div>
             <div></div>
           </SectionFive>
@@ -273,64 +361,107 @@ const UpdateLogin = ({ useForm }) => {
   );
 };
 
-function Settings({ expert, openSidebar }) {
+function Settings({
+  expert,
+  openSidebar,
+  patientSettings,
+  getSettings,
+  updateSettings,
+  isLoading,
+  uploadImage,
+  removeImage,
+  updatePassword,
+}) {
   const [isPassiveTab, setIsPassiveTab] = useState(false);
 
+  useEffect(() => {
+    getSettings();
+  }, []);
   return (
-    <Container sidebar={openSidebar}>
-      {expert ? <ExpertSidebar /> : <SideBar />}
-      <MainBody sidebar={openSidebar}>
-        <HeadSection sidebar={openSidebar}>
-          <h1>Setting</h1>
-          <ProfileImage sidebar={openSidebar} className="noTopPadding">
-            <img
-              src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-              alt=""
-            />
-          </ProfileImage>
-        </HeadSection>
-        <AppointmentContainerWrapper sidebar={openSidebar}>
-          <SettingsContainer sidebar={openSidebar}>
-            <SettingsTab>
-              {!isPassiveTab ? (
-                <>
-                  <Tab>Account</Tab>
-                  <Tab
-                    className="passive-tab"
-                    onClick={() => setIsPassiveTab(true)}
-                  >
-                    Update Login details
-                  </Tab>
-                </>
-              ) : (
-                <>
-                  <Tab
-                    className="passive-tab"
-                    onClick={() => setIsPassiveTab(false)}
-                  >
-                    Account
-                  </Tab>
-                  <Tab>Update Login details</Tab>
-                </>
-              )}
-            </SettingsTab>
-            {!isPassiveTab ? (
-              <AccountSection useForm={useForm} />
-            ) : (
-              <UpdateLogin useForm={useForm} />
-            )}
-          </SettingsContainer>
-        </AppointmentContainerWrapper>
-      </MainBody>
-    </Container>
+    <>
+      {isLoading ? (
+        <Spin />
+      ) : (
+        <Container sidebar={openSidebar}>
+          {expert ? <ExpertSidebar /> : <SideBar />}
+          <MainBody sidebar={openSidebar}>
+            <HeadSection sidebar={openSidebar}>
+              <h1>Setting</h1>
+              <ProfileImage sidebar={openSidebar} className="noTopPadding">
+                <img
+                  src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+                  alt=""
+                />
+              </ProfileImage>
+            </HeadSection>
+            <AppointmentContainerWrapper sidebar={openSidebar}>
+              <SettingsContainer sidebar={openSidebar}>
+                <SettingsTab>
+                  {!isPassiveTab ? (
+                    <>
+                      <Tab>Account</Tab>
+                      <Tab
+                        className="passive-tab"
+                        onClick={() => setIsPassiveTab(true)}
+                      >
+                        Update Login details
+                      </Tab>
+                    </>
+                  ) : (
+                    <>
+                      <Tab
+                        className="passive-tab"
+                        onClick={() => setIsPassiveTab(false)}
+                      >
+                        Account
+                      </Tab>
+                      <Tab>Update Login details</Tab>
+                    </>
+                  )}
+                </SettingsTab>
+                {!isPassiveTab ? (
+                  <AccountSection
+                    updateSettings={updateSettings}
+                    uploadImage={uploadImage}
+                    settings={patientSettings}
+                    useForm={useForm}
+                    removeImage={removeImage}
+                  />
+                ) : (
+                  <UpdateLogin
+                    updatePassword={updatePassword}
+                    useForm={useForm}
+                  />
+                )}
+              </SettingsContainer>
+            </AppointmentContainerWrapper>
+          </MainBody>
+        </Container>
+      )}
+    </>
   );
 }
 
-const mapStateProps = (state) => ({
+const mapStateToProps = (state) => ({
   openSidebar: state.utils.openSidebar,
+  patientSettings: state.patient.patientSettings,
+  isLoading: state.patient.isLoading,
 });
 
-export default Settings = connect(mapStateProps)(Settings);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getSettings: () => dispatch(getSettings()),
+    updateSettings: (value) => dispatch(updateSettings(value)),
+    uploadImage: (value) => dispatch(uploadImage(value)),
+    removeImage: (value) => dispatch(removeImage(value)),
+    updatePassword: (value) => dispatch(updatePassword(value)),
+  };
+};
+
+export default Settings = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Settings);
 
 const SettingsContainer = styled.div`
   width: 55em;
@@ -394,7 +525,7 @@ const SettingsTitle = styled.p`
     display: none;
   }
 `;
-const SettingsForm = styled.form`
+export const SettingsForm = styled.form`
   width: 100%;
   padding: 1em;
   box-shadow: 0px 2px #2e302f4a;
@@ -463,8 +594,8 @@ const Btn = styled.span`
   }
 `;
 
-const SettingInput = styled(Input)`
-  width: 90%;
+export const SettingInput = styled(Input)`
+  width: 100%;
   font-size: 1.1em;
   line-height: 21px;
   border: 2px solid #2fa5a9;
@@ -483,14 +614,30 @@ const SettingInput = styled(Input)`
   }
 `;
 
+const AddButton = styled.span`
+  position: absolute;
+  // left: 19.5em;
+  transition: all 0.5s ease-in;
+  cursor: pointer;
+
+  > .MuiSvgIcon-root {
+    fill: #ffffffd1;
+    font-size: 3em;
+  }
+  :hover {
+    opacity: 0.6;
+  }
+`;
+
 const SettingInputBox = styled(InputTypeBox)`
-  grid-template-columns: 30% 32% auto;
-  column-gap: 1em;
+  grid-template-columns: 30% 32% 30%;
+  column-gap: 2em;
   > div > input {
     font-size: 1.1em;
     border: 2px solid #2fa5a9;
     background-color: transparent;
     border-radius: 10px;
+    width: 100%;
     @media (max-width: ${500}px) {
       font-size: 14px;
       margin-bottom: 2em;
@@ -506,7 +653,7 @@ const SettingInputBox = styled(InputTypeBox)`
     color: #bdbdbe;
     height: 2.5em;
     padding: 0.5em;
-    width: 97%;
+    width: 100%;
     @media (max-width: ${500}px) {
       font-size: 14px;
       margin-bottom: 2em;
@@ -519,6 +666,12 @@ const SettingInputBox = styled(InputTypeBox)`
   }
 `;
 
-const InputContainer = styled.div`
+export const InputContainer = styled.div`
   width: 100%;
-`
+  column-gap: 3em;
+`;
+
+const Image = styled.img`
+  height: 100%;
+  width: auto;
+`;

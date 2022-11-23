@@ -97,17 +97,18 @@ export const signIn = (value, expert) => async (dispatch) => {
         });
         localStorage.setItem("doctorid", response.data.user.id);
         localStorage.setItem("doctorName", response.data.user.name);
-        // setTimeout(() => {
-        //   history.push("/expert-overview");
-        //   //window.location.reload();
-        // }, 2000);
+
         response.data.route = "doctor";
+
         return response;
       } else {
         toast.error(response.data.message);
         dispatch({
           type: actionTypes.SIGNIN_FAIL,
           payload: response.data.message,
+        });
+        dispatch({
+          type: actionTypes.NOT_LOADING,
         });
       }
     } else {
@@ -130,6 +131,9 @@ export const signIn = (value, expert) => async (dispatch) => {
         dispatch({
           type: actionTypes.SIGNIN_FAIL,
           payload: response.data.message,
+        });
+        return dispatch({
+          type: actionTypes.NOT_LOADING,
         });
       }
     }
@@ -374,6 +378,9 @@ export const getDoctorNotifications = () => async (dispatch) => {
 //Get Hospitals
 export const getHospitals = () => async (dispatch) => {
   try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
     let response = await api.get("api/v1/get-hospitals", {
       headers: {
         Authorization: `Bearer ${localStorage.token}`,
@@ -384,12 +391,18 @@ export const getHospitals = () => async (dispatch) => {
       type: actionTypes.GET_ALL_HOSPITALS,
       payload: response.data.hospital,
     });
+    dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
     return response;
   } catch (error) {
     console.log(error.message);
     if (!error.response) {
       return toast.error(error.msg);
     }
+    dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
     toast.error(error.response.data.msg);
   }
 };
@@ -397,6 +410,9 @@ export const getHospitals = () => async (dispatch) => {
 //getAllPaidAppointments
 export const getAllPaidAppointments = () => async (dispatch) => {
   try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
     let response = await api.get("api/v1/appointment-by-payment-status", {
       headers: {
         Authorization: `Bearer ${localStorage.token}`,
@@ -411,16 +427,22 @@ export const getAllPaidAppointments = () => async (dispatch) => {
       type: actionTypes.GET_ALL_PAID_APPOINTMENT_DETAILS,
       payload: response.data.Appointments,
     });
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
   } catch (error) {
     console.log(error.message);
     if (!error.response) {
       return toast.error(error.msg);
     }
     toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
   }
 };
 
-//get all doctor paid apposintment
+//get all doctor paid appointment
 export const getAllDoctorPaidAppointments = () => async (dispatch) => {
   try {
     let response = await api.get(
@@ -497,6 +519,223 @@ export const getDoctorById = (id) => async (dispatch) => {
       return toast.error(error.msg);
     }
     toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  }
+};
+
+// Setting
+export const getSettings = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
+    let response = await api.get("/api/v1/settings", {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+
+    console.log(response, "settingS");
+    dispatch({
+      type: actionTypes.PATIENT_SETTINGS,
+      payload: response.data,
+    });
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  }
+};
+
+//updateSetting
+export const updateSettings = (value) => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
+    let response = await api.post("/api/v1/settings", value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token} `,
+      },
+    });
+    console.log(response, "updateSettings");
+    dispatch(getSettings());
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  } catch (error) {
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  }
+};
+
+//upload Image
+export const uploadImage = (value) => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
+    console.log(value);
+    let response = await api.post("/api/v1/upload_image", value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token} `,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(response, "updateImage");
+    toast.success(response.data.message);
+    dispatch(getSettings());
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  } catch (error) {
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  }
+};
+
+//remove Image
+export const removeImage = (value) => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
+    let response = await api.post("/api/v1/remove_image", value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token} `,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(response, "removeImage");
+    toast.success(response.data.message);
+    dispatch(getSettings());
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  } catch (error) {
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  }
+};
+
+//update password
+export const updatePassword = (value) => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
+    let response = await api.post("api/v1/update_password", value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token} `,
+      },
+    });
+    console.log(response, "updatePass");
+    response.data.status
+      ? toast.success(response.data.message)
+      : toast.error(response.data.message);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  } catch (error) {
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  }
+};
+
+//Get Health Profile
+export const getHealthProfile = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
+    let response = await api.get("/api/v1/get-health-profile", {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+
+    console.log(response, "healthProfile");
+    dispatch({
+      type: actionTypes.GET_HEALTH_PROFILE,
+      payload: response.data.data,
+    });
+
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  } catch (error) {
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  }
+};
+
+//upload Image
+
+//export
+
+//upDate Health Profile
+export const updateHealthProfile = (value) => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
+    let response = await api.post("/api/v1/update-health-profile", value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+
+    console.log(response, "healthProfile");
+    dispatch(getHealthProfile());
+    dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+    response.data.status
+      ? toast.success("Health Profile update was successful")
+      : toast.error(response.data.message);
+  } catch (error) {
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
   }
 };
 
@@ -624,6 +863,9 @@ export const createPatientAppointment = (value) => async (dispatch) => {
       },
     });
     toast.success(response.data.message);
+    response.data.status
+      ? toast.success(response.data.message)
+      : toast.error(response.data.message);
     dispatch({
       type: actionTypes.SET_APPOINTMENT_ID,
       payload: response.data,
@@ -649,6 +891,9 @@ export const addAppointmentDetails =
         },
       });
       toast.success(response.data.message);
+      response.data.status
+        ? toast.success(response.data.message)
+        : toast.error(response.data.message);
       console.log(response, "apaDetails");
       dispatch(addPayment(paymentValue));
     } catch (error) {

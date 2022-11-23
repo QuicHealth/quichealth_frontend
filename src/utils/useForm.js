@@ -1,7 +1,7 @@
 import { userAuth } from "./../Validations/UserValidation";
-import React ,{useState} from "react"
+import React, { useState } from "react";
 
-const useForm = (formType) => {
+const useForm = (formType, dbData) => {
   const genders = ["Male", "Female"];
   const maritalStatus = ["Single", "Married"];
   let INITIAL_STATE;
@@ -35,34 +35,34 @@ const useForm = (formType) => {
       email: "",
     };
   }
-  if(formType === "time") {
+  if (formType === "time") {
     INITIAL_STATE = {
       slot1: "",
       slot2: "",
       slot3: "",
-      slot4:"",
+      slot4: "",
       slot5: "",
       slot6: "",
       slot7: "",
-      slot8:"",
+      slot8: "",
       slot9: "",
       slot10: "",
       slot11: "",
-      slot12:"",
+      slot12: "",
       slot13: "",
       slot14: "",
       slot15: "",
-      slot16:"",
-    }
+      slot16: "",
+    };
   }
 
-  if (formType === "chatBot"){
+  if (formType === "chatBot") {
     INITIAL_STATE = {
       purpose: "",
       length: "",
       treatments: "",
       others: "",
-    }
+    };
   }
 
   if (formType === "selectAppointment") {
@@ -74,45 +74,22 @@ const useForm = (formType) => {
   }
 
   if (formType === "healthProfile") {
-    INITIAL_STATE = {
-      bloodGroup: "",
-      genotype: "",
-      medication: "",
-      medicalHistory: "",
-      maritalStatus: "",
-      healthCondition: "",
-      peculiarCase: "",
-      pastSurgery: "",
-      allegies: "",
-      occupation: "",
-      postMedicalHistory: "",
-    };
+    INITIAL_STATE = {};
   }
 
   if (formType === "setting") {
-    INITIAL_STATE = {
-      email: "",
-      phoneNumber: "",
-      address: "",
-      dob: "",
-      city: "",
-      gender: "",
-      emergencyNumber: "",
-    };
+    INITIAL_STATE = dbData;
   }
 
   if (formType === "updateProfile") {
     INITIAL_STATE = {
-      firstName: "",
-      lastName: "",
-      currentPassword: "",
-      newPassword: "",
-      passwordConfirmation: "",
+      old_password: "",
+      password: "",
+      password_confirmation: "",
     };
   }
 
   const [values, setValues] = useState(INITIAL_STATE);
-
   const [errors, setErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [disabledSubmit, setDisabledSubmit] = useState(false);
@@ -120,6 +97,7 @@ const useForm = (formType) => {
   const handleBlur = () => (isSubmit ? setErrors(userAuth(values)) : "");
 
   const handleChange = (event) => {
+    console.log(isSubmit)
     if (isSubmit) {
       setErrors(userAuth(values));
     }

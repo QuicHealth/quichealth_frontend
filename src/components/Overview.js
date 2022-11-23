@@ -30,7 +30,7 @@ export const PageLimtier = ({
   limit,
   setCount,
   count,
-  array
+  array,
 }) => {
   return (
     <OverviewFoot className={appointment ? "appointment" : ""}>
@@ -53,7 +53,8 @@ export const PageLimtier = ({
       </RowPage>
       <PageNo>
         <PageBox>
-          <span>{count === 0? count+1: count}</span> - <span>{count === 0? limit: count+limit}</span> of
+          <span>{count === 0 ? count + 1 : count}</span> -{" "}
+          <span>{count === 0 ? limit : count + limit}</span> of
           <span> {array?.length}</span>
         </PageBox>
         <IconSvg>
@@ -102,7 +103,7 @@ export const decrement = (setPosition, position, limit) => {
 };
 
 export const increment = (setPosition, position, limit, array) => {
-  if (position + limit > array?.length-1) {
+  if (position + limit > array?.length - 1) {
     return position;
   }
   setPosition(position + limit);
@@ -115,7 +116,8 @@ function Overview({
   pageUp,
   getLocation,
   getHospitals,
-  getAllNotifications
+  getAllNotifications,
+  getSettings,
 }) {
   let firstName;
   let routerHistory = useHistory();

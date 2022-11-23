@@ -42,10 +42,29 @@ const patientReducers = (state = initialState, action) => {
       return {
         ...state,
         notifications: payload.notifications,
-        patientNotificationAlert: payload.new_notifications
-
+        patientNotificationAlert: payload.new_notifications,
+      };
+    case actionTypes.IS_LOADING:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case actionTypes.NOT_LOADING:
+      return {
+        ...state,
+        isLoading: false,
       };
 
+    case actionTypes.GET_HEALTH_PROFILE:
+      return {
+        ...state,
+        patientHealthProfile: payload,
+      };
+    case actionTypes.PATIENT_SETTINGS:
+      return {
+        ...state,
+        patientSettings: payload,
+      };
     default:
       return state;
   }

@@ -366,6 +366,7 @@ export const InputNameContainer = styled.div`
   }
   &.settings {
     margin-bottom: 2rem;
+    column-gap: 3em;
 
     @media (max-width: ${700}px) {
       grid-template-columns: 100%;
@@ -438,8 +439,8 @@ export const Input = styled.input`
   outline: none;
 
   &.select {
-    padding: 0.3em .5em 0.3em .5em;
-    font-size: .9em;
+    padding: 0.3em 0.5em 0.3em 0.5em;
+    font-size: 0.9em;
     ::placeholder {
       color: #bdbdbe;
     }

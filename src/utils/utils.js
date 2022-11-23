@@ -56,7 +56,7 @@ export const locations = {
   ib: "Ibadan",
   lekki: "Lekki",
   lag: "Lagos",
-  ow: "owerri"
+  ow: "owerri",
 };
 
 export const genders = {
@@ -90,9 +90,7 @@ export function getMonth(month = dayjs().month()) {
   const daysMatrix = new Array(5).fill([]).map(() => {
     return new Array(7).fill(null).map(() => {
       currentMonthCount++;
-      return dayjs(new Date(year, month, currentMonthCount ));
-      
-  
+      return dayjs(new Date(year, month, currentMonthCount));
     });
   });
 
@@ -105,11 +103,11 @@ export function getAllMonth() {
   const year = dayjs().year();
   const months = new Array(12).fill(null).map(() => {
     currentMonth++;
-    return dayjs().month(currentMonth-1)
+    return dayjs().month(currentMonth - 1);
 
     //    return dayjs(new Date (dayjs().year(),(currentMonth-1))).format("MMM YYYY")
   });
-  return months
+  return months;
 }
 
 export const TimeSelection1 = [
@@ -407,3 +405,42 @@ export const TimeSelections = [
     value: "05:30PM - 06:00PM",
   },
 ];
+
+/**
+ * The function convert time from 'dd-mm-yyyy' to 'yyyy-mm-dd' for suitable
+ * for display input[type=date] and convert from 'yyyy-mm-dd' to 'dd/mm/yyyy'
+ * suitable to submit to abi endpoint
+ *
+ * function {string, bool}
+ * {return} String
+ */
+export function convertTime(time, type) {
+  if (!time) {
+    return;
+  }
+  let newTime, day, month, year;
+  let timeToArray = time?.split("-");
+
+  if (timeToArray[0].length === 4) {
+    // day = timeToArray[2].length !== 2 ? `0${timeToArray[2]}` : timeToArray[2];
+    // month = timeToArray[1].length !== 2 ? `0${timeToArray[1]}` : timeToArray[1];
+
+    // year = timeToArray[0];
+    // newTime = type ? `${day}/${month}/${year}` : `${year}-${month}-${day}`;
+    newTime = type
+      ? dayjs(time).format("DD MMMM YYYY")
+      : dayjs(time).format("YYYY-MM-DD");
+    console.log(newTime, "time");
+    return newTime;
+  }
+  const convTime = dayjs(time).format("YYYY-MM-DD");
+  console.log(convTime, "time");
+  // timeToArray = time?.split("/");
+  // day = timeToArray[0].length !== 2 ? `0${timeToArray[0]}` : timeToArray[0];
+  // month = timeToArray[1].length !== 2 ? `0${timeToArray[1]}` : timeToArray[1];
+
+  // year = timeToArray[2];
+  // newTime = `${year}-${month}-${day}`;
+
+  return convTime;
+}

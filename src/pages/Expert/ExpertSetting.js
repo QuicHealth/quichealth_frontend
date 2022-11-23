@@ -1,6 +1,6 @@
 import React from 'react'
 import DashboardNav from '../../components/DashboardNav';
-import Settings from '../../components/Setting';
+import Settings from '../../components/settings/Setting';
 
 function ExpertSetting() {
     return (

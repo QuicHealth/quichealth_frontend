@@ -14,6 +14,15 @@ export const userAuth = (values) => {
     }
   }
 
+    //Password check
+    if (values.hasOwnProperty("old_password")) {
+      if (!values.old_password) {
+        errors.old_password = "Current password is required";
+      } else if (values.old_password.length < 7) {
+        errors.old_password = "Password must be at least 6 characters";
+      }
+    }
+
   //Password check
   if (values.hasOwnProperty("password")) {
     if (!values.password) {

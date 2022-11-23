@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
 import DashboardNav from '../components/DashboardNav';
-import Settings from '../components/Setting';
+import Settings from '../components/settings/Setting';
 
 function DashboardSettings() {
     return (

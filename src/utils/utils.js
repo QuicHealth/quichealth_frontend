@@ -430,11 +430,11 @@ export function convertTime(time, type) {
     newTime = type
       ? dayjs(time).format("DD MMMM YYYY")
       : dayjs(time).format("YYYY-MM-DD");
-    console.log(newTime, "time");
+    // console.log(newTime, "time");
     return newTime;
   }
   const convTime = dayjs(time).format("YYYY-MM-DD");
-  console.log(convTime, "time");
+  // console.log(convTime, "time");
   // timeToArray = time?.split("/");
   // day = timeToArray[0].length !== 2 ? `0${timeToArray[0]}` : timeToArray[0];
   // month = timeToArray[1].length !== 2 ? `0${timeToArray[1]}` : timeToArray[1];

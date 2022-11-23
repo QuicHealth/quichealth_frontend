@@ -525,6 +525,38 @@ export const getDoctorById = (id) => async (dispatch) => {
   }
 };
 
+// Expert Settings
+
+export const getExpertSettings = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
+    let response = await api.get("/api/v1/doctor/settings", {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
+    console.log(response, "expertSettings");
+    dispatch({
+      type: actionTypes.GET_EXPERT_SETTINGS,
+      payload: response.data,
+    });
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  } catch (error) {
+    console.log(error.message);
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  }
+};
+
 // Setting
 export const getSettings = () => async (dispatch) => {
   try {
@@ -584,22 +616,62 @@ export const updateSettings = (value) => async (dispatch) => {
   }
 };
 
+//updateExpertSetting
+export const updateExpertSettings = (value) => async (dispatch) => {
+  try {
+    dispatch({
+      type: actionTypes.IS_LOADING,
+    });
+    let response = await api.post("/api/v1/doctor/settings", value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token} `,
+      },
+    });
+    console.log(response, "upexpertSettings");
+    response.data.status
+      ? toast.success("Settings updated successfully")
+      : toast.error("Setting not updated, try again");
+    dispatch(getExpertSettings());
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  } catch (error) {
+    if (!error.response) {
+      return toast.error(error.msg);
+    }
+    toast.error(error.response.data.msg);
+    return dispatch({
+      type: actionTypes.NOT_LOADING,
+    });
+  }
+};
+
 //upload Image
-export const uploadImage = (value) => async (dispatch) => {
+export const uploadImage = (value, expert) => async (dispatch) => {
   try {
     dispatch({
       type: actionTypes.IS_LOADING,
     });
     console.log(value);
-    let response = await api.post("/api/v1/upload_image", value, {
-      headers: {
-        Authorization: `Bearer ${localStorage.token} `,
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    //if expert use expert endpoint else use patient endpoint
+    let response = expert
+      ? await api.post("/api/v1/doctor/upload_image", value, {
+          headers: {
+            Authorization: `Bearer ${localStorage.token} `,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+      : await api.post("/api/v1/upload_image", value, {
+          headers: {
+            Authorization: `Bearer ${localStorage.token} `,
+            "Content-Type": "multipart/form-data",
+          },
+        });
     console.log(response, "updateImage");
-    toast.success(response.data.message);
-    dispatch(getSettings());
+    response.data.status
+      ? toast.success(response.data.message)
+      : toast.error(response.data.message);
+    expert ? dispatch(getExpertSettings()) : dispatch(getSettings());
     return dispatch({
       type: actionTypes.NOT_LOADING,
     });
@@ -615,20 +687,30 @@ export const uploadImage = (value) => async (dispatch) => {
 };
 
 //remove Image
-export const removeImage = (value) => async (dispatch) => {
+export const removeImage = (value, expert) => async (dispatch) => {
   try {
     dispatch({
       type: actionTypes.IS_LOADING,
     });
-    let response = await api.post("/api/v1/remove_image", value, {
-      headers: {
-        Authorization: `Bearer ${localStorage.token} `,
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    //if expert use expert endpoint else use patient endpoint
+    let response = expert
+      ? await api.post("/api/v1/doctor/remove_image", value, {
+          headers: {
+            Authorization: `Bearer ${localStorage.token} `,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+      : await api.post("/api/v1/remove_image", value, {
+          headers: {
+            Authorization: `Bearer ${localStorage.token} `,
+            "Content-Type": "multipart/form-data",
+          },
+        });
     console.log(response, "removeImage");
-    toast.success(response.data.message);
-    dispatch(getSettings());
+    response.data.status
+      ? toast.success(response.data.message)
+      : toast.error(response.data.message);
+    expert ? dispatch(getExpertSettings()) : dispatch(getSettings());
     return dispatch({
       type: actionTypes.NOT_LOADING,
     });

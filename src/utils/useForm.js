@@ -97,7 +97,6 @@ const useForm = (formType, dbData) => {
   const handleBlur = () => (isSubmit ? setErrors(userAuth(values)) : "");
 
   const handleChange = (event) => {
-    console.log(isSubmit)
     if (isSubmit) {
       setErrors(userAuth(values));
     }

@@ -34,7 +34,9 @@ const initialState = {
     doctorNotification:"",
     doctorNotificationAlert:"",
     patientSettings:"",
-    patientHealthProfile: ""
+    patientHealthProfile: "",
+    doctorSettings: "",
+    doctorProfile: ""
 }
 
 export default initialState;

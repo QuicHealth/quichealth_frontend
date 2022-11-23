@@ -72,6 +72,12 @@ const hospitalReducer = (state = initialState, action) => {
         doctorNotifications: payload.notifications,
         doctorNotificationAlert: payload.notification_alert,
       };
+
+    case actionTypes.GET_EXPERT_SETTINGS:
+      return {
+        ...state,
+        doctorSettings: payload,
+      };
     default:
       return state;
   }

@@ -9,14 +9,7 @@ import {
   HeadSection,
   MainBody,
 } from "../Appointments";
-import {
-  InputNameContainer,
-  InputLabel,
-  Input,
-  InputTypeBox,
-  Text,
-  Select,
-} from "../RegisterBody";
+import { InputNameContainer, Input, InputTypeBox, Text } from "../RegisterBody";
 import { SectionFive, SaveChanges, Right } from "../HealthProfile";
 import { Avatar } from "@material-ui/core";
 import { ProfileImage } from "../Overview";
@@ -24,8 +17,10 @@ import ExpertSidebar from "../Expert/ExpertSidebar";
 import useForm from "../../utils/useForm";
 import { convertTime, genders } from "../../utils/utils";
 import {
+  getExpertSettings,
   getSettings,
   removeImage,
+  updateExpertSettings,
   updatePassword,
   updateSettings,
   uploadImage,
@@ -39,18 +34,22 @@ function AccountSection({
   updateSettings,
   uploadImage,
   removeImage,
+  expert,
+  doctorSettings,
+  updateExpertSettings,
 }) {
+  let userSettings = expert ? doctorSettings : settings;
   const { handleChange, handleBlur, values, setValues, errors } = useForm(
     "setting",
-    settings
+    userSettings
   );
   const [imageValue, setImageValue] = useState({});
   const imageUploadRef = useRef();
   const [imageUpload, setImageUpload] = useState({});
 
   useEffect(() => {
-    setValues(settings);
-  }, [settings]);
+    setValues(userSettings);
+  }, [userSettings]);
 
   const submitAccount = (e) => {
     e.preventDefault();
@@ -59,8 +58,8 @@ function AccountSection({
       dob: convertTime(values.dob, true),
     };
 
-    console.log(errors, settingsValue);
-    updateSettings(values);
+    console.log(errors, settingsValue, values);
+    expert ? updateExpertSettings(values) : updateSettings(values);
   };
 
   const handleUpload = (e) => {
@@ -76,7 +75,7 @@ function AccountSection({
     formData.append("image", imageUpload);
 
     if (imageUpload?.name) {
-      uploadImage(formData);
+      expert ? uploadImage(formData, expert) : uploadImage(formData);
     }
   };
 
@@ -87,7 +86,7 @@ function AccountSection({
       ...values,
       image: "",
     };
-    removeImage(value);
+    expert ? removeImage(value, expert) : removeImage(value);
     console.log(value, "hjsd");
   };
 
@@ -205,7 +204,7 @@ function AccountSection({
                 }}
               >
                 <option value="" hidden>
-                  {settings?.gender}
+                  {userSettings?.gender}
                 </option>
                 {Object.entries(genders).map(([key, value], id) => {
                   return (
@@ -243,124 +242,6 @@ function AccountSection({
   );
 }
 
-const UpdateLogi = ({ useForm, updatePassword }) => {
-  const { handleChange, handleBlur, values, errors, setValues } =
-    useForm("updateProfile");
-
-  console.log(errors, "dfd");
-  const updateProfile = (e) => {
-    e.preventDefault();
-    console.log(values, "values");
-  };
-  return (
-    <>
-      <SettingsForm className="update">
-        <div>
-          <InputLabel htmlFor="">Input Username</InputLabel>
-          <InputNameContainer className="update">
-            <InputContainer>
-              <SettingInput
-                type="text"
-                name="firstName"
-                border={errors.firstName && "1px solid red"}
-                value={values.firstName}
-                onChange={handleChange}
-                placeholder="First Name"
-              />
-              {errors.firstName && <Text color="red">{errors.firstName}</Text>}
-            </InputContainer>
-
-            <InputContainer></InputContainer>
-          </InputNameContainer>
-          <br />
-          <InputNameContainer className="update">
-            <InputContainer>
-              <SettingInput
-                type="text"
-                name="lastName"
-                border={errors.lastName && "1px solid red"}
-                value={values.lastName}
-                onChange={handleChange}
-                placeholder="Last Name"
-              />
-              {errors.lastName && <Text color="red">{errors.lastName}</Text>}
-            </InputContainer>
-
-            <InputContainer></InputContainer>
-          </InputNameContainer>
-          <br />
-          <br />
-        </div>
-        <div>
-          <InputLabel htmlFor="">Change Password</InputLabel>
-          <InputNameContainer className="update">
-            <InputContainer>
-              <SettingInput
-                name="currentPassword"
-                border={errors.currentPassword && "1px solid red"}
-                value={values.currentPassword}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                type="password"
-                placeholder="Current Password"
-              />
-              {errors.currentPassword && (
-                <Text color="red">{errors.currentPassword}</Text>
-              )}
-            </InputContainer>
-            <InputContainer></InputContainer>
-          </InputNameContainer>
-          <br />
-          <InputNameContainer className="update">
-            <InputContainer>
-              <SettingInput
-                name="password"
-                border={errors.password && "1px solid red"}
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                type="password"
-                placeholder="New Password"
-              />
-              {errors.password && <Text color="red">{errors.password}</Text>}
-            </InputContainer>
-            <InputContainer></InputContainer>
-          </InputNameContainer>
-          <br />
-          <InputNameContainer className="update">
-            <InputContainer>
-              <SettingInput
-                name="password_confirmation"
-                border={errors.password_confirmation && "1px solid red"}
-                value={values.password_confirmation}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                type="password"
-                placeholder="Confirm new password"
-              />
-              {errors.password_confirmation && (
-                <Text color="red">{errors.password_confirmation}</Text>
-              )}
-            </InputContainer>
-
-            <InputContainer></InputContainer>
-          </InputNameContainer>
-          <br />
-          <SectionFive className="update">
-            <div>
-              {" "}
-              <SaveChanges onClick={updateProfile} className="update">
-                Save changes
-              </SaveChanges>
-            </div>
-            <div></div>
-          </SectionFive>
-        </div>
-      </SettingsForm>
-    </>
-  );
-};
-
 function Settings({
   expert,
   openSidebar,
@@ -371,12 +252,16 @@ function Settings({
   uploadImage,
   removeImage,
   updatePassword,
+  doctorSettings,
+  getExpertSettings,
+  updateExpertSettings,
 }) {
   const [isPassiveTab, setIsPassiveTab] = useState(false);
 
   useEffect(() => {
-    getSettings();
+    expert ? getExpertSettings() : getSettings();
   }, []);
+
   return (
     <>
       {isLoading ? (
@@ -426,11 +311,15 @@ function Settings({
                     settings={patientSettings}
                     useForm={useForm}
                     removeImage={removeImage}
+                    expert={expert}
+                    doctorSettings={doctorSettings}
+                    updateExpertSettings={updateExpertSettings}
                   />
                 ) : (
                   <UpdateLogin
                     updatePassword={updatePassword}
                     useForm={useForm}
+                    expert={expert}
                   />
                 )}
               </SettingsContainer>
@@ -446,15 +335,18 @@ const mapStateToProps = (state) => ({
   openSidebar: state.utils.openSidebar,
   patientSettings: state.patient.patientSettings,
   isLoading: state.patient.isLoading,
+  doctorSettings: state.hospital.doctorSettings,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getSettings: () => dispatch(getSettings()),
     updateSettings: (value) => dispatch(updateSettings(value)),
-    uploadImage: (value) => dispatch(uploadImage(value)),
-    removeImage: (value) => dispatch(removeImage(value)),
+    uploadImage: (value, expert) => dispatch(uploadImage(value, expert)),
+    removeImage: (value, expert) => dispatch(removeImage(value, expert)),
     updatePassword: (value) => dispatch(updatePassword(value)),
+    getExpertSettings: () => dispatch(getExpertSettings()),
+    updateExpertSettings: (value) => dispatch(updateExpertSettings(value)),
   };
 };
 

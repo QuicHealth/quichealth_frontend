@@ -14,7 +14,14 @@ const patientReducers = (state = initialState, action) => {
       return {
         ...state,
         appointmentId: payload.Appointments.id,
+        appointmentCreated: true,
       };
+
+      case actionTypes.REMOVE_CREATED_APPOINTMENT:
+        return {
+          ...state,
+          appointmentCreated: false
+        };
     case actionTypes.SET_USER_DETAILS:
       return {
         ...state,

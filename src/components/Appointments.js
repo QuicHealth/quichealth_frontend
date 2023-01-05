@@ -6,11 +6,11 @@ import { decrement, increment, PageLimtier, ProfileImage } from "./Overview";
 import { Icon } from "./SelectAppointment";
 import ExpertSidebar from "./Expert/ExpertSidebar";
 import {
-  createMeeting,
-  getAllPaidAppointments,
   getPatientZoomMeeting,
-} from "../redux/actions";
+} from "../redux/actions/PatientActions";
 import { useHistory } from "react-router-dom";
+import { createMeeting } from "../redux/actions/DoctorActions";
+import { getAllPaidAppointments } from "../redux/actions/PatientActions";
 
 export function convertTimeToTwelveHrs(time) {
   let newTime;

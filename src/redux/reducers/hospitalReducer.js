@@ -78,6 +78,11 @@ const hospitalReducer = (state = initialState, action) => {
         ...state,
         doctorSettings: payload,
       };
+    case actionTypes.GET_PATIENT_EMR:
+      return {
+        ...state,
+        patientEMR: payload,
+      };
     default:
       return state;
   }

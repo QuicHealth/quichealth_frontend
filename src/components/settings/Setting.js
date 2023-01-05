@@ -17,16 +17,14 @@ import ExpertSidebar from "../Expert/ExpertSidebar";
 import useForm from "../../utils/useForm";
 import { convertTime, genders } from "../../utils/utils";
 import {
-  getExpertSettings,
   getSettings,
-  removeImage,
-  updateExpertSettings,
-  updatePassword,
   updateSettings,
-  uploadImage,
-} from "../../redux/actions";
+} from "../../redux/actions/PatientActions";
 import { Spin } from "../../pages/Register";
 import UpdateLogin from "./UpdateLogin";
+import { getExpertSettings, updateExpertSettings } from "../../redux/actions/DoctorActions";
+import { removeImage, uploadImage } from "../../redux/actions/GenericActions";
+import { updatePassword } from "../../redux/actions/AuthActions";
 
 function AccountSection({
   settings,
@@ -39,6 +37,7 @@ function AccountSection({
   updateExpertSettings,
 }) {
   let userSettings = expert ? doctorSettings : settings;
+
   const { handleChange, handleBlur, values, setValues, errors } = useForm(
     "setting",
     userSettings
@@ -47,6 +46,9 @@ function AccountSection({
   const imageUploadRef = useRef();
   const [imageUpload, setImageUpload] = useState({});
 
+
+
+  
   useEffect(() => {
     setValues(userSettings);
   }, [userSettings]);

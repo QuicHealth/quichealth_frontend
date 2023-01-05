@@ -7,7 +7,7 @@ import { AppointmentContainer } from "./History";
 //import ZoomMtgEmbedded from "@zoomus/websdk/embedded";
 import { ZoomMtg } from "@zoomus/websdk";
 import { connect } from "react-redux";
-import { getPatientZoomMeeting } from "../redux/actions";
+import { getPatientZoomMeeting } from "../redux/actions/PatientActions";
 
 ZoomMtg.setZoomJSLib("https://source.zoom.us/2.6.0/lib", "/av");
 

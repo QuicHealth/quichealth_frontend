@@ -14,7 +14,8 @@ import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import InfoIcon from "@material-ui/icons/InfoOutlined";
 import LogoutIcon from "@material-ui/icons/ExitToAppOutlined";
 
-import { notShowSidebar, showSidebar, logout } from "./../redux/actions";
+import { notShowSidebar, showSidebar } from "./../redux/actions";
+import { logout } from "../redux/actions/AuthActions";
 
 function SideBar(props) {
   const { openSidebar, showSidebar, notShowSidebar, logout } = props;

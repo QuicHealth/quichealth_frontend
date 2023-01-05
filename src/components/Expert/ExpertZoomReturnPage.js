@@ -6,8 +6,9 @@ import { notShowSidebar } from "../../redux/actions";
 import { Container, MainBody } from "../Appointments";
 import SideBar from "../SideBar";
 import { useHistory } from "react-router-dom";
+import { getEMR } from "../../redux/actions/DoctorActions";
 
-function ExpertZoomReturnPage({ openSidebar, notShowSidebar }) {
+function ExpertZoomReturnPage({ openSidebar, notShowSidebar, getEMR }) {
   let history = useHistory();
   useEffect(() => {
     notShowSidebar();
@@ -21,8 +22,18 @@ function ExpertZoomReturnPage({ openSidebar, notShowSidebar }) {
           <EMRContainer>
             <EMRTitle>Your meeting has ended</EMRTitle>
             <EMRButtons>
-              <Button onClick={() =>  history.push("/expert-overview")}>Go to Dashboard</Button>
-              <Button onClick={() =>  history.push("/expert-emrPage")} className="emr">Review EMR Submission</Button>
+              <Button onClick={() => history.push("/expert-overview")}>
+                Go to Dashboard
+              </Button>
+              <Button
+                onClick={() => {
+                  getEMR();
+                  history.push("/expert-emrPage");
+                }}
+                className="emr"
+              >
+                Review EMR Submission
+              </Button>
             </EMRButtons>
           </EMRContainer>
         </Backdrop>
@@ -33,11 +44,13 @@ function ExpertZoomReturnPage({ openSidebar, notShowSidebar }) {
 
 const mapStateToProps = (state) => ({
   openSidebar: state.utils.openSidebar,
+  meetingDetails: state.hospital.doctorMeetingDetails,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     notShowSidebar: () => dispatch(notShowSidebar()),
+    getEMR: () => dispatch(getEMR()),
   };
 };
 

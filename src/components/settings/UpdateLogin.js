@@ -1,10 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import { connect } from "react-redux";
 import { InputNameContainer, InputLabel, Text } from "../RegisterBody";
 import { InputContainer, SettingInput, SettingsForm } from "./Setting";
 import useForm from "../../utils/useForm";
-import { updatePassword } from "../../redux/actions";
+import { updatePassword } from "../../redux/actions/AuthActions";
 import { SaveChanges, SectionFive } from "../HealthProfile";
 import { userAuth } from "../../Validations/UserValidation";
 

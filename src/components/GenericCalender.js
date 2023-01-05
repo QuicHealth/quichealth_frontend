@@ -4,18 +4,16 @@ import dayjs from "dayjs";
 import LessThan from "./../Image/lessThan.svg";
 import GreaterThan from "./../Image/greaterThan.svg";
 import { getAllMonth, getMonth } from "../utils/utils";
-import ScheduleIcon from "./../Image/schedule.svg";
 
 function GenericCalender({
   patient,
   daySelected,
   modal,
   setDaySelected,
-  setModal,
   daysAvailable,
   setSlotSelected,
+  disabled,
 }) {
-  let timeSlot;
   let format = "DD-MM-YY";
   const [currentMonthIdx, setCurrentMonthIdx] = useState(dayjs().month());
   const [currentMonth, setCurrentMonth] = useState(getMonth());
@@ -23,7 +21,7 @@ function GenericCalender({
   const [monthIndex, setMonthIndex] = useState(dayjs().month());
   const [allMonths, setAllMonth] = useState(getAllMonth());
   const [monthsModal, setMonthModal] = useState(false);
-  console.log(dayjs(new Date(allMonths[0])).format("MMM YYYY"), "allMontg");
+
   function getDayClass(day) {
     //const format = "DD-MM-YY";
     const nowDay = dayjs().format(format);
@@ -109,15 +107,21 @@ function GenericCalender({
           </>
         )}
       </CalenderHead>
-      <CalenderBody modal={modal} className={monthsModal? "monthModal" : ""}>
+      <CalenderBody modal={modal} className={monthsModal ? "monthModal" : ""}>
         {monthsModal ? (
           <>
             {allMonths.map((month, i) => {
-              return <Month onClick={()=> {
-               // console.log(i, "chcking")
-                setCurrentMonthIdx(i)
-                setMonthModal(false)
-              }}>{dayjs(new Date(month)).format("MMMM")}</Month>;
+              return (
+                <Month
+                  onClick={() => {
+                    // console.log(i, "chcking")
+                    setCurrentMonthIdx(i);
+                    setMonthModal(false);
+                  }}
+                >
+                  {dayjs(new Date(month)).format("MMMM")}
+                </Month>
+              );
             })}
           </>
         ) : (
@@ -133,7 +137,11 @@ function GenericCalender({
                 {row.map((day, idx) => (
                   <button
                     disabled={
-                      patient ? !disableButton(daysAvailable, day)?.[0] : ""
+                      patient
+                        ? !disableButton(daysAvailable, day)?.[0]
+                        : disabled
+                        ? true
+                        : false
                     }
                     key={idx}
                     className={`${getDayClass(day)}`}
@@ -148,6 +156,7 @@ function GenericCalender({
                         color:
                           day["$M"] === currentMonthIdx ? "#252733" : "#D6D8E1",
                       }}
+                      expertDisabled={disabled}
                       className={` ${getDayClass(day)} ${patient} `}
                     >
                       {day.format("D")}
@@ -183,7 +192,7 @@ const CalenderBody = styled.div`
   grid-template-rows: repeat(6, 1fr);
 
   &.monthModal {
-    grid-template-columns: repeat(1,1fr);
+    grid-template-columns: repeat(1, 1fr);
     font-size: 13px;
     font-weight: 600;
     justify-items: center;
@@ -218,19 +227,20 @@ const CalenderBody = styled.div`
     }
 
     &:disabled span {
-      color: #dadade !important;
+      color: ${(expertDisabled) =>
+        expertDisabled ? "" : "#dadade !important"};
     }
   }
 `;
 
 const Month = styled.span`
   cursor: pointer;
-  padding: .1em;
+  padding: 0.1em;
 
-  &:hover{
-    opacity: .6;
+  &:hover {
+    opacity: 0.6;
   }
-`
+`;
 
 const WeekDays = styled.span`
   text-align: center;

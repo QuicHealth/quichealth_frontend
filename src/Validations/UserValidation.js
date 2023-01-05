@@ -1,5 +1,4 @@
-
-export const userAuth = (values) => {
+export const userAuth = (values, emr) => {
   let errors = {};
   let isValid = true;
 
@@ -14,14 +13,14 @@ export const userAuth = (values) => {
     }
   }
 
-    //Password check
-    if (values.hasOwnProperty("old_password")) {
-      if (!values.old_password) {
-        errors.old_password = "Current password is required";
-      } else if (values.old_password.length < 7) {
-        errors.old_password = "Password must be at least 6 characters";
-      }
+  //Password check
+  if (values.hasOwnProperty("old_password")) {
+    if (!values.old_password) {
+      errors.old_password = "Current password is required";
+    } else if (values.old_password.length < 7) {
+      errors.old_password = "Password must be at least 6 characters";
     }
+  }
 
   //Password check
   if (values.hasOwnProperty("password")) {
@@ -60,6 +59,20 @@ export const userAuth = (values) => {
     }
   }
 
+  if (emr) {
+    if (values.hasOwnProperty("diagnosis")) {
+      if (!values.diagnosis) {
+        errors.diagnosis = "Diagnosis field is required";
+      }
+    }
+
+    if (values.hasOwnProperty("treatments")) {
+      if (!values.treatments) {
+        errors.treatment = "Treatment field is required";
+      }
+    }
+  }
+
   if (values.hasOwnProperty("phone")) {
     if (!values.phone) {
       errors.phone = "Mobile number is required";
@@ -81,6 +94,7 @@ export const userAuth = (values) => {
       errors.dob = "DOB must be characters";
     }
   }
+
   if (values.hasOwnProperty("day")) {
     if (!values.day) {
       errors.day = "day is required";
@@ -102,13 +116,14 @@ export const userAuth = (values) => {
   if (
     values.hasOwnProperty("length") ||
     values.hasOwnProperty("treatments") ||
-    values.hasOwnProperty("others") ||values.hasOwnProperty("purpose")
+    values.hasOwnProperty("others") ||
+    values.hasOwnProperty("purpose")
   ) {
     if (!values.length) {
       errors.length = "This field is required";
     }
     if (!values.treatments) {
-      errors.treatments = "This field is required";
+      errors.treatments = "Treatment field is required";
     }
     if (!values.others) {
       errors.others = "This field is required";

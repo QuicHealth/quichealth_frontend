@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
-import {signIn , pageUp } from "./../../redux/actions";
+import { pageUp } from "./../../redux/actions";
 import {
   TermsParagraph,
   AlreadyHaveAccount,
@@ -19,6 +19,7 @@ import { Slidein } from "./../RegisterBody";
 import { userAuth } from "./../../Validations/UserValidation";
 import useForm from "./../../utils/useForm";
 import { Spin } from "../../pages/Register";
+import { signIn } from "../../redux/actions/AuthActions";
 
 function SigninBody(props) {
   let history = useHistory();
@@ -47,7 +48,7 @@ function SigninBody(props) {
       let response = expert
         ? await signIn(values, expert)
         : await signIn(values);
-       // console.log(response);
+       
       if (response?.data?.route?.includes("doctor")) { 
         setTimeout(() => {
           return history.push("/expert-overview");

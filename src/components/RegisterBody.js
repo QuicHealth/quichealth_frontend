@@ -6,8 +6,9 @@ import styled, { keyframes } from "styled-components";
 import { dates, months, years } from "../utils/utils";
 import { userAuth } from "./../Validations/UserValidation";
 import useForm from "./../utils/useForm";
-import { pageUp, registerUser } from "./../redux/actions";
+import { pageUp } from "./../redux/actions";
 import { Spin } from "../pages/Register";
+import { registerUser } from "../redux/actions/AuthActions";
 
 function RegisterBody(props) {
   const {

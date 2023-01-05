@@ -66,7 +66,7 @@ function ExpertHealthProfile({ openSidebar }) {
             />
           </div>
           <br />
-          <div>
+          {/* <div>
             <InputText>Set available Date and Time</InputText>
             <Input
               type="date"
@@ -77,7 +77,7 @@ function ExpertHealthProfile({ openSidebar }) {
               value={values.date}
             />
           </div>
-          <br />
+          <br /> */}
 
           <div>
             <InputText>Hospital Affliate</InputText>

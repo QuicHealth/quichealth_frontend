@@ -8,7 +8,8 @@ import { Slidein, Text, InputContainer } from "./RegisterBody";
 import { userAuth } from "./../Validations/UserValidation";
 import useForm from "./../utils/useForm";
 import { Spin } from "../pages/Register";
-import { changePassword, verifyResetToken } from "../redux/actions";
+import { changePassword } from "../redux/actions/AuthActions";
+import { verifyResetToken } from "../redux/actions/AuthActions";
 
 function ResetPasswordBody(props) {
   const {
@@ -31,7 +32,7 @@ function ResetPasswordBody(props) {
     setErrors(formError);
     setDisabledSubmit(true);
     setIsSubmit(true);
-    console.log(values)
+    console.log(values);
     const noErrors = Object.keys(formError).length === 0;
     if (noErrors) {
       changePassword(values);
@@ -40,7 +41,7 @@ function ResetPasswordBody(props) {
 
   useEffect(() => {
     verifyResetToken();
-  }, [])
+  }, []);
 
   return (
     <Container>
@@ -71,7 +72,6 @@ function ResetPasswordBody(props) {
                 onChange={handleChange}
                 name="password_confirmation"
                 value={values.password_confirmation}
-                onChange={handleChange}
                 placeholder="password"
               />
             </div>

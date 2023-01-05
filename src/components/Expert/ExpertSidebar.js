@@ -15,10 +15,11 @@ import InfoIcon from "@material-ui/icons/InfoOutlined";
 import LogoutIcon from "@material-ui/icons/ExitToAppOutlined";
 
 import {Container, List, IconBox, StyledLink, ListItem, BackArrow, ListIcon, ListName} from "./../SideBar"
-import { notShowSidebar, showSidebar, logout } from "./../../redux/actions";
+import { notShowSidebar, showSidebar } from "./../../redux/actions";
+import { logout } from "../../redux/actions/AuthActions";
 
 function ExpertSidebar(props) {
-    const { openSidebar, showSidebar, notShowSidebar, logout } = props;
+    const { openSidebar, showSidebar, notShowSidebar, logout} = props;
 
     return (
         <Container
@@ -89,12 +90,7 @@ function ExpertSidebar(props) {
             </ListIcon>
             <ListName>Settings</ListName>
           </StyledLink>
-          <StyledLink to="/schedule-time" activeClassName="active">
-            <ListIcon>
-              <ScheduleIcon />
-            </ListIcon>
-            <ListName>Schedule</ListName>
-          </StyledLink>
+
           <StyledLink to="/expert-help" activeClassName="active">
             <ListIcon>
               <InfoIcon />
@@ -103,9 +99,9 @@ function ExpertSidebar(props) {
           </StyledLink>
           <ListItem>
             <ListIcon>
-              <LogoutIcon onClick={()=> logout()} />
+              <LogoutIcon onClick={()=> logout("expert")} />
             </ListIcon>
-            <ListName onClick={()=> logout()}>Signout</ListName>
+            <ListName onClick={()=> logout("expert")}>Signout</ListName>
           </ListItem>
         </List>
       </Container>
@@ -121,7 +117,7 @@ const mapStateProps = (state) => ({
     return {
       showSidebar: () => dispatch(showSidebar()),
       notShowSidebar: () => dispatch(notShowSidebar()),
-      logout: () => dispatch(logout()),
+      logout: (expert) => dispatch(logout(expert)),
     };
   };
 

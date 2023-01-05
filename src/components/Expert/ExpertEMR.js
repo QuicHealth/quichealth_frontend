@@ -1,15 +1,60 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { notShowSidebar } from "../../redux/actions";
+import { updateEMR } from "../../redux/actions/DoctorActions";
+import useForm from "../../utils/useForm";
+import { userAuth } from "../../Validations/UserValidation";
 import { Container, MainBody } from "../Appointments";
+import { Text } from "../RegisterBody";
 import SideBar from "../SideBar";
 
-function ExpertZoomReturnPage({ openSidebar, notShowSidebar }) {
+function ExpertZoomReturnPage({
+  openSidebar,
+  notShowSidebar,
+  patientEMR,
+  updateEMR,
+}) {
+  const {
+    handleChange,
+    values,
+    errors,
+    disabledSubmit,
+    setDisabledSubmit,
+    setIsSubmit,
+    setErrors,
+    setValues,
+  } = useForm("emr");
+
+  const Submit = (e) => {
+    e.preventDefault();
+
+    const formError = userAuth(values, true);
+    setErrors(formError);
+    setDisabledSubmit(true);
+    setIsSubmit(true);
+
+    const noErrors = Object.keys(formError).length === 0;
+
+    const emrValues = {};
+    console.log( noErrors, errors, emrValues, "emr");
+
+    if (noErrors) {
+      emrValues.diagnosis = values.diagnosis;
+      emrValues.treatments = values.treatments;
+      console.log( noErrors,emrValues, "emr");
+      updateEMR(emrValues);
+    }
+    //setValues({});
+  };
+
   useEffect(() => {
     notShowSidebar();
   }, []);
+
+  useEffect(() => {
+    setValues(patientEMR);
+  }, [patientEMR]);
 
   return (
     <Container sidebar={openSidebar}>
@@ -20,16 +65,35 @@ function ExpertZoomReturnPage({ openSidebar, notShowSidebar }) {
             <EMRForm>
               <EMRBody>
                 <EMRType>Diagnosis</EMRType>
-                <EMRInput></EMRInput>
+                <EMRInput
+                  value={values?.diagnosis}
+                  border={errors?.diagnosis && "1px solid red"}
+                  name="diagnosis"
+                  onChange={handleChange}
+                />
+                {errors?.diagnosis && (
+                  <Text color="red">{errors?.diagnosis}</Text>
+                )}
               </EMRBody>
 
               <EMRBody>
                 <EMRType>Treatment</EMRType>
-                <EMRInput></EMRInput>
+                <EMRInput
+                  value={values?.treatments}
+                  name="treatments"
+                  border={errors?.treatment && "1px solid red"}
+                  onChange={handleChange}
+                />
+                {errors?.treatments && (
+                  <Text color="red">{errors?.treatments}</Text>
+                )}
               </EMRBody>
 
               <EMRSubmit>
-                <EMRButton> Done</EMRButton>
+                <EMRButton disabled={disabledSubmit} onClick={Submit}>
+                  {" "}
+                  Done
+                </EMRButton>
               </EMRSubmit>
             </EMRForm>
           </EMRContainer>
@@ -41,11 +105,13 @@ function ExpertZoomReturnPage({ openSidebar, notShowSidebar }) {
 
 const mapStateToProps = (state) => ({
   openSidebar: state.utils.openSidebar,
+  patientEMR: state.hospital.patientEMR,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     notShowSidebar: () => dispatch(notShowSidebar()),
+    updateEMR: (value) => dispatch(updateEMR(value)),
   };
 };
 
@@ -67,18 +133,18 @@ const Backdrop = styled.div`
 const EMRContainer = styled.div`
   background-color: #fff;
   position: relative;
-  width: 50%;
+  width: 35em;
   border-radius: 10px;
   margin: 0 auto;
   z-index: 101;
   //right: 0em;
-  top: 10%;
+  top: 20%;
   padding: 1.5em;
   font-family: "Inter", sans-serif !important;
 `;
 
 const EMRHead = styled.div`
-  margin-top: 3em;
+  margin-top: 2em;
   display: flex;
   align-items: center;
 `;
@@ -103,7 +169,7 @@ const EMRTitle = styled.h3`
 `;
 
 const EMRForm = styled.form`
-  margin-top: 3em;
+  margin-top: 2em;
 `;
 
 const EMRBody = styled.div`
@@ -117,16 +183,17 @@ const EMRType = styled.h3`
 `;
 
 const EMRInput = styled.textarea`
-  height: 13em;
+  height: 8em;
   width: 100%;
   background-color: #f8f8f8;
-  border-radius: 10px;
-  border: 1px solid #B3B3B3;
+  border-radius: 5px;
+  border: 1px solid #b3b3b3;
   font-size: 16px;
   font-family: "Poppins", sans-serif !important;
   overflow: auto;
   outline: none;
   resize: none;
+  padding: 1em;
 `;
 
 const EMRSubmit = styled.div`

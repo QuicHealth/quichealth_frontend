@@ -12,6 +12,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, Slide } from "react-toastify";
 import jwt from "jsonwebtoken";
 
+import { setAuthorizationToken } from "./redux/setToken";
+import { setCurrentUser } from "./redux/actions/AuthActions";
+import history from "./history";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { ExpertProtectedRoute } from "./routes/ExpertProtectedRoute";
+
 //pages
 import "./index.css";
 import DashboardOverview from "./pages/DasboardOverview";
@@ -32,11 +38,9 @@ import Meeting from "./pages/Meeting";
 import ChatBotPage from "./pages/ChatBotPage";
 import PaymentPage from "./pages/PaymentPage";
 import BookedPage from "./pages/BookedPage";
-import { setAuthorizationToken } from "./redux/setToken";
-import { setCurrentUser } from "./redux/actions";
-import history from "./history";
-import { ProtectedRoute } from "./components/ProtectedRoute";
 import NewPasswordLinkPage from "./pages/NewPasswordLinkPage";
+
+//Expert Pages
 import ExpertDashboardOverview from "./pages/Expert/ExpertDashboardOverview";
 import ExpertAppointmentPage from "./pages/Expert/ExpertAppointmentPage";
 import ExpertNotification from "./pages/Expert/ExpertNotification";
@@ -45,9 +49,7 @@ import ExpertSetting from "./pages/Expert/ExpertSetting";
 import ExpertMeeting from "./pages/Expert/ExpertMeetingPage";
 import ExpertHelp from "./pages/Expert/ExpertHelp";
 import ExpertHealthProfilePage from "./pages/Expert/ExpertHealthProfilePage";
-import ScheduleTimePage from "./pages/Expert/ScheduleTimePage";
 import ExpertSignin from "./pages/Expert/ExpertSignin";
-import ExpertZoomReturnPage from "./components/Expert/ExpertZoomReturnPage";
 import ExpertZoomReturn from "./pages/Expert/ExpertZoomReturn";
 import ExpertEMRPage from "./pages/Expert/ExpertEMRPage";
 
@@ -72,75 +74,111 @@ class Main extends React.Component {
               component={NewPasswordLinkPage}
             />
             <Route exact path="/new-password" component={Resetpassword} />
-            <Route
+
+            {/* Protected routes */}
+            <ProtectedRoute
               exact
               path="/dashboard-overview"
               component={DashboardOverview}
             />
-            <Route
+            <ProtectedRoute
               exact
               path="/appointments"
               component={DashboardAppointments}
             />
-            <Route
+            <ProtectedRoute
               exact
               path="/notifications"
               component={DashboardNotification}
             />
-            <Route exact path="/history" component={DashboardHistory} />
-            <Route
+            <ProtectedRoute
+              exact
+              path="/history"
+              component={DashboardHistory}
+            />
+            <ProtectedRoute
               exact
               path="/health-profile"
               component={DashboardHealthProfile}
             />
-            <Route exact path="/settings" component={DashboardSettings} />
-            <Route exact path="/help" component={DashboardHelp} />
-            <Route
+            <ProtectedRoute
+              exact
+              path="/settings"
+              component={DashboardSettings}
+            />
+            <ProtectedRoute exact path="/help" component={DashboardHelp} />
+            <ProtectedRoute
               exact
               path="/select-appointment"
               component={SelectAppointment}
             />
-            <Route exact path="/pricings" component={Pricing} />
-            <Route exact path="/meeting" component={Meeting} />
-            <Route exact path="/chatbot" component={ChatBotPage} />
-            <Route exact path="/payment/status" component={PaymentPage} />
-            <Route exact path="/payment-confirm" component={BookedPage} />
-            <Route
+            <ProtectedRoute exact path="/pricings" component={Pricing} />
+            <ProtectedRoute exact path="/meeting" component={Meeting} />
+            <ProtectedRoute exact path="/chatbot" component={ChatBotPage} />
+            <ProtectedRoute
+              exact
+              path="/payment/status"
+              component={PaymentPage}
+            />
+            <ProtectedRoute
+              exact
+              path="/payment-confirm"
+              component={BookedPage}
+            />
+            <Route exact path="/expert-signin" component={ExpertSignin} />
+            
+            {/* expert protected routes */}
+            <ExpertProtectedRoute
               exact
               path="/expert-overview"
               component={ExpertDashboardOverview}
             />
-            <Route
+            <ExpertProtectedRoute
               exact
               path="/expert-appointments"
               component={ExpertAppointmentPage}
             />
-            <Route
+            <ExpertProtectedRoute
               exact
               path="/expert-notifications"
               component={ExpertNotification}
             />
-            <Route exact path="/expert-history" component={ExpertHistory} />
-            <Route exact path="/expert-settings" component={ExpertSetting} />
-            <Route exact path="/expert-meeting" component={ExpertMeeting} />
-            <Route exact path="/expert-help" component={ExpertHelp} />
-            <Route
+            <ExpertProtectedRoute
+              exact
+              path="/expert-history"
+              component={ExpertHistory}
+            />
+            <ExpertProtectedRoute
+              exact
+              path="/expert-settings"
+              component={ExpertSetting}
+            />
+            <ExpertProtectedRoute
+              exact
+              path="/expert-meeting"
+              component={ExpertMeeting}
+            />
+            <ExpertProtectedRoute
+              exact
+              path="/expert-help"
+              component={ExpertHelp}
+            />
+            <ExpertProtectedRoute
               exact
               path="/expert-healthProfile"
               component={ExpertHealthProfilePage}
             />
-            <Route
+            <ExpertProtectedRoute
               exact
               path="/expert-zoomReturn"
               component={ExpertZoomReturn}
             />
-            <Route
+            <ExpertProtectedRoute
               exact
               path="/expert-emrPage"
               component={ExpertEMRPage}
             />
-            <Route exact path="/schedule-time" component={ScheduleTimePage} />
-            <Route exact path="/expert-signin" component={ExpertSignin} />
+
             <Route path="/*/reload" component={null} />
             {/* <Route exact path='/404' component={} /> */}
             <Redirect to="/404" />

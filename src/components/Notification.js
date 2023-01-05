@@ -17,7 +17,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import { ProfileImage } from "./Overview";
 import { Margin } from "./SelectAppointment";
 import ExpertSidebar from "./Expert/ExpertSidebar";
-import { getDoctorNotifications, getNotifications } from "../redux/actions";
+import { getNotifications } from "../redux/actions/PatientActions";
+import { getDoctorNotifications } from "../redux/actions/DoctorActions";
 
 function Notification({
   expert,
@@ -55,7 +56,7 @@ function Notification({
   };
 
   let apiCall = expert ? getDoctorNotifications : getAllNotifications;
-  
+
   useEffect(() => {
     apiCall();
   }, []);
@@ -92,14 +93,15 @@ function Notification({
           <Margin className="notify" />
           {/* Renders doctor's notification if expert is true or render patients notification  */}
           {expert
-            ? doctorNotifications && doctorNotifications?.map((notification, key) => {
+            ? doctorNotifications &&
+              doctorNotifications?.map((notification, key) => {
                 return (
                   <GenericAppointmentContainer
                     key={key}
                     notification={notification}
                   />
                 );
-             })
+              })
             : notifications?.map((notification, key) => {
                 return (
                   <GenericAppointmentContainer
@@ -202,9 +204,10 @@ const NotificationSearch = styled.div`
 const SelectBox = styled.div``;
 
 export const NotificationSearchIcon = styled(SearchIcon)`
-  position: absolute;
+  position: relative;
   margin-left: 10px;
   color: #c4c4c4;
+  left: 1.2em;
 `;
 
 export const Search = styled.div`

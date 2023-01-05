@@ -8,7 +8,7 @@ import { Slidein, Text, InputContainer } from "./RegisterBody";
 import { userAuth } from "./../Validations/UserValidation";
 import useForm from "./../utils/useForm";
 import { Spin } from "../pages/Register";
-import { pageUp, passwordReset } from "../redux/actions";
+import { pageUp } from "../redux/actions";
 import {
   Container,
   RegisterMinContainer,
@@ -16,6 +16,7 @@ import {
   InputLabel,
   Input,
 } from "./ResetPasswordBody";
+import { passwordReset } from "../redux/actions/AuthActions";
 
 function NewPasswordLink(props) {
   const {

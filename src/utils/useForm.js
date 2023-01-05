@@ -80,6 +80,9 @@ const useForm = (formType, dbData) => {
   if (formType === "setting") {
     INITIAL_STATE = dbData;
   }
+  if (formType === "emr") {
+    INITIAL_STATE = {};
+  }
 
   if (formType === "updateProfile") {
     INITIAL_STATE = {

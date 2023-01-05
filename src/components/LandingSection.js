@@ -3,21 +3,25 @@ import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { SaveChanges } from "./HealthProfile";
 import { Bot, Patient } from "./ChatBot";
+import Wave from "./../Image/wavesz.png";
 
 //Landing Section
 export const GetStarted = ({ firsth1, secondh1, body, buttonName }) => {
   return (
-      <LeftSection>
-        <h1>{firsth1}{secondh1}</h1>
+    <LeftSection>
+      <h1>
+        {firsth1}
+        {secondh1}
+      </h1>
 
-        <SectionText>{body}</SectionText>
+      <SectionText>{body}</SectionText>
 
-        <div>
-          <SaveChanges className="landingPage">
-            <ButtonLink to="/register">{buttonName}</ButtonLink>
-          </SaveChanges>
-        </div>
-      </LeftSection>
+      <div>
+        <SaveChanges className="landingPage">
+          <ButtonLink to="/register">{buttonName}</ButtonLink>
+        </SaveChanges>
+      </div>
+    </LeftSection>
   );
 };
 
@@ -61,20 +65,21 @@ function LandingSection() {
       <Waves>
         {" "}
         <img src="./images/wavesz.png" alt="" />
+        <SectionOne>
+          <GetStarted
+            firsth1={"Welcome to QuicHealth, "}
+            secondh1={'"your pocket doctor"'}
+            body={
+              "See a doctor without leaving your home. We provide easy and fast access to the best medical experts in NIGERIA."
+            }
+            buttonName={"Get Started"}
+          />
+          <RightSection>
+            <img src="./images/blob1.svg" alt="" />
+          </RightSection>
+        </SectionOne>
       </Waves>
-      <SectionOne>
-        <GetStarted
-          firsth1={"Welcome to QuicHealth, "}
-          secondh1={'"your pocket doctor"'}
-          body={
-            "See a doctor without leaving your home. We provide easy and fast access to the best medical experts in NIGERIA."
-          }
-          buttonName={"Get Started"}
-        />
-        <RightSection>
-          <img src="./images/blob1.svg" alt="" />
-        </RightSection>
-      </SectionOne>
+
       {
         <ChatBot onClick={() => setNotShow(true)}>
           {!show ? <img src="./images/chatbot.png" alt="" /> : ""}
@@ -98,7 +103,6 @@ const MoveLeft = keyframes`
         opacity:1;
     }
 `;
-
 
 const MoveRight = keyframes`
     0%{
@@ -125,6 +129,7 @@ const Container = styled.div`
   width: 100%;
   margin-bottom: 14em;
 `;
+
 const ChatBot = styled.div`
   position: absolute;
   right: 2em;
@@ -141,13 +146,14 @@ const SectionOne = styled.div`
   grid-template-columns: 50% 50%;
   color: #070647;
   overflow-x: hidden;
-  position: relative;
+  //background-image: url(${Wave});
+
   @media (max-width: ${750}px) {
-       //grid  : 100%;
-    }
-    @media (max-width: ${500}px) {
-        grid-template-columns: 100%;
-    }
+    //grid  : 100%;
+  }
+  @media (max-width: ${500}px) {
+    grid-template-columns: 100%;
+  }
 `;
 const RightSection = styled.div`
   width: 100%;
@@ -157,16 +163,14 @@ const RightSection = styled.div`
   padding: 0em 6em 0em 0em;
   align-items: center;
   @media (max-width: ${500}px) {
-       padding: 0;
-      
-    }
+    padding: 0;
+  }
   > img {
     //width: 100%;
     @media (max-width: ${500}px) {
-       height: 50vh;
-       margin: 0 auto;
-       width:27em;
-      
+      height: 50vh;
+      margin: 0 auto;
+      width: 27em;
     }
     animation: ${MoveLeft} 2s ease-in;
   }
@@ -175,12 +179,12 @@ const RightSection = styled.div`
 const SectionText = styled.p`
   margin-top: 1em;
   font-size: 1.5em;
-  color: #9B9B9B;
+  color: #9b9b9b;
   animation: ${MoveRight} 2s ease-in;
 
   @media (max-width: ${500}px) {
-      font-size: 1em;
-    }
+    font-size: 1em;
+  }
 `;
 export let LeftSection = styled.div`
   width: 100%;
@@ -189,8 +193,8 @@ export let LeftSection = styled.div`
   //padding-top: 6em;
   position: relative;
   @media (max-width: ${500}px) {
-      padding: 6em 1em 0;
-    }
+    padding: 6em 1em 0;
+  }
   > h1 {
     animation: ${MoveRight} 2s ease-in;
     font-size: 3.1em;
@@ -200,16 +204,16 @@ export let LeftSection = styled.div`
       width: 10em;
     }
   }
-  >div>div{
-    width:17em;
+  > div > div {
+    width: 17em;
     margin-top: 4em;
     font-weight: 600;
     border-radius: 19px;
     padding: 0.5em 0px;
     @media (max-width: ${500}px) {
       width: 11em;
-      border-radius:10px;
-      margin-top:1em;
+      border-radius: 10px;
+      margin-top: 1em;
     }
   }
 `;
@@ -219,21 +223,22 @@ const ButtonLink = styled(Link)`
   text-decoration: none;
   font-size: 2em;
   @media (max-width: ${500}px) {
-      font-size: 1em;
-      width:11em;
-    }
+    font-size: 1em;
+    width: 11em;
+  }
 `;
 
 export const Waves = styled.div`
-  position: absolute;
+  position: relative;
   width: 100%;
   transition: width ease-in;
   height: 100vh;
 
   > img {
     width: 100%;
+    position: absolute;
     @media (max-width: ${500}px) {
-       height: 40vh;
+      height: 40vh;
     }
   }
 `;
@@ -289,13 +294,13 @@ const SubmitSection = styled.div`
   background-color: white;
   z-index: 100;
   @media (max-width: ${500}px) {
-      font-size: 1em;
-      width:11em;
-    }
-    @media (max-width: ${500}px) {
-      font-size: 1em;
-      width:100%;
-    }
+    font-size: 1em;
+    width: 11em;
+  }
+  @media (max-width: ${500}px) {
+    font-size: 1em;
+    width: 100%;
+  }
   > div {
     width: 43px;
     height: 41px;
@@ -318,7 +323,7 @@ const Input = styled.input`
   outline: none;
   border: 1px solid #f3ebeb;
   padding: 20px;
-  ::placeholder{
+  ::placeholder {
     color: #a4a4a4;
   }
 `;

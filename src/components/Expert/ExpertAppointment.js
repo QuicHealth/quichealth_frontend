@@ -22,7 +22,7 @@ import {
 import { ProfileImage } from "../Overview";
 import { Icon } from "../SelectAppointment";
 import ExpertSidebar from "./ExpertSidebar";
-import { getAllDoctorPaidAppointments } from "../../redux/actions";
+import { getAllDoctorPaidAppointments } from "../../redux/actions/DoctorActions";
 
 function ExpertAppointment({
   openSidebar,
@@ -76,7 +76,7 @@ function ExpertAppointment({
                     parseInt(appointment.start) <= 12
                       ? "AM"
                       : "PM"}{" "}
-                  </Time> 
+                  </Time>
 
                   <Minutes>
                     {" "}
@@ -91,13 +91,13 @@ function ExpertAppointment({
                   onClick={() => {
                     // console.log(appointment);
                     // value.appointment_id = appointment.id;
-                   // value.topic = "Health Matters";
-                   // value.duration = 30;
+                    // value.topic = "Health Matters";
+                    // value.duration = 30;
                     //  value.start_time = appointment.start;
-                   // console.log(value);
+                    // console.log(value);
                     //createMeeting(value);
                     setTimeout(() => {
-                        history.push("/expert-meeting");
+                      history.push("/expert-meeting");
                     }, 2000);
                   }}
                 >

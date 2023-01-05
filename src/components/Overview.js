@@ -4,13 +4,13 @@ import styled, { keyframes } from "styled-components";
 import SideBar from "./SideBar";
 import { NavigateNext } from "@material-ui/icons";
 import {
-  getDashboard,
   pageUp,
-  getLocation,
-  getHospitals,
-  getNotifications,
 } from "../redux/actions";
 import { useHistory } from "react-router-dom";
+import { getDashboard } from "../redux/actions/GenericActions";
+import { getHospitals } from "../redux/actions/HospitalActions";
+import { getLocation } from "../redux/actions/utilsActions";
+import { getNotifications } from "../redux/actions/PatientActions";
 
 const userActivity = [
   {

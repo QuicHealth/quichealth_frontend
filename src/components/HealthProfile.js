@@ -13,7 +13,7 @@ import { AnimateBtn } from "./LandingSection";
 import { ProfileImage } from "./Overview";
 import useForm from "./../utils/useForm";
 import { Text } from "./RegisterBody";
-import { getHealthProfile, updateHealthProfile } from "../redux/actions";
+import { getHealthProfile, updateHealthProfile } from "../redux/actions/PatientActions";
 import { Spin } from "../pages/Register";
 
 function HealthProfile({
@@ -42,7 +42,7 @@ function HealthProfile({
   return (
     <>
       {isLoading ? (
-        <Spin/>
+        <Spin />
       ) : (
         <Container sidebar={openSidebar}>
           <SideBar />
@@ -68,15 +68,15 @@ function HealthProfile({
                     <GenotypeBox>
                       <InputSmall
                         type="text"
-                        border={errors.bloodGroup && "1px solid red"}
-                        value={values.blood_group}
-                        onChange={handleChange}
+                        border={errors.blood_group && "1px solid red"}
                         name="blood_group"
+                        value={values?.blood_group}
+                        onChange={handleChange}
                         placeholder=""
                       />
                     </GenotypeBox>
-                    {errors.bloodGroup && (
-                      <Text color="red">{errors.bloodGroup}</Text>
+                    {errors.blood_group && (
+                      <Text color="red">{errors.blood_group}</Text>
                     )}
                   </Left>
                   <Right></Right>
@@ -88,7 +88,7 @@ function HealthProfile({
                       <InputSmall
                         type="text"
                         border={errors.genotype && "1px solid red"}
-                        value={values.genotype}
+                        value={values?.genotype}
                         onChange={handleChange}
                         name="genotype"
                         placeholder=""
@@ -113,7 +113,7 @@ function HealthProfile({
                               value={status}
                               name="martial_status"
                               type="checkbox"
-                              checked={values.martial_status === status}
+                              checked={values?.martial_status === status}
                               onChange={handleChange}
                             />{" "}
                             <label
@@ -140,7 +140,7 @@ function HealthProfile({
                       type="text"
                       border={errors.medication && "1px solid red"}
                       name="medication"
-                      value={values.medication}
+                      value={values?.medication}
                       onChange={handleChange}
                       placeholder="Type here..."
                     />
@@ -155,7 +155,7 @@ function HealthProfile({
                         type="text"
                         border={errors.family_medical_history}
                         name="family_medical_history"
-                        value={values.family_medical_history}
+                        value={values?.family_medical_history}
                         onChange={handleChange}
                         placeholder="Type here..."
                       />
@@ -173,7 +173,7 @@ function HealthProfile({
                       type="text"
                       border={errors.health_condition && "1px solid red"}
                       name="health_condition"
-                      value={values.health_condition}
+                      value={values?.health_condition}
                       onChange={handleChange}
                       placeholder="Type here..."
                     />
@@ -188,7 +188,7 @@ function HealthProfile({
                         type="text"
                         border={errors.peculiar_cases && "1px solid red"}
                         name="peculiar_case"
-                        value={values.peculiar_cases}
+                        value={values?.peculiar_cases}
                         onChange={handleChange}
                         placeholder="Type here..."
                       />
@@ -205,7 +205,7 @@ function HealthProfile({
                       type="text"
                       border={errors.past_surgery && "1px solid red"}
                       name="past_surgery"
-                      value={values.past_surgery}
+                      value={values?.past_surgery}
                       onChange={handleChange}
                       placeholder="Type here..."
                     />
@@ -220,7 +220,7 @@ function HealthProfile({
                         type="text"
                         name="allergies"
                         border={errors.allergies && "1px solid red"}
-                        value={values.allergies}
+                        value={values?.allergies}
                         onChange={handleChange}
                         placeholder="Type here..."
                       />
@@ -237,7 +237,7 @@ function HealthProfile({
                       type="text"
                       name="Occupation"
                       border={errors.Occupation && "1px solid red"}
-                      value={values.Occupation}
+                      value={values?.Occupation}
                       onChange={handleChange}
                       placeholder="Type here..."
                     />
@@ -252,7 +252,7 @@ function HealthProfile({
                         type="text"
                         name="past_medical_history"
                         border={errors.past_medical_history}
-                        value={values.past_medical_history}
+                        value={values?.past_medical_history}
                         onChange={handleChange}
                         placeholder="Type here..."
                       />

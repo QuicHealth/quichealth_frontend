@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import MenuIcon from "@material-ui/icons/Menu";
 import { Containa, IconBox } from "./../SelectAppointment";
-import { ViewProfile, Name, Details, MainBody, Image } from "./../Appointments";
-import { AppointmentContainer } from "./../History";
-//import ZoomMtgEmbedded from "@zoomus/websdk/embedded";
+import { toast } from "react-toastify";
 import { ZoomMtg } from "@zoomus/websdk";
 import { connect } from "react-redux";
-import { getAllDoctorZoomMeeting } from "../../redux/actions";
-import EMRIcon from "./../../Image/emr.png";
 
 import "./expertMeeting.css";
+import { getAllDoctorZoomMeeting } from "../../redux/actions/DoctorActions";
 
 ZoomMtg.setZoomJSLib("https://source.zoom.us/2.6.0/lib", "/av");
 
@@ -22,6 +18,7 @@ ZoomMtg.i18n.reload("en-US");
 
 const b = document.createElement("div");
 const d = document.createElement("div");
+
 const emrDiv = `
   <div class='emr_container' id='wc-right-container emr_box'>
     <div id='emr_head'>
@@ -30,21 +27,22 @@ const emrDiv = `
       </div>
       <h3> Add to EMR </h3>
     </div>
+    
 
     <form id="emr_form">
 
       <div>
         <h4> Diagnosis</h4>
-        <textarea> </textarea>
+        <textarea id="diagnosis" name="diagnosis"> </textarea>
       </div>
 
       <div>
         <h4> Treatment</h4>
-        <textarea> </textarea>
+        <textarea id="treatment" name="treatment"> </textarea>
       </div>
 
       <div id="emr_submit">
-          <span id="emrbutton">Add </span>
+          <button type="submit" id="emrbutton">Add </button>
       <div>
       </div>
 
@@ -79,17 +77,53 @@ function ExpertMeeting({
   meetingId,
 }) {
   // setup your signature endpoint here: https://github.com/zoom/meetingsdk-sample-signature-node.js
-  var signatureEndpoint = "http://localhost:4000";
+  var signatureEndpoint = process.env.REACT_APP_SIGNATURE_ENDPOINT;
   //var signature = ""
   // This Sample App has been updated to use SDK App type credentials https://marketplace.zoom.us/docs/guides/build/sdk-app
-  var sdkKey = "CW3Cjig4wb7ergJYRgsBtJ0yiMAoZf3NXgRe";
+  var sdkKey = process.env.REACT_APP_SDK_KEY;
   var meetingNumber = "";
   var role = 1;
-  var leaveUrl = "http://localhost:3000/expert-zoomReturn";
+  var leaveUrl = "/expert-zoomReturn";
   var userName = "Doctor";
   var userEmail = "";
   var passWord = "";
   const [signature, setSignature] = useState(null);
+
+  const submitEmr = async (e) => {
+    const diagnosis = document.getElementById("diagnosis").value;
+    const treatments = document.getElementById("treatment").value;
+
+    e.preventDefault();
+
+    const user_id = meetingDetails.user_id;
+    const appointment_id = meetingDetails.appointment_id;
+    console.log(diagnosis, treatments, user_id, appointment_id, "ermsss");
+
+    const response = await fetch(process.env.REACT_APP_EMR_URL, {
+      method: "POST",
+      headers: {
+        Accept: "application/json,*/*",
+        "Content-type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+      body: JSON.stringify({
+        diagnosis,
+        treatments,
+        user_id,
+        appointment_id,
+      }),
+    });
+    const data = await response.json();
+    console.log(data, "responszemr");
+    document.getElementsByClassName("emr_container")[0].style.display = "none";
+    if (!data.status) {
+      return toast.error("Something went wrong, pls try again");
+    }
+
+    return toast.success(data.msg);
+  };
 
   console.log(meetingId, pwd, "numid");
   passWord = pwd;
@@ -122,15 +156,6 @@ function ExpertMeeting({
     // console.log(meetingId, "numid");
   }, []);
 
-  const [EMRactive, setEMRactive] = useState(false);
-
-  const activate = (e) => {
-    e.preventDefault();
-    setEMRactive(true);
-  };
-  const emrStyles = () => {
-    document.getElementById("emr_box").style.display = "none";
-  };
   function startMeeting(signature) {
     document.getElementById("zmmtg-root").style.display = "block";
     console.log(sdkKey.length);
@@ -163,13 +188,42 @@ function ExpertMeeting({
             document
               .getElementsByClassName("emrbuttonwrapper")[0]
               ?.addEventListener("click", () => {
-                document.getElementsByClassName("emr_container")[0].style.display = 'block';
+                document.getElementsByClassName(
+                  "emr_container"
+                )[0].style.display = "block";
               });
+
+            const buttonToHide = document.getElementsByClassName(
+              "security-option-menu__pop-menu"
+            );
+            // const buttonToHide2 = document.getElementsByClassName(
+            //   "custom-dropdown-menu"
+            // );
+
+            for (let button of buttonToHide) {
+              button.style.display = "none";
+            }
+            // for (let button of buttonToHide2) {
+            //   button.style.display = "none";
+            // }
+            console.log(
+              document.getElementsByClassName("security-option-menu__pop-menu"),
+              "jdksk"
+            );
 
             document
               .getElementsByClassName("icon")[0]
-              ?.addEventListener("click", () => document.getElementsByClassName("emr_container")[0].style.display = 'none'
-              )
+              ?.addEventListener(
+                "click",
+                () =>
+                  (document.getElementsByClassName(
+                    "emr_container"
+                  )[0].style.display = "none")
+              );
+
+            document
+              .getElementById("emr_form")
+              ?.addEventListener("submit", submitEmr);
           },
           error: (error) => {
             console.log(error);
@@ -185,9 +239,6 @@ function ExpertMeeting({
   useEffect(() => {
     startMeeting(signature);
   }, [signature]);
-
-
-
 
   return (
     <Containa>

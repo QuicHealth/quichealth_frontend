@@ -206,8 +206,21 @@ export const ConfirmationModal = ({
   setPatientBookValues,
   value,
   createPatientAppointment,
+  appointmentCreated,
 }) => {
   let history = useHistory();
+  console.log(appointmentCreated, "test");
+
+  if (appointmentCreated) {
+    setTimeout(() => {
+      history.push("/chatbot");
+    }, 2000);
+  }
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     history.push("/chatbot");
+  //   }, 2000);
+  // }, [appointmentCreated]);
   return (
     <BackdropContainer>
       <ModalContent className="confirmation">
@@ -225,9 +238,6 @@ export const ConfirmationModal = ({
               console.log(value, "value");
               setPatientBookValues(value);
               createPatientAppointment(value);
-              setTimeout(() => {
-                history.push("/chatbot");
-              }, 2000);
             }}
           >
             Yes, Confirm

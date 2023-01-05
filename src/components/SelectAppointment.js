@@ -11,11 +11,8 @@ import SideBar from "./SideBar";
 import { ProfileImage } from "./Overview";
 import {
   setPatientBookValues,
-  getDoctorById,
-  getHospitals,
-  getLocation,
   createPatientAppointment,
-} from "../redux/actions";
+} from "../redux/actions/PatientActions";
 import { locations } from "../utils/utils";
 import useForm from "../utils/useForm";
 import { useHistory } from "react-router-dom";
@@ -23,6 +20,9 @@ import GenericCalender from "./GenericCalender";
 import { PatientCalenderModal, ConfirmationModal } from "./Modal";
 import dayjs from "dayjs";
 import LocalizedFormat from "dayjs/plugin/localizedFormat";
+import { getHospitals } from "../redux/actions/HospitalActions";
+import { getLocation } from "../redux/actions/utilsActions";
+import { getDoctorById } from "../redux/actions/DoctorActions";
 
 export const DocAppointment = ({
   name,
@@ -43,12 +43,15 @@ export const DocAppointment = ({
 }) => {
   const setIdTrue = (arry, setArry, id) => {
     arry = new Array(arry?.length).fill(false);
+
     if (!arry[id]) {
       arry[id] = true;
       setArry(arry);
       console.log(arry);
     }
   };
+
+  // console.log(Hname, name, doctorDetails,uniqueId, "test")
 
   const removeClass = (arry, setArry) => {
     arry = new Array(arry?.length).fill(false);
@@ -194,6 +197,7 @@ export const BookAppointment = ({
   doctorId,
   setPatientBookValues,
   createPatientAppointment,
+  appointmentCreated
 }) => {
   const [modal, setModal] = useState(false);
   const [daySelected, setDaySelected] = useState("");
@@ -243,6 +247,7 @@ export const BookAppointment = ({
           setPatientBookValues={setPatientBookValues}
           setModal={setModal}
           createPatientAppointment={createPatientAppointment}
+          appointmentCreated={appointmentCreated}
         />
       ) : (
         ""
@@ -313,6 +318,7 @@ const AppointmentComponent = ({
   doctorDetails,
   setPatientBookValues,
   createPatientAppointment,
+  appointmentCreated,
 }) => {
   const longitude = localStorage.getItem("longitude");
   const latitude = localStorage.getItem("latitude");
@@ -424,8 +430,9 @@ const AppointmentComponent = ({
               .sort((a, b) => a.distance - b.distance)
               .map((hospital) => {
                 a = new Array(hospital.doctors.length).fill(false);
-                // console.log(doctor.unique_id, "unigdfhgj");
+
                 return hospital?.doctors?.map((doctor, idx) => {
+                  console.log(doctor.unique_id, "unigdfhgj");
                   doctor.select = arrayId[idx];
                   return (
                     <>
@@ -444,12 +451,14 @@ const AppointmentComponent = ({
                         doctorId={doctor?.id}
                         setPatientBookValues={setPatientBookValues}
                         createPatientAppointment={createPatientAppointment}
+                        appointmentCreated={appointmentCreated}
                       />
                     </>
                   );
                 });
               })
           : filterHospitals?.map((hospital) => {
+              console.log("no location Access here");
               return hospital.doctors?.map((doctor, idx) => {
                 return (
                   <BookAppointment
@@ -488,8 +497,7 @@ function SelectAppointments({
   doctor,
   setPatientBookValues,
   createPatientAppointment,
-  time,
-  NoIcon,
+  appointmentCreated,
 }) {
   const {
     values,
@@ -539,40 +547,6 @@ function SelectAppointments({
     setFilterHospitals(filteredHospitals);
   };
 
-  let a;
-  // //let b = new Array(1).fill(false);
-  // //console.log(b, "b");
-  // const [arrayId, setArrayId] = useState([false]);
-  // const [modal, setModal] = useState(false);
-  // const [daySelected, setDaySelected] = useState("");
-  // const [slotSelected, setSlotSelected] = useState("");
-  // const [value, setValuess] = useState({});
-
-  //appointment details
-  // const setIdTrue = (arry, setArry, id) => {
-  //   arry = new Array(arry?.length).fill(false);
-  //   if (!arry[id]) {
-  //     arry[id] = true;
-  //     setArry(arry);
-  //     console.log(arry);
-  //   }
-  // };
-
-  // const removeClass = (arry, setArry) => {
-  //   arry = new Array(arry?.length).fill(false);
-  //   setArry(arry);
-  // };
-
-  //const [modal, setModal] = useState(false);
-  // const [allSlots, setAllSlots] = useState("");
-
-  // const getClass = (arr, inst, id) => {
-  //   if (arr[id] === inst) {
-  //     return "setSlot";
-  //   }
-  //   return "";
-  // };
-
   dayjs.extend(LocalizedFormat);
 
   return (
@@ -599,6 +573,7 @@ function SelectAppointments({
           doctorDetails={doctor}
           setPatientBookValues={setPatientBookValues}
           createPatientAppointment={createPatientAppointment}
+          appointmentCreated={appointmentCreated}
         />
       </MainBody>
     </Container>
@@ -610,6 +585,7 @@ const mapStateProps = (state) => ({
   hospitals: state.hospital.hospitals,
   locationAccess: state.hospital.locationAccess,
   doctor: state.hospital.doctor,
+  appointmentCreated: state.patient.appointmentCreated,
 });
 
 const mapDispatchToProps = (dispatch) => {

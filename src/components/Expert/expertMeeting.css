@@ -70,16 +70,17 @@
     display: grid;
     justify-items: center;
     position: absolute;
-    left: 33%;
+    left: 27%;
     bottom: 0.6em;
     cursor:pointer;
 }
 
 .emrbuttonwrapper > img {
     height: 20px;
+    margin-bottom: .2em;
 }
 
-.emrbuttonwrapper > span { 
+.emrbuttonwrapper > button { 
     margin-top: 0.5em;
     font-size: 12px
 }

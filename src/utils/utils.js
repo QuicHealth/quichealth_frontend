@@ -85,7 +85,7 @@ export function getMonth(month = dayjs().month()) {
   const firstDayOfTheMonth = dayjs(new Date(year, month)).daysInMonth();
 
   let monthCount = dayjs(new Date(year, month)).daysInMonth();
-  //console.log(dayjs().month().format("MMMM"), "month")
+
   let currentMonthCount = 0;
   const daysMatrix = new Array(5).fill([]).map(() => {
     return new Array(7).fill(null).map(() => {
@@ -207,7 +207,7 @@ export const TimeSelection2 = [
     end: "03:00",
     selected: false,
     status: "enabled",
-    value: "02:30AM - 03:00PM",
+    value: "02:30PM - 03:00PM",
   },
   {
     slot: 13,
@@ -215,7 +215,7 @@ export const TimeSelection2 = [
     end: "03:30",
     selected: false,
     status: "enabled",
-    value: "03:00AM - 03:30PM",
+    value: "03:00PM - 03:30PM",
   },
   {
     slot: 14,
@@ -231,7 +231,7 @@ export const TimeSelection2 = [
     end: "04:30",
     selected: false,
     status: "enabled",
-    value: "04:0PM - 04:30PM",
+    value: "04:00PM - 04:30PM",
   },
   {
     slot: 16,
@@ -247,7 +247,7 @@ export const TimeSelection2 = [
     end: "05:30",
     selected: false,
     status: "enabled",
-    value: "05:00AM - 05:30PM",
+    value: "05:00PM - 05:30PM",
   },
   {
     slot: 18,
@@ -354,7 +354,7 @@ export const TimeSelections = [
     end: "03:00",
     selected: false,
     status: "enabled",
-    value: "02:30AM - 03:00PM",
+    value: "02:30PM - 03:00PM",
   },
   {
     slot: 13,
@@ -362,7 +362,7 @@ export const TimeSelections = [
     end: "03:30",
     selected: false,
     status: "enabled",
-    value: "03:00AM - 03:30PM",
+    value: "03:00PM - 03:30PM",
   },
   {
     slot: 14,
@@ -378,7 +378,7 @@ export const TimeSelections = [
     end: "04:30",
     selected: false,
     status: "enabled",
-    value: "04:0PM - 04:30PM",
+    value: "04:00PM - 04:30PM",
   },
   {
     slot: 16,
@@ -422,11 +422,7 @@ export function convertTime(time, type) {
   let timeToArray = time?.split("-");
 
   if (timeToArray[0].length === 4) {
-    // day = timeToArray[2].length !== 2 ? `0${timeToArray[2]}` : timeToArray[2];
-    // month = timeToArray[1].length !== 2 ? `0${timeToArray[1]}` : timeToArray[1];
-
-    // year = timeToArray[0];
-    // newTime = type ? `${day}/${month}/${year}` : `${year}-${month}-${day}`;
+ 
     newTime = type
       ? dayjs(time).format("DD MMMM YYYY")
       : dayjs(time).format("YYYY-MM-DD");
@@ -434,13 +430,7 @@ export function convertTime(time, type) {
     return newTime;
   }
   const convTime = dayjs(time).format("YYYY-MM-DD");
-  // console.log(convTime, "time");
-  // timeToArray = time?.split("/");
-  // day = timeToArray[0].length !== 2 ? `0${timeToArray[0]}` : timeToArray[0];
-  // month = timeToArray[1].length !== 2 ? `0${timeToArray[1]}` : timeToArray[1];
 
-  // year = timeToArray[2];
-  // newTime = `${year}-${month}-${day}`;
 
   return convTime;
 }

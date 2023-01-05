@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { Container, MainBody, ProfileImage } from "../Overview";
-import { Avatar } from "@material-ui/core";
-import { Icon } from "../SelectAppointment";
 import ExpertSidebar from "./ExpertSidebar";
 import SearchIcon from "@material-ui/icons/Search";
 import Stat1 from "./../../Image/statimg1.svg";
@@ -18,10 +16,16 @@ import dayjs from "dayjs";
 import { TimeSelections } from "../../utils/utils";
 import useForm from "../../utils/useForm";
 import GenericCalender from "../GenericCalender";
-import {Modal} from "../Modal";
-import { addSchedule, getDoctorNotifications } from "../../redux/actions";
+import { Modal } from "../Modal";
+import { addSchedule } from "../../redux/actions/DoctorActions";
+import { getDoctorNotifications } from "../../redux/actions/DoctorActions";
 
-function ExpertDashboard({ openSidebar, addSchedule, getDoctorNotifications, doctorNotifications }) {
+function ExpertDashboard({
+  openSidebar,
+  addSchedule,
+  getDoctorNotifications,
+  doctorNotifications,
+}) {
   const { values, isSubmit, setIsSubmit } = useForm("time");
   const doctorId = localStorage.getItem("doctorid");
 
@@ -62,6 +66,11 @@ function ExpertDashboard({ openSidebar, addSchedule, getDoctorNotifications, doc
 
   let selectedTimeCheck = selectedTime?.every((time, id) => time === undefined);
 
+  const currentDate = dayjs().format("MMMM D, YYYY");
+  const time = dayjs().format("hh:mm A");
+
+  console.log(dayjs().year(), dayjs().format("hh:mm a, "), "currentDate");
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const values = {};
@@ -82,13 +91,13 @@ function ExpertDashboard({ openSidebar, addSchedule, getDoctorNotifications, doc
       values.date = daySelected.format(format);
       values.time_slots = timeSlot;
       console.log(values);
-      addSchedule(values)
+      addSchedule(values);
     }
   };
 
   useEffect(() => {
     getDoctorNotifications();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (selectedTimeCheck === true) {
@@ -155,7 +164,9 @@ function ExpertDashboard({ openSidebar, addSchedule, getDoctorNotifications, doc
             <BHeading sidebar={openSidebar}>
               Welcome, <b>Dr Alice</b>
             </BHeading>
-            <p>June 25, 2022 &nbsp; &nbsp; &nbsp; &nbsp; 9:16AM</p>
+            <p>
+              {currentDate} &nbsp; &nbsp; &nbsp; &nbsp; {time}
+            </p>
           </S1LeftSide>
           <S1RightSide>
             <SearchBox>
@@ -246,6 +257,7 @@ function ExpertDashboard({ openSidebar, addSchedule, getDoctorNotifications, doc
               {" "}
               <Title2>Schedule</Title2>
               <GenericCalender
+                disabled={true}
                 // daySelected={daySelected}
                 // modal={modal}
                 // setDaySelected={setDaySelected}

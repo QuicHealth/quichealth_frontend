@@ -10,10 +10,10 @@ import { Container, MainBody } from "./Appointments";
 import SideBar from "./SideBar";
 import { ProfileImage } from "./Overview";
 import {
-  createMeeting,
-  getAllPaidAppointments,
   notShowSidebar,
 } from "../redux/actions";
+import { createMeeting } from "../redux/actions/DoctorActions";
+import { getAllPaidAppointments } from "../redux/actions/PatientActions";
 
 const BookedComponent = ({ doctorName, time }) => {
   return (
@@ -72,7 +72,7 @@ function Booked({
     console.log(value);
     createMeeting(value);
     setTimeout(() => {
-      //history.push("/appointments");
+      history.push("/appointments");
     }, 6000);
   }
   useEffect(() => {

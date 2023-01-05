@@ -4,9 +4,8 @@ import styled from "styled-components";
 import {
   addAppointmentDetails,
   addPayment,
-  createPatientAppointment,
-  getDashboard,
-} from "../redux/actions";
+} from "../redux/actions/PatientActions";
+import { getDashboard } from "../redux/actions/GenericActions";
 import useForm from "../utils/useForm";
 import { userAuth } from "../Validations/UserValidation";
 import { AppointmentContainer } from "./History";
@@ -93,7 +92,7 @@ function ChatBot({
       console.log(values);
       const paymentValue = {};
       paymentValue.appointment_id =appointmentId;
-      paymentValue.amount = hospitalDetails?.hospital?.settings?.amount
+      paymentValue.amount = hospitalDetails?.hospital?.settings?.amount || 100;
       paymentValue.customerName = `${userDetails.firstname} ${userDetails.lastname}`
       paymentValue.customerEmail = userDetails.email
       paymentValue.paymentDescription = "Doctor Appointment"

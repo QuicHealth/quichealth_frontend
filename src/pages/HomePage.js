@@ -3,12 +3,13 @@ import { useIntersection } from "react-use";
 import gsap from "gsap";
 import styled from "styled-components";
 import Footer from "../components/Footer";
-import HowItWork from "../components/HowItWork";
-import LandingSection from "../components/LandingSection";
+import HowItWork from "../components/LandingPage/HowItWork";
+import LandingSection from "../components/LandingPage/LandingSection";
 import NavBar from "../components/NavBar";
-import OurServices from "../components/OurServices";
-import WhyQuicHealth from "../components/WhyQuicHealth";
-import { ContactSupportOutlined } from "@material-ui/icons";
+import OurServices from "../components/LandingPage/OurServices";
+import WhyQuicHealth from "../components/LandingPage/WhyQuicHealth";
+
+
 
 function HomePage() {
   const sectionRef = useRef(null);

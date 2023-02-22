@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import AboutUs from '../components/AboutUs';
+import AboutUs from '../components/LandingPage/AboutUs';
 import Footer from '../components/Footer';
 import NavBar from '../components/NavBar';
 

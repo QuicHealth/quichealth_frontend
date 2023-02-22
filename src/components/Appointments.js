@@ -5,9 +5,7 @@ import SideBar from "./SideBar";
 import { decrement, increment, PageLimtier, ProfileImage } from "./Overview";
 import { Icon } from "./SelectAppointment";
 import ExpertSidebar from "./Expert/ExpertSidebar";
-import {
-  getPatientZoomMeeting,
-} from "../redux/actions/PatientActions";
+import { getPatientZoomMeeting } from "../redux/actions/PatientActions";
 import { useHistory } from "react-router-dom";
 import { createMeeting } from "../redux/actions/DoctorActions";
 import { getAllPaidAppointments } from "../redux/actions/PatientActions";
@@ -41,7 +39,6 @@ function Appointments({
     "time"
   );
 
-
   const [limit, setLimit] = useState(3);
   const [count, setCount] = useState(0);
   let appointments = allPaidApp?.slice(count, count + limit);
@@ -71,77 +68,81 @@ function Appointments({
           </ProfileImage>
         </HeadSection>
 
-        <AppointmentContainerWrapper sidebar={openSidebar}>
-          {appointments?.map((appointment, id) => {
-            return (
-              <AppointmentContainer>
-                <CheckBox className="active"></CheckBox>
-                <Image>
-                  <img
-                    src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
-                    alt=""
-                  />
-                </Image>
-                <Details>
-                  <div>
-                    <Name>{appointment?.doctor?.name}</Name>
-                    <ViewProfile>view profile</ViewProfile>
-                  </div>
-                  <Dates>
-                    <Icon className="noLeftPadding">
-                      <i class="fas fa-calendar-alt"></i>
-                    </Icon>
-                    <span>{appointment.date}</span>
-                  </Dates>
-                  <Time>
-                    {appointment.start}{" "}
-                    {parseInt(appointment.start) > 9 &&
-                    parseInt(appointment.start) <= 12
-                      ? "AM"
-                      : "PM"}{" "}
-                  </Time>
-                 
-                  <Minutes>
-                    {" "}
-                    <Icon className="noLeftPadding">
-                      <i class="far fa-clock"></i>
-                    </Icon>
-                    <span>30 Minutes</span>
-                  </Minutes>
-                </Details>
-                {appointment?.id === allPaidApp[0]?.id? (
-                  <Meeting
-                    // disabled={
-                    //   currentTime.slice(0, 5) !==
-                    //   convertTimeToTwelveHrs(appointment.start)
-                    // }
-                    className="active"
-                    onClick={() => {
-                      //createMeeting(value);
-                      setTimeout(() => {
-                        history.push("/meeting");
-                      }, 2000);
-                    }}
-                  >
-                    Join Meeting
-                  </Meeting>
-                ) : (
-                  <Dot>...</Dot>
-                )}
-              </AppointmentContainer>
-            );
-          })}
-          <PageLimtier
-            RowCount={4}
-            TotalCount={1024}
-            increment={increment}
-            decrement={decrement}
-            setCount={setCount}
-            count={count}
-            limit={limit}
-            array={allPaidApp}
-          />
-        </AppointmentContainerWrapper>
+        {appointments?.length < 1 ? (
+          <NoDataBox>No Appointment available</NoDataBox>
+        ) : (
+          <AppointmentContainerWrapper sidebar={openSidebar}>
+            {appointments?.map((appointment, id) => {
+              return (
+                <AppointmentContainer>
+                  <CheckBox className="active"></CheckBox>
+                  <Image>
+                    <img
+                      src="https://i.pinimg.com/564x/09/1e/51/091e51bc9eca2ba4a868113e5c26f6a7.jpg"
+                      alt=""
+                    />
+                  </Image>
+                  <Details>
+                    <div>
+                      <Name>{appointment?.doctor?.name}</Name>
+                      <ViewProfile>view profile</ViewProfile>
+                    </div>
+                    <Dates>
+                      <Icon className="noLeftPadding">
+                        <i class="fas fa-calendar-alt"></i>
+                      </Icon>
+                      <span>{appointment.date}</span>
+                    </Dates>
+                    <Time>
+                      {appointment.start}{" "}
+                      {parseInt(appointment.start) > 9 &&
+                      parseInt(appointment.start) <= 12
+                        ? "AM"
+                        : "PM"}{" "}
+                    </Time>
+
+                    <Minutes>
+                      {" "}
+                      <Icon className="noLeftPadding">
+                        <i class="far fa-clock"></i>
+                      </Icon>
+                      <span>30 Minutes</span>
+                    </Minutes>
+                  </Details>
+                  {appointment?.id === allPaidApp[0]?.id ? (
+                    <Meeting
+                      // disabled={
+                      //   currentTime.slice(0, 5) !==
+                      //   convertTimeToTwelveHrs(appointment.start)
+                      // }
+                      className="active"
+                      onClick={() => {
+                        //createMeeting(value);
+                        setTimeout(() => {
+                          history.push("/meeting");
+                        }, 2000);
+                      }}
+                    >
+                      Join Meeting
+                    </Meeting>
+                  ) : (
+                    <Dot>...</Dot>
+                  )}
+                </AppointmentContainer>
+              );
+            })}
+          </AppointmentContainerWrapper>
+        )}
+        <PageLimtier
+          RowCount={4}
+          TotalCount={1024}
+          increment={increment}
+          decrement={decrement}
+          setCount={setCount}
+          count={count}
+          limit={limit}
+          array={allPaidApp}
+        />
       </MainBody>
     </Container>
   );
@@ -414,5 +415,9 @@ export const HeadSection = styled.div`
 `;
 
 const Dot = styled.span`
+  text-align: center;
+`;
+
+export const NoDataBox = styled.h3`
   text-align: center;
 `;

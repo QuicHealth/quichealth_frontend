@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { SaveChanges } from "./HealthProfile";
-import { Bot, Patient } from "./ChatBot";
-import Wave from "./../Image/wavesz.png";
+import { Bot, Patient } from "../ChatBot";
+import { SaveChanges } from "../HealthProfile";
+import Wave from "./../../Image/wavesz.png";
 
 //Landing Section
 export const GetStarted = ({ firsth1, secondh1, body, buttonName }) => {

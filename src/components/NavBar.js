@@ -53,15 +53,23 @@ function NavBar() {
       <List>
         <div style={{ display: "flex" }}>
           {/* Normal Navbar */}
-          <ListItem>About Us</ListItem>
-          <ListItem>Our Services</ListItem>
+          <ListItem>
+            <a href="/#howItWorks">About Us</a>
+          </ListItem>
+          <ListItem>
+            {" "}
+            <a href="/#ourServices">Our Services</a>
+          </ListItem>
           <ListItem>Pricing</ListItem>
           <ListItem>Contact</ListItem>
         </div>
         <div style={{ display: "flex" }}>
           <ListItem>
             <SignUpSpan>
-              <StyledLink to="/register" style={{ color: "#ffffffd9" , borderRadius: "40px"}}>
+              <StyledLink
+                to="/register"
+                style={{ color: "#ffffffd9", borderRadius: "40px" }}
+              >
                 Sign up
               </StyledLink>
             </SignUpSpan>
@@ -71,7 +79,11 @@ function NavBar() {
       {/* DropDown Navbar  */}
       <MobileList
         ref={mobileListRef}
-        style={isOpen ? { display: "none" ,transform:"scaley(0)"} : { display: "grid", transform:"scaley(1)" }}
+        style={
+          isOpen
+            ? { display: "none", transform: "scaley(0)" }
+            : { display: "grid", transform: "scaley(1)" }
+        }
       >
         <ListItem>About Us</ListItem>
         <ListItem>Our Services</ListItem>
@@ -161,6 +173,14 @@ const ListItem = styled.li`
   padding-left: 3em;
   color: #070647;
   transition: all 0.5ms;
+
+  a {
+    text-decoration: none;
+
+    &:visited {
+      color: inherit;
+    }
+  }
 
   &:hover {
     opacity: 0.4;

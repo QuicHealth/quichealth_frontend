@@ -1,6 +1,7 @@
 import * as actionTypes from "./../actionTypes";
 import { api } from "./axios";
 import { toast } from "react-toastify";
+import { createMeeting } from "./DoctorActions";
 
 //Notification call
 export const getNotifications = () => async (dispatch) => {

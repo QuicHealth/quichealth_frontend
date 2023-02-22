@@ -1,5 +1,5 @@
 import React from "react";
-import styled ,{ keyframes } from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { AnimateBtn } from "./LandingSection";
 
 export const Subsection = ({ Title, Body }) => {
@@ -28,62 +28,63 @@ export const SectionChild = ({ ImgUrl, Split, SplitStyle, Title, Body }) => {
 
 function OurServices() {
   return (
-    <Box className="fadeIn">
-        <Subsection Title={"Our Services"} Body={""} />
-        <SectionContainer>
-          <Left>
-            <ServiceBody>
-              <SectionChild
-                ImgUrl={"./images/service1.png"}
-                Title={"Infection Diseases Management"}
-                Body={
-                  "Via our specialized healthcare approach, our ID specialists can help you manage infectious conditions."
-                }
-              />
-            </ServiceBody>
-          </Left>
-          <Left>
-            <ServiceBody>
-              <SectionChild
-                ImgUrl={"./images/service2.png"}
-                Title={"Schedule an appointment with ID specialists."}
-                Body={
-                  "Schedule/terminate online or offline appointment with out league of specialists at any convenient timethat works best for you."
-                }
-              />
-            </ServiceBody>
-          </Left>
-        </SectionContainer>
-        <SectionContainer>
-          <Left>
-            <ServiceBody>
-              <SectionChild
-                ImgUrl={"./images/service3.png"}
-                Title={"Online Consultation"}
-                Body={
-                  "QuicHealth has easy-to-use features that provide a worthwhile experience via an online consultation with our specialists"
-                }
-              />
-            </ServiceBody>
-          </Left>
-          <Left>
-            <ServiceBody>
-              <SectionChild
-                ImgUrl={"./images/service4.png"}
-                Title={"Physical consultation"}
-                Body={
-                  "Our platform provides access to ID specialists physically for consulation if they need arise."
-                }
-              />
-            </ServiceBody>
-          </Left>
-        </SectionContainer>
+    <Box className="fadeIn" id="ourServices">
+      <Subsection Title={"Our Services"} Body={""} />
+      <SectionContainer>
+        <Left>
+          <ServiceBody>
+            <SectionChild
+              ImgUrl={"./images/service1.png"}
+              Title={"Infectious Diseases Management"}
+              Body={
+                "Via our specialized healthcare approach, our ID specialists can help you manage infectious conditions."
+              }
+            />
+          </ServiceBody>
+        </Left>
+        <Left>
+          <ServiceBody>
+            <SectionChild
+              ImgUrl={"./images/service2.png"}
+              Title={
+                "Schedule an appointment with Infectious Diseases (ID) specialists."
+              }
+              Body={
+                "Schedule/terminate online or offline appointment with out league of specialists at any convenient time that works best for you."
+              }
+            />
+          </ServiceBody>
+        </Left>
+      </SectionContainer>
+      <SectionContainer>
+        <Left>
+          <ServiceBody>
+            <SectionChild
+              ImgUrl={"./images/service3.png"}
+              Title={"Online Consultation"}
+              Body={
+                "QuicHealth has easy-to-use features that provide a worthwhile experience via an online consultation with our specialists"
+              }
+            />
+          </ServiceBody>
+        </Left>
+        <Left>
+          <ServiceBody>
+            <SectionChild
+              ImgUrl={"./images/service4.png"}
+              Title={"Physical consultation"}
+              Body={
+                "You can book physical consultations with our ID specialists if the need arises."
+              }
+            />
+          </ServiceBody>
+        </Left>
+      </SectionContainer>
     </Box>
   );
 }
 
 export default OurServices;
-
 
 export const Slideup = keyframes`
   0%{
@@ -95,7 +96,7 @@ export const Slideup = keyframes`
     transform: scaley(1);
     opacity: 1;
   }
-`
+`;
 
 export const Box = styled.section`
   height: 100vh;
@@ -111,10 +112,9 @@ export const SectionSplit = styled.div`
   border: 4px solid #070647;
   background-color: #070647;
   @media (max-width: ${500}px) {
-       border:2px solid #070647;
-       width: 3em;
-      
-    }
+    border: 2px solid #070647;
+    width: 3em;
+  }
 `;
 
 const SectionName = styled.h1`
@@ -126,12 +126,10 @@ const SectionName = styled.h1`
   font-size: 3.1em;
   margin-bottom: 1em;
   @media (max-width: ${500}px) {
-       font-size: 24px;
-       line-height: 36px;
-       font-weight: 700;
-      
-    }
-
+    font-size: 24px;
+    line-height: 36px;
+    font-weight: 700;
+  }
 `;
 const SectionBody = styled.p`
   width: 80%;
@@ -151,11 +149,10 @@ const SectionContainer = styled.div`
   //width: 0em;
   margin: 2em auto;
   @media (max-width: ${500}px) {
-       grid-template-columns: 100%;
-       padding:  0;
-       margin: 0 auto;
-      
-    }
+    grid-template-columns: 100%;
+    padding: 0;
+    margin: 0 auto;
+  }
 `;
 
 const Left = styled.div`
@@ -177,7 +174,7 @@ const Left = styled.div`
     height: unset;
     box-shadow: 0px 0px 47px 1px rgba(0, 0, 0, 0.12);
     border-radius: 33px;
-    }
+  }
 `;
 
 const ServiceBody = styled.div`
@@ -186,8 +183,7 @@ const ServiceBody = styled.div`
   column-gap: 1em;
   @media (max-width: ${400}px) {
     grid-template-columns: 35% 65%;
-    }
-
+  }
 `;
 
 const ImgBox = styled.div`
@@ -196,14 +192,13 @@ const ImgBox = styled.div`
   padding-bottom: 1em;
   @media (max-width: ${500}px) {
     align-items: flex-end;
-    }
+  }
   > img {
     width: 10em;
     height: fit-content;
     @media (max-width: ${500}px) {
-       width:8em;
-       height: 7em;
-      
+      width: 8em;
+      height: 7em;
     }
   }
 `;
@@ -213,15 +208,15 @@ export const ServiceChild = styled.div`
     font-size: 1.5em;
     padding: 1em 0;
     @media (max-width: ${500}px) {
-       font-size: 14px;
-       font-weight: 700;
-       line-height: 21px;
-       padding-right: 1em;
-       padding-bottom: .5em;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 21px;
+      padding-right: 1em;
+      padding-bottom: 0.5em;
     }
     @media (max-width: ${400}px) {
-       padding-right: 2em;
-       padding-bottom: .5em;
+      padding-right: 2em;
+      padding-bottom: 0.5em;
     }
   }
   > p {
@@ -233,12 +228,12 @@ export const ServiceChild = styled.div`
     padding-right: 2em;
     color: #07064766;
     @media (max-width: ${500}px) {
-       font-size: 13px;
-       line-height: 23px;
+      font-size: 13px;
+      line-height: 23px;
     }
     @media (max-width: ${390}px) {
-       font-size: 11px;
-       line-height: unset;
+      font-size: 11px;
+      line-height: unset;
     }
   }
 `;

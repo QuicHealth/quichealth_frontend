@@ -3,9 +3,7 @@ import { connect } from "react-redux";
 import styled, { keyframes } from "styled-components";
 import SideBar from "./SideBar";
 import { NavigateNext } from "@material-ui/icons";
-import {
-  pageUp,
-} from "../redux/actions";
+import { pageUp } from "../redux/actions";
 import { useHistory } from "react-router-dom";
 import { getDashboard } from "../redux/actions/GenericActions";
 import { getHospitals } from "../redux/actions/HospitalActions";
@@ -762,10 +760,15 @@ const OverviewFoot = styled.div`
   justify-content: flex-end;
   //column-gap: 5em;
   padding: 2em;
+  position: relative;
+  bottom: -60vh;
+  width: 60em;
+  left: 4em;
 
   &.appointment {
     position: relative;
-    bottom: 0;
+    bottom: -80vh;
+    width: 60em;
     left: 4em;
   }
 `;

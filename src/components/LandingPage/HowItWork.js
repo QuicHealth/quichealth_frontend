@@ -22,7 +22,7 @@ function HowItWork() {
     </>
   );
   return (
-    <Container className="fadeIn">
+    <Container id="howItWorks" className="fadeIn">
       <Subsection Title={"How it Works"} Body={""} />
       <SectionContainer>
         <Section>
@@ -35,20 +35,20 @@ function HowItWork() {
           />
           <Dots />
         </Section>
-        <Section>
+        {/* <Section>
           <SectionChild
             ImgUrl={"./images/work2.png"}
             Title={"Select Plan"}
             Body={"Purchase a scheduling plan that works with your wallet"}
           />
           <Dots />
-        </Section>
+        </Section> */}
         <Section>
           <SectionChild
             ImgUrl={"./images/work3.png"}
             Title={"Book appointment"}
             Body={
-              "Search for the nearest QuicHealth partner hospital and bool an online or offline appointment with an ID specialist"
+              "Search for the nearest QuicHealth partner hospital and book an online or offline appointment with an ID specialist"
             }
           />
           <Dots />
@@ -86,7 +86,7 @@ const Container = styled.section`
 
 const SectionContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   column-gap: 1em;
   width: 100%;
   padding: 0 5em;
@@ -198,11 +198,11 @@ const GetStartedBox = styled(SectionContainer)`
       width: 13em;
       padding: 0.5em 0.5em;
     }
-    >a{
-        font-size: 24px;
-        @media (max-width: ${500}px){
-          font-size: 18px;
-        }
+    > a {
+      font-size: 24px;
+      @media (max-width: ${500}px) {
+        font-size: 18px;
+      }
     }
   }
   > div > h1 {

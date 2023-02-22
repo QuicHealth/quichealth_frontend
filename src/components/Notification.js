@@ -11,6 +11,7 @@ import {
   AppointmentContainer,
   AppointmentContainerWrapper,
   convertTimeToTwelveHrs,
+  NoDataBox,
 } from "./Appointments";
 import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 import SearchIcon from "@material-ui/icons/Search";
@@ -75,41 +76,50 @@ function Notification({
           </ProfileImage>
         </HeadSection>
         <AppointmentContainerWrapper sidebar={openSidebar}>
-          <NotificationSearch>
-            <LeftSide>
-              <SelectBox>
-                <input type="checkbox" style={{ display: "block" }} />
-              </SelectBox>
-              <DeleteIcon />
-            </LeftSide>
-            <RightSide>
-              <Search>
-                <NotificationSearchIcon />
-                <SearchInput placeholder="Type here to search..." />
-              </Search>
-            </RightSide>
-          </NotificationSearch>
-
-          <Margin className="notify" />
+          {!doctorNotifications || !notifications.length ? (
+            ""
+          ) : (
+            <NotificationSearch>
+              <LeftSide>
+                <SelectBox>
+                  <input type="checkbox" style={{ display: "block" }} />
+                </SelectBox>
+                <DeleteIcon />
+              </LeftSide>
+              <RightSide>
+                <Search>
+                  <NotificationSearchIcon />
+                  <SearchInput placeholder="Type here to search..." />
+                </Search>
+              </RightSide>
+              <Margin className="notify" />
           {/* Renders doctor's notification if expert is true or render patients notification  */}
-          {expert
-            ? doctorNotifications &&
-              doctorNotifications?.map((notification, key) => {
-                return (
-                  <GenericAppointmentContainer
-                    key={key}
-                    notification={notification}
-                  />
-                );
-              })
-            : notifications?.map((notification, key) => {
-                return (
-                  <GenericAppointmentContainer
-                    key={key}
-                    notification={notification}
-                  />
-                );
-              })}
+            </NotificationSearch>
+          )}
+
+
+
+          {!doctorNotifications || !notifications.length ? (
+            <NoDataBox>No Notification available</NoDataBox>
+          ) : expert ? (
+            doctorNotifications?.map((notification, key) => {
+              return (
+                <GenericAppointmentContainer
+                  key={key}
+                  notification={notification}
+                />
+              );
+            })
+          ) : (
+            notifications?.map((notification, key) => {
+              return (
+                <GenericAppointmentContainer
+                  key={key}
+                  notification={notification}
+                />
+              );
+            })
+          )}
         </AppointmentContainerWrapper>
       </MainBody>
     </Container>

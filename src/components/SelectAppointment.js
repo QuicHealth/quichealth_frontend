@@ -197,16 +197,16 @@ export const BookAppointment = ({
   doctorId,
   setPatientBookValues,
   createPatientAppointment,
-  appointmentCreated
+  appointmentCreated,
 }) => {
   const [modal, setModal] = useState(false);
   const [daySelected, setDaySelected] = useState("");
   const [slotSelected, setSlotSelected] = useState("");
+  const [value, setValues] = useState({});
   let routerHistory = useHistory();
   const pricing = () => {
     routerHistory.push("/pricings");
   };
-  const [value, setValues] = useState({});
   return (
     <BookingDetails>
       <DocAppointment
@@ -226,6 +226,7 @@ export const BookAppointment = ({
       />
       <BookBtn>
         <Button
+          disabled={!(daySelected && slotSelected)}
           onClick={() => {
             setModal(true);
             setValues({
@@ -323,6 +324,7 @@ const AppointmentComponent = ({
   const longitude = localStorage.getItem("longitude");
   const latitude = localStorage.getItem("latitude");
   const [location, setLocation] = useState("");
+  const [filterHospitals, setFilterHospitals] = useState([]);
   console.log(hospitals, "here");
 
   let hospitalsWithDistance;
@@ -340,11 +342,6 @@ const AppointmentComponent = ({
   useEffect(() => {
     setFilterHospitals(hospitalsWithDistance);
   }, [hospitals]);
-
-  const [filterHospitals, setFilterHospitals] = useState([]);
-
-  //console.log(allHospital, "jbjdd");
-  // console.log(hospitalsWithDistance.sort((a, b) => a.distance - b.distance), "distance")
 
   const getDoctor = (e) => {
     e.preventDefault();
@@ -458,28 +455,40 @@ const AppointmentComponent = ({
                 });
               })
           : filterHospitals?.map((hospital) => {
+              a = new Array(hospital.doctors.length).fill(false);
               console.log("no location Access here");
               return hospital.doctors?.map((doctor, idx) => {
+                doctor.select = arrayId[idx];
                 return (
                   <BookAppointment
                     key={idx}
-                    Hname={hospital.name}
-                    name={doctor.name}
-                    getSelectedAppointment={getSelectedAppointment}
-                    hospitalz={filterHospitals}
-                    id={id}
-                    doctor={doctor}
-                    select={doctor.select}
+                    Hname={hospital?.name}
+                    name={doctor?.name}
+                    t={doctor?.name}
+                    uniqueId={doctor?.unique_id}
+                    setArrayId={setArrayId}
+                    id={idx}
+                    arrayId={arrayId}
+                    select={doctor?.select}
+                    getDoctorById={getDoctorById}
+                    doctorDetails={doctorDetails}
+                    doctorId={doctor?.id}
+                    setPatientBookValues={setPatientBookValues}
+                    createPatientAppointment={createPatientAppointment}
+                    appointmentCreated={appointmentCreated}
                   />
                 );
               });
             })}
         <Margin className="booking"></Margin>
-
         <ViewMore>
-          <Button className="nobtn">
-            View more <i className="fas fa-angle-right"></i>{" "}
-          </Button>
+          {!filterHospitals.length ? (
+            "No Doctor is available for this location"
+          ) : (
+            <Button className="nobtn">
+              View more <i className="fas fa-angle-right"></i>{" "}
+            </Button>
+          )}
         </ViewMore>
       </Bookings>
     </Containa>
@@ -889,6 +898,10 @@ export const Button = styled.button`
     cursor: pointer;
     opacity: 0.6;
     transition: all 0.5s;
+  }
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
   &.search {
     padding: 0.45em 2.5em;

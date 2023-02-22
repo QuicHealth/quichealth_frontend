@@ -9,7 +9,7 @@ import {
   HeadSection,
   MainBody,
 } from "./Appointments";
-import { AnimateBtn } from "./LandingSection";
+import { AnimateBtn } from "./LandingPage/LandingSection";
 import { ProfileImage } from "./Overview";
 import useForm from "./../utils/useForm";
 import { Text } from "./RegisterBody";

@@ -19,7 +19,7 @@ export const Modal = ({
 }) => {
   return (
     <BackdropContainer>
-      <ModalContent>
+      <ModalContent className="expert">
         <SideBar></SideBar>
         <ScheduleBox>
           <CalenderBox>
@@ -94,10 +94,10 @@ export const PatientCalenderModal = ({
   const modalRef = useRef();
 
   const closeModal = (event) => {
-    // console.log(event, modalRef, "modal");
     if (modalRef.current === event.target) {
       setModal(false);
     }
+    console.log(modalRef, event.target);
   };
 
   const keyPress = useCallback(
@@ -115,16 +115,14 @@ export const PatientCalenderModal = ({
   }, [keyPress]);
 
   return (
-    <BackdropContainer
-      key={id}
-      ref={modalRef}
-      onClick={closeModal}
-      className="patient"
-    >
+    <BackdropContainer key={id} ref={modalRef} onClick={closeModal}  className="patient">
       <ModalContent>
         <SideBar></SideBar>
         <ScheduleBox className="patient">
           <CalenderBox>
+            <Icon className="patient" onClick={() => setModal(false)}>
+              <img src={CancelIcon} alt="cancel" />
+            </Icon>
             <GenericCalender
               daySelected={daySelected}
               setDaySelected={setDaySelected}
@@ -258,7 +256,7 @@ const BackdropContainer = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 
   &.patient {
-    background-color: unset;
+    //background-color: black;
     overflow-y: scroll;
   }
   /* overflow-y:scroll;
@@ -268,8 +266,21 @@ const BackdropContainer = styled.div`
 
 const ModalContent = styled.div`
   display: grid;
-  grid-template-columns: 25% 75%;
+  position: relative;
+  grid-template-columns: 100%;
+  width: 20em;
   padding: 2em;
+  left: 20%;
+  top: -15%;
+
+  &.expert {
+    position: relative;
+    grid-template-columns: 25% auto;
+    padding: 2em;
+    left: unset;
+    width: 90%;
+    top: unset;
+  }
 
   &.confirmation {
     grid-template-columns: 100%;
@@ -279,7 +290,8 @@ const ModalContent = styled.div`
     border-radius: 5px;
     padding: 1em 2em 2em 2em;
     position: relative;
-    top: 30%;
+    left: unset;
+    top: 40%;
   }
 `;
 const SideBar = styled.div``;
@@ -294,6 +306,7 @@ const ScheduleBox = styled.div`
   grid-template-columns: 44% 54%;
   gap: 1em;
   padding: 1em 3em 2em 3em;
+  z-index: 1006;
 
   &.patient {
     grid-template-columns: 1fr;
@@ -421,7 +434,11 @@ const Icon = styled.div`
   left: 1.5em;
   top: -0.5em;
   cursor: pointer;
-
+  &.patient {
+    left: 16em;
+    top: unset;
+    width: fit-content;
+  }
   &:hover {
     opacity: 0.7;
   }

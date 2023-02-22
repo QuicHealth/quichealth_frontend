@@ -19,13 +19,13 @@ ZoomMtg.i18n.reload("en-US");
 
 function Meetings({ getPatientZoomMeeting, pwd, zak, meetingId }) {
   // setup your signature endpoint here: https://github.com/zoom/meetingsdk-sample-signature-node.js
-  var signatureEndpoint = "http://localhost:4000";
+  var signatureEndpoint = "http://3.80.189.105:4000/";
   //var signature = ""
   // This Sample App has been updated to use SDK App type credentials https://marketplace.zoom.us/docs/guides/build/sdk-app
   var sdkKey = "CW3Cjig4wb7ergJYRgsBtJ0yiMAoZf3NXgRe";
   var meetingNumber = "";
   var role = 0;
-  var leaveUrl = "http://localhost:3000/appointments";
+  var leaveUrl = "/appointments";
   var userName = "React";
   var userEmail = "";
   var passWord = "";

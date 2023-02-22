@@ -215,6 +215,11 @@ const CalenderBody = styled.div`
     &.patient {
       color: #070647;
     }
+    &:disabled{
+      opacity: 0.4;
+      color: white !important;
+      cursor: not-allowed;
+    }
 
     span {
       &.bg-currDay,

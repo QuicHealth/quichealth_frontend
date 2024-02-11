@@ -22,47 +22,52 @@ export const getPaidAppointments = async (axiosPrivateApi) => {
   );
 };
 
-export const getAppointmentsDetails = async (appointment_id) => {
-  return API_CALL("get", `doctor/get/appointment/details/${appointment_id}`);
+export const getAppointmentsDetails = async (axiosPrivateAPI, appointment_id) => {
+  return API_CALL("get", `doctor/get/appointment/details/${appointment_id}`, axiosPrivateAPI);
 };
 
-export const getExpertNotifications = async () => {
-  return API_CALL("get", `doctor/notifications`);
+export const getExpertNotifications = async (axiosPrivateAPI) => {
+  return API_CALL("get", `doctor/notifications`, axiosPrivateAPI);
 };
-export const getExpertHistory = async () => {
-  return API_CALL("get", `doctor/get-history`);
-};
-
-export const getExpertSetting = async () => {
-  return API_CALL("get", `doctor/settings`);
+export const getExpertHistory = async (axiosPrivateAPI) => {
+  return API_CALL("get", `doctor/get-history`, axiosPrivateAPI);
 };
 
-export const updateExpertSetting = async (value) => {
-  return API_CALL("post", `doctor/settings`, value);
+export const getExpertSetting = async (axiosPrivateAPI) => {
+  return API_CALL("get", `doctor/settings`, axiosPrivateAPI);
 };
 
-export const expertImageUpload = async (value) => {
-  return API_CALL("post", "doctor/upload_image", value, true);
+export const updateExpertSetting = async (axiosPrivateAPI,value) => {
+  return API_CALL("post", `doctor/settings`,axiosPrivateAPI, value);
 };
 
-export const expertImageRemove = async (value) => {
-  return API_CALL("post", "doctor/remove_image", value, true);
+export const expertImageUpload = async (axiosPrivateAPI,value) => {
+  return API_CALL("post", "doctor/upload_image",axiosPrivateAPI, value, true);
 };
 
-export const setAvailability = async (value) => {
-  if (value.lastSlot) return API_CALL("post", "doctor/save-schedule", value);
-  API_CALL("post", "doctor/save-schedule", value);
-  //return API_CALL("post", "doctor/save-schedule", value);
+export const expertImageRemove = async (axiosPrivateAPI,value) => {
+  return API_CALL("post", "doctor/remove_image",axiosPrivateAPI, value, true);
 };
 
-export const addEMR = async (value) => {
-  return API_CALL("post", "/doctor/add-emr", value);
+export const setAvailability = async (axiosPrivateAPI, value) => {
+  return async () => {
+    if (value.lastSlot)
+      return API_CALL("post", "doctor/save-schedule", axiosPrivateAPI, value);
+    API_CALL("post", "doctor/save-schedule", axiosPrivateAPI, value);
+    //return API_CALL("post", "doctor/save-schedule", value);
+  };
 };
 
-export const getEMR = async (appointment_id) => {
-  return API_CALL("get", `doctor/get-emr/${appointment_id}`);
+export const addEMR = async (axiosPrivate, value) => {
+  return async () => {
+    return API_CALL("post", "/doctor/add-emr", axiosPrivate, value);
+  };
 };
 
-export const getPatientAppDetailsByDoctor = async (appointment_id) => {
-  return API_CALL("get", `doctor/find-appointment/${appointment_id}`);
+export const getEMR = async (axiosPrivate, appointment_id) => {
+  return API_CALL("get", `doctor/get-emr/${appointment_id}`, axiosPrivate);
+};
+
+export const getPatientAppDetailsByDoctor = async (axiosPrivate,appointment_id) => {
+  return API_CALL("get", `doctor/find-appointment/${appointment_id}`, axiosPrivate);
 };

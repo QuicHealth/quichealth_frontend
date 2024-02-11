@@ -1,11 +1,12 @@
+import axios from "axios";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { api, axiosPrivate } from "./axios";
 
 export const API_CALL = async (
   method,
   endpoint,
-  value,
   axiosPrivate,
+  value = {},
   upload = false
 ) => {
   switch (method) {
@@ -67,15 +68,17 @@ export const appointment = async (axiosApi) => {
   };
 };
 
-export const doctors = async () => {
-  const response = await api.get("get-doctors", {
-    headers: {
-      Authorization: `Bearer ${localStorage.token}`,
-    },
-  });
+export const doctors = async (axiosPrivateApi) => {
+  return async () => {
+    const response = await axiosPrivateApi.get("get-doctors", {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
 
-  if (!response.data.status) throw new Error(response.data.message);
-  return response.data;
+    if (!response.data.status) throw new Error(response.data.message);
+    return response.data;
+  };
 };
 
 export const appointments = (axiosPrivateApi) => {
@@ -91,87 +94,99 @@ export const appointments = (axiosPrivateApi) => {
   };
 };
 
-export const paidAppointments = async () => {
-  const response = await api.get("appointment-by-payment-status", {
-    headers: {
-      Authorization: `Bearer ${localStorage.token}`,
-    },
-  });
+export const paidAppointments = async (axiosPrivateAPI) => {
+  return async () => {
+    const response = await axiosPrivateAPI.get("appointment-by-payment-status", {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
 
-  if (!response.data.status) throw new Error(response.data.message);
-  return response.data;
+    if (!response.data.status) throw new Error(response.data.message);
+    return response.data;
+  };
 };
 
-export const doctorDetails = async (id) => {
-  const response = await api.get(`/get-doctor/${id}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.token}`,
-    },
-  });
+export const doctorDetails = async (axiosPrivateAPI, id) => {
+  return async () => {
+    const response = await axiosPrivateAPI.get(`/get-doctor/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
 
-  if (!response.data.status) throw new Error(response.data.message);
-  return response.data;
+    if (!response.data.status) throw new Error(response.data.message);
+    return response.data;
+  };
 };
 
-export const createAppointment = async (value) => {
-  const response = await api.post(`/create-appointment`, value, {
-    headers: {
-      Authorization: `Bearer ${localStorage.token}`,
-    },
-  });
+export const createAppointment = async (axiosPrivateAPI, value) => {
+  return async () => {
+    const response = await axiosPrivateAPI.post(`/create-appointment`, value, {
+      headers: {
+        Authorization: `Bearer ${localStorage.token}`,
+      },
+    });
 
-  if (!response.data.status) throw new Error(response.data.message);
-  return response.data;
+    if (!response.data.status) throw new Error(response.data.message);
+    return response.data;
+  };
 };
 
-export const verifyPay = async (value) => {
-  const response = await api.post(`/save_payment`, JSON.stringify(value), {
-    headers: {
-      Authorization: `Bearer ${localStorage.token}`,
-    },
-  });
+export const verifyPay = async (axiosPrivateAPI, value) => {
+  return async () => {
+    const response = await axiosPrivateAPI.post(
+      `/save_payment`,
+      JSON.stringify(value),
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
+      }
+    );
 
-  if (!response.data.status) throw new Error(response.data.message);
-  return response.data;
+    if (!response.data.status) throw new Error(response.data.message);
+    return response.data;
+  };
 };
 
-export const getHistory = async () => {
-  return API_CALL("get", "history");
+export const getHistory = async (axiosPrivateAPI) => {
+  return API_CALL("get", "history", axiosPrivateAPI);
 };
 
-export const getPatientNotifications = async () => {
-  return API_CALL("get", "notifications");
+export const getPatientNotifications = async (axiosPrivateAPI) => {
+  return API_CALL("get", "notifications", axiosPrivateAPI);
 };
 
-export const getPatientHealthProfile = async () => {
-  return API_CALL("get", "get-health-profile");
+export const getPatientHealthProfile = async (axiosPrivateAPI) => {
+  return API_CALL("get", "get-health-profile", axiosPrivateAPI);
 };
 
-export const updateHealthProfile = async (value) => {
-  return API_CALL("post", "update-health-profile", value);
+export const updateHealthProfile = async (axiosPrivateAPI, value) => {
+  return API_CALL("post", "update-health-profile", value, axiosPrivateAPI);
 };
 
-export const getPatientSettings = async () => {
-  return API_CALL("get", "settings");
+export const getPatientSettings = async (axiosPrivateAPI) => {
+  return API_CALL("get", "settings", axiosPrivateAPI);
 };
-export const updatePatientSettings = async (value) => {
-  return API_CALL("post", "settings", value);
-};
-
-export const patientImageUpload = async (value) => {
-  return API_CALL("post", "upload_image", value, true);
+export const updatePatientSettings = async (axiosPrivateAPI, value) => {
+  return API_CALL("post", "settings", axiosPrivateAPI, value);
 };
 
-export const patientImageRemove = async (value) => {
-  return API_CALL("post", "remove_image", value, true);
+export const patientImageUpload = async (axiosPrivateAPI, value) => {
+  return API_CALL("post", "upload_image", axiosPrivateAPI, value, true);
 };
 
-export const patientAppointmentDetails = async (value) => {
-  return API_CALL("post", "appointment/details", value);
+export const patientImageRemove = async (axiosPrivateAPI, value) => {
+  return API_CALL("post", "remove_image", axiosPrivateAPI, value, true);
 };
 
-export const patientUpdatePassword = async () => {
-  return API_CALL("post", "update_password");
+export const patientAppointmentDetails = async (axiosPrivateAPI, value) => {
+  return API_CALL("post", "appointment/details", axiosPrivateAPI, value);
+};
+
+export const patientUpdatePassword = async (axiosPrivateAPI) => {
+  return API_CALL("post", "update_password", axiosPrivateAPI);
 };
 
 // export const getHealthProfile = async () => {

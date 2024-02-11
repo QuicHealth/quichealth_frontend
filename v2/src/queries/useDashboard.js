@@ -22,11 +22,12 @@ export const useExpertDashboard = () => {
 
 export const useSetAvailability = () => {
   const queryClient = useQueryClient();
+  const axiosPrivates = useAxiosPrivate();
   const {
     mutate: setAvailables,
     isLoading,
     isSuccess,
-  } = useMutation(setAvailability, {
+  } = useMutation(setAvailability(axiosPrivates), {
     onSuccess: (data) => {
       queryClient.invalidateQueries(["expert-dashboard"]);
       toast.success(data?.message);
@@ -38,12 +39,13 @@ export const useSetAvailability = () => {
 };
 
 export const useAddEMR = () => {
+  const axiosPrivates = useAxiosPrivate();
   const queryClient = useQueryClient();
   const {
     mutate: addEMRs,
     isLoading,
     isSuccess,
-  } = useMutation(addEMR, {
+  } = useMutation(addEMR(axiosPrivates), {
     onSuccess: (data) => {
       queryClient.invalidateQueries(["emr"]);
       toast.success(data.message);
@@ -55,5 +57,6 @@ export const useAddEMR = () => {
 };
 
 export const useGetEMR = (id) => {
-  return useQuery(["emr"], () => getEMR(id));
+  const axiosPrivates = useAxiosPrivate();
+  return useQuery(["emr"], () => getEMR(axiosPrivates, id));
 };

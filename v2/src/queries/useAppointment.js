@@ -44,51 +44,67 @@ export const useAppointment = (expert = false) => {
 };
 
 export const useHospitals = () => {
-  return useQuery(["hospitals"], hospitals);
+  const axiosPrivates = useAxiosPrivate();
+  return useQuery(["hospitals"], hospitals(axiosPrivates));
 };
 
 export const useDoctorsDetail = (id) => {
-  return useQuery(["doctor-details", id], () => doctorDetails(id));
+  const axiosPrivates = useAxiosPrivate();
+  return useQuery(["doctor-details", id], () =>
+    doctorDetails(axiosPrivates, id)
+  );
 };
 
 export const useDoctors = () => {
-  return useQuery(["doctors"], doctors);
+  const axiosPrivates = useAxiosPrivate();
+  return useQuery(["doctors"], doctors(axiosPrivates));
 };
 
 export const useAppointments = () => {
-  return useQuery(["appointment"], appointments);
+  const axiosPrivates = useAxiosPrivate();
+  return useQuery(["appointment"], appointments(axiosPrivates));
 };
 
 export const usePaidAppointments = (expert) => {
-  const apps = expert ? getPaidAppointments : paidAppointments;
+  const axiosPrivates = useAxiosPrivate();
+  const apps = expert
+    ? getPaidAppointments(axiosPrivates)
+    : paidAppointments(axiosPrivates);
   const query = expert ? ["expert-paid-App"] : ["paid-app"];
   return useQuery(query, apps);
-
-  // return useQuery(["paid-App"], apps);
 };
 
 export const useGetHistory = (expert = false) => {
-  const api = expert ? getExpertHistory : getHistory;
+  const axiosPrivates = useAxiosPrivate();
+  const api = expert
+    ? getExpertHistory(axiosPrivates)
+    : getHistory(axiosPrivates);
+
   return useQuery(["history"], api);
 };
 
 export const useGetNotifications = (expert = false) => {
-  const api = expert ? getExpertNotifications : getPatientNotifications;
+  const axiosPrivates = useAxiosPrivate();
+  const api = expert
+    ? getExpertNotifications(axiosPrivates)
+    : getPatientNotifications(axiosPrivates);
   const query = expert ? ["expert-notify"] : ["patient-notify"];
   return useQuery(query, api);
 };
 
 export const useGetHealthProfile = () => {
-  return useQuery(["healthProfile"], getPatientHealthProfile);
+  const axiosPrivates = useAxiosPrivate();
+  return useQuery(["healthProfile"], getPatientHealthProfile(axiosPrivates));
 };
 
 export const useUpdateHealthProfile = () => {
+  const axiosPrivates = useAxiosPrivate();
   const queryClient = useQueryClient();
   const {
     mutate: updateHealthProfiles,
     isLoading,
     isSuccess,
-  } = useMutation(updateHealthProfile, {
+  } = useMutation(updateHealthProfile(axiosPrivates), {
     onSuccess: (data) => {
       queryClient.invalidateQueries(["healthProfile"]);
       toast.success(data.message);
@@ -104,7 +120,10 @@ export const useUpdateHealthProfile = () => {
 };
 
 export const useGetSettings = (expert = false) => {
-  const api = expert ? getExpertSetting : getPatientSettings;
+  const axiosPrivates = useAxiosPrivate();
+  const api = expert
+    ? getExpertSetting(axiosPrivates)
+    : getPatientSettings(axiosPrivates);
 
   const query = expert ? ["expertSettings"] : ["patientSettings"];
 
@@ -114,7 +133,10 @@ export const useGetSettings = (expert = false) => {
 
 export const useUpdateSettings = (expert = false) => {
   const queryClient = useQueryClient();
-  const api = expert ? updatePatientSettings : updateExpertSetting;
+  const axiosPrivates = useAxiosPrivate();
+  const api = expert
+    ? updatePatientSettings(axiosPrivates)
+    : updateExpertSetting(axiosPrivates);
 
   const query = expert ? ["expertSettings"] : ["patientSettings"];
   const {
@@ -133,7 +155,10 @@ export const useUpdateSettings = (expert = false) => {
 
 export const useImageUpload = (expert = false) => {
   const queryClient = useQueryClient();
-  const api = expert ? expertImageUpload : patientImageUpload;
+  const axiosPrivates = useAxiosPrivate();
+  const api = expert
+    ? expertImageUpload(axiosPrivates)
+    : patientImageUpload(axiosPrivates);
 
   const query = expert ? ["expertSettings"] : ["patientSettings"];
   const {
@@ -156,7 +181,10 @@ export const useImageUpload = (expert = false) => {
 
 export const useImageRemove = (expert = false) => {
   const queryClient = useQueryClient();
-  const api = expert ? expertImageRemove : patientImageRemove;
+  const axiosPrivates = useAxiosPrivate();
+  const api = expert
+    ? expertImageRemove(axiosPrivates)
+    : patientImageRemove(axiosPrivates);
 
   const query = expert ? ["expertSettings"] : ["patientSettings"];
   const {
@@ -178,16 +206,20 @@ export const useImageRemove = (expert = false) => {
 };
 
 export const useExpertGetPatientAppDetails = (id) => {
-  return useQuery(["appointment"], () => getPatientAppDetailsByDoctor(id));
+  const axiosPrivates = useAxiosPrivate();
+  return useQuery(["appointment"], () =>
+    getPatientAppDetailsByDoctor(useAxiosPrivates, id)
+  );
 };
 
 export const usePatientUpdatePassword = () => {
   // const queryClient = useQueryClient();
+  const axiosPrivates = useAxiosPrivate();
   const {
     mutate: patientUpdatePasswords,
     isLoading,
     isSuccess,
-  } = useMutation(patientUpdatePassword, {
+  } = useMutation(patientUpdatePassword(axiosPrivates), {
     onSuccess: (data) => {
       // queryClient.invalidateQueries(["patientSettings"]);
       toast.success(data.message);
@@ -200,11 +232,12 @@ export const usePatientUpdatePassword = () => {
 
 export const useCreateAppointment = () => {
   const { setAppointmentDetails } = useContext(GlobalContext);
+  const axiosPrivates = useAxiosPrivate();
   const {
     mutate: createAppointments,
     isLoading,
     isSuccess,
-  } = useMutation(createAppointment, {
+  } = useMutation(createAppointment(axiosPrivates), {
     onSuccess: (data) => {
       setAppointmentDetails(data?.Appointments);
       localStorage.setItem("app", JSON.stringify(data.Appointments));
@@ -221,13 +254,14 @@ export const useCreateAppointment = () => {
 };
 
 export const usePatientAppointmentDetails = (patientDetails, paymentType) => {
+  const axiosPrivates = useAxiosPrivate();
   const payStack = usePaystack(patientDetails);
   const payFlutter = useFlutterwavePay(patientDetails);
   const {
     mutate: PatientAppDetails,
     isLoading,
     isSuccess,
-  } = useMutation(patientAppointmentDetails, {
+  } = useMutation(patientAppointmentDetails(axiosPrivates), {
     onSuccess: (data) => {
       paymentType === "paystack" ? payStack() : payFlutter();
       toast.success(data.message);
@@ -243,13 +277,14 @@ export const usePatientAppointmentDetails = (patientDetails, paymentType) => {
 };
 
 export const useVerifyPay = () => {
+  const axiosPrivates = useAxiosPrivate();
   const { setAppointmentDetails } = useContext(GlobalContext);
 
   const {
     mutate: verifyPays,
     isLoading,
     isSuccess,
-  } = useMutation(verifyPay, {
+  } = useMutation(verifyPay(axiosPrivates), {
     onSuccess: (data) => {
       console.log(data, "credbhs");
       // localStorage.setItem("app", JSON.stringify(data.Appointments));

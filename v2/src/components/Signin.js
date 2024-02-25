@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Field, Form, Formik } from "formik";
 
-import signin from "./../assets/signin.png";
+import signin from "./../assets/signin1.png";
 import back from "./../assets/backArrow.svg";
 import eye from "./../assets/eye.svg";
 import logo from "./../assets/whitelogo.png";
@@ -15,6 +15,7 @@ import { Spin } from "../utils/Spinners";
 import useGoogleSignin from "../hooks/useGoogleSignin";
 
 function Signin({ expert }) {
+  const navigate = useNavigate();
   const { login, isLoading } = useLogin(expert);
   const [showPassword, setShowPassword] = useState(false);
   const { isLoading: googleReqLoading } = useGoogleSignin(expert, "signInDiv");
@@ -38,8 +39,8 @@ function Signin({ expert }) {
         <Logo className="mobile">
           <img src={lg} alt="logo" />
         </Logo>
-        <Link to="/">
-          <Back src={back} alt="Back" />
+        <Link to="..">
+          <Back src={back} alt="Back" onClick={() => navigate(-1)} />
         </Link>
 
         <Title>Hi, Welcome Back!</Title>
@@ -66,7 +67,7 @@ function Signin({ expert }) {
                   Component={Eye}
                   componentImg={eye}
                   name="password"
-                  type={showPassword ? "text":"password"}
+                  type={showPassword ? "text" : "password"}
                   placeholder="8+ characters required"
                   showPassword={showPassword}
                   setShowPassword={setShowPassword}
@@ -74,7 +75,7 @@ function Signin({ expert }) {
               </InputContainer>
 
               <ForgetPassword>
-                <NavLink to="">Forget Password?</NavLink>
+                <NavLink to="/forget-password">Forget Password?</NavLink>
               </ForgetPassword>
 
               <Button disabled={isSubmitting} type="submit">
@@ -121,26 +122,30 @@ export const Container = styled.div`
   //background: var(--background);
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
   display: grid;
   grid-template-columns: 40% auto;
+  overflow-y: hidden;
 
   @media only Screen and (max-width: 768px) {
     padding: 2em 1em;
     height: auto;
     display: block;
+    overflow-y: auto;
   }
 `;
 
 export const LeftSection = styled.div`
   padding: 3rem 5rem 0em 5rem;
+  overflow-y: auto;
   @media only Screen and (max-width: 768px) {
     padding: 1rem 0rem 0 0rem;
     width: 60vw;
     margin: auto;
+    overflow-y: auto;
   }
 
   @media only Screen and (max-width: 450px) {
+    overflow-y: auto;
     padding: 1rem 0rem 0 0rem;
     width: 100%;
   }
@@ -175,6 +180,7 @@ export const Title = styled.h3`
 
 export let Forms = styled(Form)`
   /* width: 31vw; */
+  margin-bottom: 2em;
 
   @media only Screen and (max-width: 768px) {
     font-size: 14px;
@@ -360,13 +366,13 @@ export const Logo = styled.div`
   }
 `;
 export const Topic = styled.h1`
-  margin-top: 10em;
+  margin-top: 65%;
   font-size: 2.5em;
   width: 13em;
 `;
 export const Footer = styled.div`
   display: flex;
-  margin-top: 12em;
+  margin-top: 10vh;
   justify-content: space-between;
   width: 80%;
   font-size: 13px;

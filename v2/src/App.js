@@ -48,6 +48,10 @@ import RequireAuth from "./components/RequireAuth";
 const SigninPage = lazy(() => import("./pages/SigninPage"));
 const SignUp = lazy(() => import("./pages/SignupPage"));
 
+const ForgetPassword = lazy(() => import("./pages/ForgetPasswordPage"));
+
+const ResetPassword = lazy(() => import("./pages/ResetPasswordPage"));
+
 const Appointmentlayout = lazy(() =>
   import("./components/Appointments/Appointmentlayout")
 );
@@ -150,12 +154,15 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<Homepage />} />
             </Route>
+            <Route path="/forget-password" element={<ForgetPassword />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SigninPage />} />
             <Route
               path="/expert-signin"
               element={<SigninPage expert={true} />}
             />
+
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* Protected Routes */}
 

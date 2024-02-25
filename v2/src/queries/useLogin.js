@@ -1,7 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-import { ESignIn, Signup, signIn } from "../api/user";
+import {
+  ESignIn,
+  ForgetPassword,
+  ResetPassword,
+  Signup,
+  signIn,
+} from "../api/user";
 import { setAuthorizationToken } from "../api/setAuth";
 import { useContext } from "react";
 import GlobalContext from "../context/GlobalContext/GlobalContext";
@@ -64,6 +70,54 @@ export const useSignup = () => {
 
   return {
     register,
+    isLoading,
+    isSuccess,
+  };
+};
+
+export const useForgetPassword = () => {
+  const {
+    mutate: forgetPass,
+    isLoading,
+    isSuccess,
+  } = useMutation(ForgetPassword, {
+    onSuccess: (data) => {
+      toast.success(data);
+      // setTimeout(() => {
+      //   navigate("/signin");
+      // }, 2000);
+    },
+    onError: (error) => {
+      console.log(error.response.data, "errro");
+      return toast.error(error.response.data.message);
+    },
+  });
+
+  return {
+    forgetPass,
+    isLoading,
+    isSuccess,
+  };
+};
+
+export const useResetPassword = () => {
+  const navigate = useNavigate();
+  const {
+    mutate: resetPass,
+    isLoading,
+    isSuccess,
+  } = useMutation(ResetPassword, {
+    onSuccess: (data) => {
+      toast.success(data);
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+    },
+    onError: (error) => toast.error(error.response.data.message),
+  });
+
+  return {
+    resetPass,
     isLoading,
     isSuccess,
   };

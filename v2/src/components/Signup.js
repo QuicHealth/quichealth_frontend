@@ -5,7 +5,7 @@ import { Field, Form, Formik } from "formik";
 import { Spin } from "../utils/Spinners";
 import google from "./../assets/google.svg";
 import back from "./../assets/backArrow.svg";
-import signup from "./../assets/signup.png";
+import signup from "./../assets/signup1.png";
 import eye from "./../assets/eye.svg";
 import logo from "./../assets/whitelogo.png";
 import lg from "./../assets/logo.png";
@@ -15,6 +15,7 @@ import { useSignup } from "../queries/useLogin";
 import useGoogleSignin from "../hooks/useGoogleSignin";
 
 function Signup({ expert }) {
+  const navigate = useNavigate();
   const { register, isLoading } = useSignup();
   const { isLoading: googleReqLoading } = useGoogleSignin(expert, "signupDiv");
   const [showPassword, setShowPassword] = useState(false);
@@ -39,8 +40,8 @@ function Signup({ expert }) {
         <Logo className="mobile">
           <img src={lg} alt="logo" />
         </Logo>
-        <Link to="/">
-          <Back src={back} alt="Back" />
+        <Link to="..">
+          <Back src={back} alt="Back" onClick={() => navigate(-1)} />
         </Link>
 
         <Title>Create Account</Title>
@@ -157,20 +158,29 @@ export default Signup;
 export const Container = styled.div`
   //background: var(--background);
   width: 100vw;
-  //height: 100vh;
-  overflow: hidden;
+  height: 100vh;
   display: grid;
   grid-template-columns: 40% auto;
+  overflow-y: hidden;
 
   @media only Screen and (max-width: 768px) {
     padding: 2em 1em;
     height: auto;
     display: block;
+    overflow-y: auto;
   }
 `;
 
 export const LeftSection = styled.div`
   padding: 3rem 5rem 0em 5rem;
+  overflow-y: auto;
+
+  &.forgetPasswordBox {
+    min-height: 54vh;
+    display: flex;
+    flex-direction: column;
+  }
+
   @media only Screen and (max-width: 768px) {
     padding: 1rem 0rem 0 0rem;
     width: 60vw;
@@ -313,6 +323,10 @@ export const Button = styled.button`
     }
   }
 
+  &.forgetPassword {
+    margin-top: 4em;
+  }
+
   &:hover {
     transform: scale(1.1);
   }
@@ -354,7 +368,8 @@ export const Line = styled.div`
 export const Signin = styled.p`
   text-align: center;
   font-weight: 300;
-  margin: 2.4em 0;
+  margin: 2.4vh 0;
+  position: relative;
 
   a {
     color: unset;
@@ -364,6 +379,10 @@ export const Signin = styled.p`
     cursor: pointer;
     &:hover {
       opacity: 0.5;
+    }
+
+    .forgetPassword {
+      bottom: 0;
     }
   }
 
@@ -377,7 +396,8 @@ export const RightSection = styled.div`
   @media only Screen and (max-width: 768px) {
     display: none;
   }
-  //height: 100vh;
+  overflow-y: hidden;
+  height: 100vh;
   background-image: url(${signup});
   background-repeat: no-repeat;
   background-origin: content-box;
@@ -413,12 +433,12 @@ export const Google = styled.div`
 `;
 
 export const Topic = styled.h1`
-  margin-top: 10em;
+  margin-top: 65%;
   font-size: 2.5em;
 `;
 export const Footer = styled.div`
   display: flex;
-  margin-top: 12em;
+  margin-top: 10vh;
   justify-content: space-between;
   width: 95%;
   font-size: 13px;

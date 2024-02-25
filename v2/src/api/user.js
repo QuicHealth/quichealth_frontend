@@ -24,3 +24,15 @@ export const Signup = async (values) => {
 export const GoogleSignin = async (values) => {
   return API_CALL("post", "authenicateWithGoogle", values);
 };
+
+export const ForgetPassword = async (values) => {
+  const response = await api.post("/forgot-password", values);
+  if (!response.status === 200) throw new Error(response.data);
+  return response.data;
+};
+
+export const ResetPassword = async (values) => {
+  const response = await api.post(`/reset-password/${values.token}`, values);
+  if (!response.status === 200) throw new Error(response.data.response.data);
+  return response.data;
+};

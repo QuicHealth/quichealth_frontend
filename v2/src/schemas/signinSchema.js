@@ -24,6 +24,25 @@ export const signupSchema = yup.object().shape({
     .required("Confirm password is required"),
 });
 
+export const forgetPasswordSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Please enter a valid email address")
+    .required("Email is required"),
+});
+
+export const resetPasswordSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Please enter a valid email address")
+    .required("Email is required"),
+  password: yup.string().min(5).required("Password is required"),
+  password_confirmation: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .required("Confirm password is required"),
+});
+
 export const questionaireSchema = yup.object().shape({
   purpose: yup.string().required("Required"),
   symptoms: yup.string().required("Required"),

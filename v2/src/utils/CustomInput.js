@@ -14,6 +14,11 @@ const Input = styled.input`
   margin-top: 0.5em;
   font-size: 16px;
 
+  &.disabled-input {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   &::placeholder {
     color: #d5d5d5;
     font-size: 14px;
@@ -111,6 +116,8 @@ const GenericCustomInput = ({
           {...field}
           border={meta.touched && meta.error && "1px solid red"}
           {...props}
+          className={props.props.disabled && "disabled-input"}
+          disabled={props.props.disabled}
         />
         {Component && (
           <Component
@@ -134,6 +141,7 @@ const SpecificCustomInput = ({ className, field, meta, ...props }) => {
           border={meta.touched && meta.error && "1px solid red"}
           className={className}
           {...props}
+          disabled={props.disabled}
         />
         {meta.touched && meta.error && <Text color="red">{meta.error}</Text>}
       </div>

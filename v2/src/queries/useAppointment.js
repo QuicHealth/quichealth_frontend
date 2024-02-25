@@ -208,7 +208,7 @@ export const useImageRemove = (expert = false) => {
 export const useExpertGetPatientAppDetails = (id) => {
   const axiosPrivates = useAxiosPrivate();
   return useQuery(["appointment"], () =>
-    getPatientAppDetailsByDoctor(useAxiosPrivates, id)
+    getPatientAppDetailsByDoctor(axiosPrivates, id)
   );
 };
 
